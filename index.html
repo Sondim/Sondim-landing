@@ -17,6 +17,25 @@
     
 
     <style>
+        /* --- TYPOGRAPHIC ENGINE ENFORCEMENT --- */
+        :root {
+            --font-ui: 'Press Start 2P', system-ui, monospace;
+            --font-lore: 'Open Sans', sans-serif;
+        }
+
+        /* 1. The Lore Layer: Force smooth, readable text globally */
+        body, 
+        .font-mono, 
+        .font-sans {
+            font-family: var(--font-lore) !important;
+        }
+
+        /* 2. The UI Layer: Force 8-bit system text on structural elements */
+        .font-\[\'Press_Start_2P\'\],
+        .btn-8bit,
+        .pixel-title {
+            font-family: var(--font-ui) !important;
+        }
         
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600&display=swap');
@@ -415,8 +434,9 @@
         /* --- PIXEL HERO PHYSICS --- */
         .hero-container {
             position: relative;
-            width: 100vw;
-            height: 100vh; /* Now fills the entire monitor */
+            width: 100%; /* Prevents horizontal scrollbar glitches */
+            /* Artificial margin removed. The sticky navbar acts as the physical ceiling. */
+            aspect-ratio: 9 / 16; /* Locks to your exact mobile art */
             background: #7dd3fc;
         }
 
@@ -426,15 +446,19 @@
             inset: 0; 
             background-image: url('https://raw.githubusercontent.com/Sondim/Sondim.github.io/a5c1da5798644088ba738233daa1c9828c136766/staticmobileheroimage.jpg');
             background-size: cover;
-            background-position: center 25%; 
+            background-position: top center; /* Hard-anchors the art flush against the ceiling */
             background-repeat: no-repeat;
             image-rendering: pixelated; 
         }
 
         /* Desktop Override (Landscape Image) */
         @media (min-width: 768px) {
+            .hero-container {
+                aspect-ratio: 16 / 9; /* Locks to your exact desktop art */
+            }
             .static-hero-bg {
-                background-image: url('https://raw.githubusercontent.com/Sondim/Sondim.github.io/9a9870e43f406695f2d5dd785e0b87c0d0b43df9/upscaled.png');
+                /* Injected new upscaled hero art */
+                background-image: url('https://raw.githubusercontent.com/Sondim/Sondim.github.io/cee6b24ef804d577a0a95c4784bbb201d5043a8f/upscaled_Hero.png');
             }
         }
 
@@ -826,6 +850,73 @@
             fill: #facc15;
         }
 
+        /* --- HUD STENCIL PHYSICS --- */
+        #main-nav {
+            transition: background-color 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        
+        #main-nav.is-scrolled {
+            background-color: #1B2933 !important;
+        }
+        
+        /* 1. Grounded State (y=0): Full physical mass, no outline */
+        .stencil-text {
+            color: #1B2933 !important;
+            -webkit-text-stroke: 0px transparent;
+            text-shadow: 0px 0px 0px transparent; /* Anchor for smooth physics */
+            transition: color 0.15s ease, -webkit-text-stroke 0.15s ease, text-shadow 0.15s ease;
+        }
+        
+        .stencil-svg {
+            color: #1B2933 !important;
+            stroke: #1B2933; 
+            transition: stroke 0.15s ease, color 0.15s ease;
+        }
+
+        /* 2. Airborne State (Scrolled): Illuminated solid text */
+        #main-nav.is-scrolled .stencil-text {
+            color: #AFD5DA !important;
+            -webkit-text-stroke: 0px transparent;
+        }
+
+        #main-nav.is-scrolled .stencil-svg {
+            stroke: #AFD5DA;
+        }
+
+        /* 3. Hardware Override (Hover) */
+        /* Wired to the parent .group so it stays illuminated while using dropdowns */
+        .stencil-text:hover,
+        .group:hover .stencil-text {
+            color: #facc15 !important; 
+            -webkit-text-stroke: 0px transparent !important;
+            /* Solid isometric extrusion: fills the 1px gap and extends to 2px */
+            text-shadow: 1px 1px 0px #1B2933, 2px 2px 0px #1B2933 !important; 
+        }
+        
+        /* Counter-physics: Invert the stacked shadow on the flipped arrow */
+        .stencil-text:hover .group-hover\:rotate-180,
+        .group:hover .stencil-text .group-hover\:rotate-180 {
+            text-shadow: -1px -1px 0px #1B2933, -2px -2px 0px #1B2933 !important;
+        }
+
+        .stencil-svg:hover,
+        .group:hover .stencil-svg {
+            stroke: #facc15 !important;
+        }
+
+        /* 4. Airborne Hover Physics (Scrolled) */
+        /* When the navbar background is dark blue, the shadow must deepen to pure black to stay visible */
+        #main-nav.is-scrolled .stencil-text:hover,
+        #main-nav.is-scrolled .group:hover .stencil-text {
+            color: #facc15 !important; /* Overrides the airborne light blue with a hardware yellow flash */
+            text-shadow: 1px 1px 0px #000000, 2px 2px 0px #000000 !important;
+        }
+
+        #main-nav.is-scrolled .stencil-text:hover .group-hover\:rotate-180,
+        #main-nav.is-scrolled .group:hover .stencil-text .group-hover\:rotate-180 {
+            text-shadow: -1px -1px 0px #000000, -2px -2px 0px #000000 !important;
+        }
+
     </style>
 
 </head>
@@ -833,38 +924,38 @@
 <body class="bg-zinc-950 text-zinc-100 font-sans selection:bg-blue-500/30 overflow-x-hidden">
 
 
-    <nav class="fixed top-0 left-0 w-full z-40 bg-zinc-950 border-b border-white/5">
+    <nav id="main-nav" class="fixed top-0 left-0 w-full z-40 bg-transparent border-b-2 border-[#1B2933]">
         <div class="max-w-7xl mx-auto px-6 py-2.5 md:py-4 flex justify-between items-center relative">
             
-            <a href="/" onclick="event.preventDefault(); navigateTo('home');" class="text-xl font-black tracking-[0.2em] text-white flex gap-1 group cursor-pointer z-50">
-                <span>S</span><span>O</span><span class="text-yellow-400">N</span><span>D</span><span>I</span><span>M</span>
+            <a href="/" onclick="event.preventDefault(); navigateTo('home');" class="text-xl font-black tracking-[0.2em] stencil-text flex gap-1 group cursor-pointer z-50">
+                <span>S</span><span>O</span><span style="color: #facc15 !important; -webkit-text-stroke: 0 !important;">N</span><span>D</span><span>I</span><span>M</span>
             </a>
 
-            <button id="mobile-menu-btn" class="md:hidden text-zinc-400 hover:text-yellow-400 z-50 p-2 -mr-2 transition-transform active:scale-95">
-                <svg id="hamburger-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            <button id="mobile-menu-btn" class="md:hidden stencil-svg z-50 p-2 -mr-2 transition-transform active:scale-95 cursor-pointer appearance-none bg-transparent border-none">
+                <svg id="hamburger-icon" class="w-6 h-6" fill="none" stroke="inherit" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
                 </svg>
-                <svg id="close-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                <svg id="close-icon" class="w-6 h-6 hidden" fill="none" stroke="inherit" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
             </button>
 
             <div class="hidden md:flex gap-12 lg:gap-16 items-center">
-                <button onclick="openAboutModal()" class="text-[10px] font-['Press_Start_2P'] uppercase tracking-widest text-zinc-300 hover:text-yellow-400 transition-colors cursor-pointer">About</button>
+                <button onclick="openAboutModal()" class="text-[10px] font-['Press_Start_2P'] uppercase tracking-widest stencil-text cursor-pointer bg-transparent border-none">About</button>
                 
                 <div class="relative group py-4 -my-4">
-                    <button onclick="bootQuestEngine()" class="text-[10px] font-['Press_Start_2P'] uppercase tracking-widest text-zinc-300 hover:text-yellow-400 transition-colors cursor-pointer flex items-center gap-2">
-                        Resources <span class="text-[8px] transform group-hover:rotate-180 transition-transform">▼</span>
+                    <button onclick="bootQuestEngine()" class="text-[10px] font-['Press_Start_2P'] uppercase tracking-widest stencil-text cursor-pointer flex items-center gap-2 bg-transparent border-none">
+                        Resources <span class="text-[8px] transform group-hover:rotate-180 transition-transform" style="-webkit-text-stroke: 0;">▼</span>
                     </button>
-                    <div class="absolute top-full left-1/2 -translate-x-1/2 mt-0 w-64 bg-zinc-900 border-4 border-black shadow-[6px_6px_0px_rgba(0,0,0,1)] opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-150 flex flex-col z-50">
-                        <button onclick="navigateTo('#guides')" class="text-left px-5 py-4 text-[9px] font-['Press_Start_2P'] uppercase tracking-widest text-zinc-400 hover:text-yellow-400 hover:bg-zinc-800 transition-colors border-b border-black">Free guides</button>
-                        <button onclick="navigateTo('#workshops')" class="text-left px-5 py-4 text-[9px] font-['Press_Start_2P'] uppercase tracking-widest text-zinc-400 hover:text-yellow-400 hover:bg-zinc-800 transition-colors border-b border-black">Free workshops</button>
-                        <button onclick="fastTravelQuest('state-test')" class="text-left px-5 py-4 text-[9px] font-['Press_Start_2P'] uppercase tracking-widest text-zinc-400 hover:text-yellow-400 hover:bg-zinc-800 transition-colors">Do a quick test</button>
+                    <div class="absolute top-full left-1/2 -translate-x-1/2 mt-0 w-64 bg-[#AFD5DA] border-4 border-[#1B2933] opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-150 flex flex-col z-50">
+                        <button onclick="navigateTo('#guides')" class="text-left px-5 py-4 text-[9px] font-['Press_Start_2P'] uppercase tracking-widest text-[#1B2933] hover:bg-[#1B2933] hover:text-[#facc15] hover:[text-shadow:1px_1px_0px_#000000,2px_2px_0px_#000000] transition-all border-b-2 border-[#1B2933] bg-transparent">Free guides</button>
+                        <button onclick="navigateTo('#workshops')" class="text-left px-5 py-4 text-[9px] font-['Press_Start_2P'] uppercase tracking-widest text-[#1B2933] hover:bg-[#1B2933] hover:text-[#facc15] hover:[text-shadow:1px_1px_0px_#000000,2px_2px_0px_#000000] transition-all border-b-2 border-[#1B2933] bg-transparent">Free workshops</button>
+                        <button onclick="fastTravelQuest('state-test')" class="text-left px-5 py-4 text-[9px] font-['Press_Start_2P'] uppercase tracking-widest text-[#1B2933] hover:bg-[#1B2933] hover:text-[#facc15] hover:[text-shadow:1px_1px_0px_#000000,2px_2px_0px_#000000] transition-all bg-transparent">Do a quick test</button>
                     </div>
                 </div>
 
-                <button onclick="openMainContactGateway()" class="text-[10px] font-['Press_Start_2P'] uppercase tracking-widest text-zinc-300 hover:text-yellow-400 transition-colors cursor-pointer bg-transparent border-none">Contact</button>
-                <button onclick="navigateToHomeAndScroll('book')" class="text-[10px] font-['Press_Start_2P'] uppercase tracking-widest text-zinc-300 hover:text-yellow-400 transition-colors cursor-pointer bg-transparent border-none">Book a session</button>
+                <button onclick="openMainContactGateway()" class="text-[10px] font-['Press_Start_2P'] uppercase tracking-widest stencil-text cursor-pointer bg-transparent border-none">Contact</button>
+                <button onclick="navigateToHomeAndScroll('book')" class="text-[10px] font-['Press_Start_2P'] uppercase tracking-widest stencil-text cursor-pointer bg-transparent border-none">Book a session</button>
             </div>
             
             <div id="mobile-menu" class="absolute top-full left-0 w-full bg-zinc-900 border-b border-white/5 hidden flex-col items-center py-8 gap-6 shadow-2xl transition-all md:hidden z-50">
@@ -936,49 +1027,8 @@
         </div>  
     </section>
 
-    <!-- MOVED RPG DIALOGUE SECTION -->
-    <section id="dialogue-section" class="w-full bg-zinc-950 py-12 md:py-16 border-b border-white/5 relative z-20 flex justify-center shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
-        <div id="hero-panel" class="canvas-panel-8bit w-full max-w-3xl p-5 md:p-6 text-left flex flex-col md:flex-row gap-6 items-center md:items-start mx-4" style="background-color: rgba(24, 24, 27, 1); box-shadow: 8px 8px 0px rgba(0, 0, 0, 1); border-color: rgba(0, 0, 0, 1);">
-            <div class="flex flex-col items-center flex-shrink-0 relative">
-                <div id="hero-avatar-wrapper" class="animate-head-drift">
-                    <button onclick="copyDiscordId(this, 'portrait')" class="discord-avatar-container cursor-pointer block bg-transparent border-none p-0 outline-none appearance-none w-full text-left">
-                        <div class="discord-avatar-mask">
-                            <img id="discord-avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='%2318181b'></svg>" 
-                                 alt="Magnus" class="w-full h-full object-cover transition-opacity duration-300 opacity-0">
-                        </div>
-                        <div id="discord-badge-element" class="discord-badge offline"></div>
-                        
-                        <div class="discord-tooltip">
-                            <span id="discord-tooltip-text">Connecting...</span>
-                        </div>
-                    </button>
-                </div>
-                <span id="portrait-copy-feedback" class="absolute -bottom-8 font-['Press_Start_2P'] text-[9px] text-yellow-400 opacity-0 transition-opacity duration-200 pointer-events-none whitespace-nowrap drop-shadow-[2px_2px_0_rgba(0,0,0,1)]">ID COPIED!</span>
-            </div>
-
-            <div class="flex-1 w-full text-center md:text-left flex flex-col h-full">
-                <div class="flex items-center justify-between border-b-2 border-black pb-3 mb-4 text-[10px] font-['Press_Start_2P'] tracking-widest text-zinc-300">
-                    <span id="discord-username-display">Welcome, I'm Magnus!</span>
-                </div>
-
-                <div id="dialogue-zone" class="dialogue-text-area min-h-[120px] md:min-h-[90px]" onclick="advanceDialogue()">
-                    <p id="dialogue-text" class="font-mono text-xs md:text-sm text-zinc-300 leading-relaxed text-left m-0">
-                        I'm a professional coach who helps solodevs and teams who are stuck in stress, conflict or burnout to get <em>unstuck</em> and finish the game they want to make.
-                    </p>
-                    
-                    <div id="dialogue-arrow" class="dialogue-arrow">▼</div>
-                </div>
-
-                <div id="hero-unlocked-btns" class="hidden flex-col w-full mt-4 md:mt-5 fade-in">
-                    <button onclick="bootQuestEngine()" class="btn-8bit w-full text-[9px] tracking-widest">
-                        RESOURCES
-                    </button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="testimonials-ticker" class="w-full bg-zinc-950 py-2 md:py-4 border-b border-white/5 relative z-20 shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+    <!-- TESTIMONIALS TICKER MOVED UP -->
+    <section id="testimonials-ticker" class="w-full bg-[#1B2933] pt-12 pb-4 relative z-20">
         <div class="overflow-hidden w-full max-w-7xl mx-auto relative px-6">
             <div id="testi-track" class="flex transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)]">
                 
@@ -1018,6 +1068,48 @@
                     </div>
                 </div>
 
+            </div>
+        </div>
+    </section>
+
+    <!-- RPG DIALOGUE SECTION MOVED DOWN -->
+    <section id="dialogue-section" class="w-full bg-[#1B2933] py-8 md:py-12 border-b border-white/5 relative z-20 flex justify-center">
+        <div id="hero-panel" class="canvas-panel-8bit w-full max-w-3xl p-5 md:p-6 text-left flex flex-col md:flex-row gap-6 items-center md:items-start mx-4" style="background-color: rgba(24, 24, 27, 1); box-shadow: 8px 8px 0px rgba(0, 0, 0, 1); border-color: rgba(0, 0, 0, 1);">
+            <div class="flex flex-col items-center flex-shrink-0 relative">
+                <div id="hero-avatar-wrapper" class="animate-head-drift">
+                    <button onclick="copyDiscordId(this, 'portrait')" class="discord-avatar-container cursor-pointer block bg-transparent border-none p-0 outline-none appearance-none w-full text-left">
+                        <div class="discord-avatar-mask">
+                            <img id="discord-avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='%2318181b'></svg>" 
+                                 alt="Magnus" class="w-full h-full object-cover transition-opacity duration-300 opacity-0">
+                        </div>
+                        <div id="discord-badge-element" class="discord-badge offline"></div>
+                        
+                        <div class="discord-tooltip">
+                            <span id="discord-tooltip-text">Connecting...</span>
+                        </div>
+                    </button>
+                </div>
+                <span id="portrait-copy-feedback" class="absolute -bottom-8 font-['Press_Start_2P'] text-[9px] text-yellow-400 opacity-0 transition-opacity duration-200 pointer-events-none whitespace-nowrap drop-shadow-[2px_2px_0_rgba(0,0,0,1)]">ID COPIED!</span>
+            </div>
+
+            <div class="flex-1 w-full text-center md:text-left flex flex-col h-full">
+                <div class="flex items-center justify-between border-b-2 border-black pb-3 mb-4 text-[10px] font-['Press_Start_2P'] tracking-widest text-zinc-300">
+                    <span id="discord-username-display">Welcome, I'm Magnus!</span>
+                </div>
+
+                <div id="dialogue-zone" class="dialogue-text-area min-h-[120px] md:min-h-[90px]" onclick="advanceDialogue()">
+                    <p id="dialogue-text" class="font-mono text-xs md:text-sm text-zinc-300 leading-relaxed text-left m-0">
+                        I'm a professional coach who helps solodevs and teams who are stuck in stress, conflict or burnout to get <em>unstuck</em> and finish the game they want to make.
+                    </p>
+                    
+                    <div id="dialogue-arrow" class="dialogue-arrow">▼</div>
+                </div>
+
+                <div id="hero-unlocked-btns" class="hidden flex-col w-full mt-4 md:mt-5 fade-in">
+                    <button onclick="bootQuestEngine()" class="btn-8bit w-full text-[9px] tracking-widest">
+                        RESOURCES
+                    </button>
+                </div>
             </div>
         </div>
     </section>
@@ -3677,7 +3769,7 @@ function openMainContactGateway() {
             clearInterval(testiAutoTimer);
             testiAutoTimer = setInterval(() => {
                 if (!isTestiAnimating) moveTestiRight();
-            }, 6000); // Slightly faster pacing for a text-only ambient ticker
+            }, 4000); // Slightly faster pacing for a text-only ambient ticker
         }
 
         function resetTestiTimer() {
@@ -3802,6 +3894,17 @@ function openMainContactGateway() {
             attachSearchEngine('guides-search-input', 'guides-card-container');
             attachSearchEngine('workshops-search-input', 'workshops-card-container');
         });
+
+        // --- HUD SCROLL PHYSICS ---
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('main-nav');
+            if (!nav) return;
+            if (window.scrollY > 50) {
+                nav.classList.add('is-scrolled');
+            } else {
+                nav.classList.remove('is-scrolled');
+            }
+        }, { passive: true });
 
 // --- DISCORD ID COPY ENGINE ---
         const TARGET_DISCORD_ID = "198813370441269249";
