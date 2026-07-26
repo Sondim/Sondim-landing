@@ -367,7 +367,7 @@
             background-size: cover;
             background-position: center top;
             background-repeat: no-repeat;
-            opacity: 0.5; 
+            opacity: 0.3; 
             pointer-events: none;
             z-index: 0;
             image-rendering: pixelated;
@@ -496,7 +496,7 @@
             2px -2px 0 #000,
             -2px  2px 0 #000,
             2px  2px 0 #000,
-            6px  6px 0px rgba(0,0,0,0.85); 
+            5px  5px 0px rgba(0,0,0,0.85); 
         }
 
         @media (max-width: 768px) {
@@ -506,7 +506,7 @@
                 1.5px -1.5px 0 #000,
                 -1.5px  1.5px 0 #000,
                 1.5px  1.5px 0 #000,
-                4px  4px 0px rgba(0,0,0,0.85); 
+                3px  3px 0px rgba(0,0,0,0.85); 
             }
         }
 
@@ -2032,7 +2032,7 @@
                         Meet Magnus Chirgwin
                     </h1>
                     <p class="font-mono text-sm md:text-base text-white max-w-2xl leading-relaxed">
-                        ICF accredited Coach | BSc Medical Science (PT) | Also gamedev
+                        ICF accredited Coach | BSc Medical Science (PT) | Gamedev & gamer
                     </p>
                 </header>
 
@@ -3462,6 +3462,9 @@ function openMainContactGateway() {
         function bookFromModal() { closeModals(); document.getElementById('book').scrollIntoView(); }
 
         
+        // --- WEBHOOK DATA TRANSMISSION ---
+        const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxLLC8Ph1O-zphixuFRMzogpbFDK-gEWWshqQqpgf2mzT4twYN5pRj92nOPwMVutyOO/exec';
+
         // --- GENERAL QUEST WEBHOOK INTEGRATION ---
         const generalNameInput = document.getElementById('generalSenderName');
         const generalEmailInput = document.getElementById('generalSenderEmail');
@@ -3515,7 +3518,7 @@ function openMainContactGateway() {
 
                     const enrichedMessage = `[QUEST RESULT: ${questContext}]\n\n${messageVal}`;
 
-                    await fetch(WEBHOOK_URL, {
+                    const response = await fetch(WEBHOOK_URL, {
                         method: 'POST', 
                         body: JSON.stringify({ 
                             type: 'contact', 
@@ -3526,6 +3529,7 @@ function openMainContactGateway() {
                         }),
                         headers: { 'Content-Type': 'text/plain;charset=utf-8' }
                     });
+                    if (!response.ok) throw new Error(`Webhook failed: ${response.status}`);
                     clearInterval(dotInterval);
                     
                     // ON SUCCESS: Transform the form into a success message, protecting the results above
@@ -3637,13 +3641,15 @@ function openMainContactGateway() {
 
             try {
 
-                await fetch(WEBHOOK_URL, {
+                const response = await fetch(WEBHOOK_URL, {
 
                     method: 'POST', body: JSON.stringify({ type: 'contact', name: nameVal, email: emailVal, message: messageVal }),
 
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' }
 
                 });
+
+                if (!response.ok) throw new Error(`Webhook failed: ${response.status}`);
 
                 clearInterval(dotInterval);
 
