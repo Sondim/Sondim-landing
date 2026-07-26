@@ -2049,8 +2049,22 @@
                         
                         <!-- Wrapper added to constrain height and trigger the scrollbar -->
                         <div class="relative w-full h-48 md:h-64 overflow-hidden !rounded-none border-4 border-black shadow-[4px_4px_0px_#000000]">
-                            <div id="about-dialogue-zone" class="dialogue-text-area !border-none !rounded-none !bg-[#1B2933]/80 w-full h-full overflow-y-auto custom-scrollbar transition-all duration-300 z-10 cursor-default" style="padding-bottom: 2.5rem;">
+                            <div id="about-dialogue-zone" class="dialogue-text-area !border-none !rounded-none !bg-[#1B2933]/80 w-full h-full overflow-y-auto custom-scrollbar transition-all duration-300 z-10 cursor-default flex flex-col" style="padding-bottom: 2.5rem;">
                                 <p id="about-dialogue-text" class="font-mono text-sm md:text-base text-white leading-relaxed text-left m-0"></p>
+                                
+                                <!-- Completionist Easter Egg CTA (Hidden by default) -->
+                                <div id="about-easter-egg-cta" class="hidden mt-8 flex-row gap-4 items-center justify-start opacity-0 transition-opacity duration-500">
+                                    
+                                    <!-- Wired to the SPA router and the native .btn-8bit engine -->
+                                    <button onclick="navigateToHomeAndScroll('book')" class="btn-8bit text-[10px] md:text-[12px] px-6 py-3 md:py-4 tracking-widest cursor-pointer shadow-[4px_4px_0px_black] active:shadow-[2px_2px_0px_black]">
+                                        BOOK SESSION
+                                    </button>
+                                    
+                                    <button onclick="openMainContactGateway()" class="btn-8bit text-[10px] md:text-[12px] px-6 py-3 md:py-4 tracking-widest cursor-pointer shadow-[4px_4px_0px_black] active:shadow-[2px_2px_0px_black]">
+                                        CONTACT ME
+                                    </button>
+
+                                </div>
                             </div>
                         </div>
 
@@ -2984,13 +2998,49 @@
         let currentAboutTopic = 'intro';
         let visitedAboutButtons = new Set();
 
+        // TELEMETRY ENGINE: Tracks which topics the user has read
+        const readAboutTopics = new Set();
+
         function renderAboutDialogue() {
             const textEl = document.getElementById('about-dialogue-text');
             const choicesEl = document.getElementById('about-choices-container');
+            const dialogueZone = document.getElementById('about-dialogue-zone');
+            const easterEggCta = document.getElementById('about-easter-egg-cta');
             if (!textEl || !choicesEl) return;
 
-            const pages = aboutDialogueData[currentAboutTopic];
+            // 1. TRACK PROGRESS: Record the topic (Ignore the default intro screen)
+            // ** CHANGE 'intro' IF YOUR DEFAULT KEY IS NAMED DIFFERENTLY **
+            if (currentAboutTopic !== 'intro') {
+                readAboutTopics.add(currentAboutTopic);
+            }
+
+            let pages = aboutDialogueData[currentAboutTopic];
+
+            // 2. EASTER EGG INTERCEPT
+            // If they are on the intro screen AND have read 3 topics, swap the state
+            if (currentAboutTopic === 'intro' && readAboutTopics.size >= 3) {
+                pages = ["You've already read everything here! Feel free to read it again, but a great next step would be to check out the resources or contact me if you want to know more!"];
+                
+                // Snap the hardware buttons into view
+                if (easterEggCta) {
+                    easterEggCta.classList.remove('hidden', 'opacity-0');
+                    easterEggCta.classList.add('flex', 'opacity-100');
+                }
+            } else {
+                // Ensure buttons strictly disappear if they go back to reading a normal topic
+                if (easterEggCta) {
+                    easterEggCta.classList.add('hidden', 'opacity-0');
+                    easterEggCta.classList.remove('flex', 'opacity-100');
+                }
+            }
+
+            // 3. RENDER TEXT
             textEl.innerHTML = pages.join('<br><br><br>');
+
+            // HARDWARE SNAP: Instantly zero out the Y-axis scroll position
+            if (dialogueZone) {
+                dialogueZone.scrollTop = 0;
+            }
 
             textEl.classList.remove('fade-in');
             void textEl.offsetWidth;
