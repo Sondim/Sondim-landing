@@ -255,10 +255,10 @@
             background-size: 200% 100%;
         }
 
-        /* Added :not(.no-shimmer) to the exclusion list! */
-        .btn-8bit:not(.btn-8bit-secondary):not(:disabled):not(.no-shimmer)::before {
+        /* Triggers the shimmer sweep ONLY on hover to build tactile anticipation */
+        .btn-8bit:not(.btn-8bit-secondary):not(:disabled):not(.no-shimmer):hover::before {
             display: block;
-            animation: shimmerSweep 2.5s infinite linear;
+            animation: shimmerSweep 3s infinite linear;
         }
 
         @keyframes shimmerSweep {
@@ -352,6 +352,30 @@
 
         .spa-view-hidden {
             display: none;
+        }
+
+        /* About page: dark-blue stage + faded hero (scoped — does not affect home/guides) */
+        #view-about {
+            background-color: #1B2933;
+        }
+
+        #view-about .about-hero-bg {
+            position: absolute;
+            inset: 0;
+            /* Hard-linked to the raw asset to bypass the base href routing */
+            background-image: url('https://raw.githubusercontent.com/Sondim/Sondim.github.io/cee6b24ef804d577a0a95c4784bbb201d5043a8f/upscaled_Hero.png');
+            background-size: cover;
+            background-position: center top;
+            background-repeat: no-repeat;
+            opacity: 0.2; 
+            pointer-events: none;
+            z-index: 0;
+            image-rendering: pixelated;
+        }
+
+        #view-about .about-page-inner {
+            position: relative;
+            z-index: 1;
         }
 
         /* Light-mode white canvas views (scoped, no bleed into dark UI) */
@@ -927,7 +951,7 @@
     <nav id="main-nav" class="fixed top-0 left-0 w-full z-40 bg-transparent border-b-2 border-[#1B2933]">
         <div class="max-w-7xl mx-auto px-6 py-2.5 md:py-4 flex justify-between items-center relative">
             
-            <a href="/" onclick="event.preventDefault(); navigateTo('home');" class="text-xl font-black tracking-[0.2em] stencil-text flex gap-1 group cursor-pointer z-50">
+            <a href="/" onclick="event.preventDefault(); navigateTo('home');" class="text-lg md:text-xl font-['Press_Start_2P'] tracking-[0.2em] stencil-text flex gap-1 group cursor-pointer z-50 uppercase">
                 <span>S</span><span>O</span><span style="color: #facc15 !important; -webkit-text-stroke: 0 !important;">N</span><span>D</span><span>I</span><span>M</span>
             </a>
 
@@ -941,7 +965,7 @@
             </button>
 
             <div class="hidden md:flex gap-12 lg:gap-16 items-center">
-                <button onclick="openAboutModal()" class="text-[10px] font-['Press_Start_2P'] uppercase tracking-widest stencil-text cursor-pointer bg-transparent border-none">About</button>
+                <button onclick="navigateTo('#about')" class="text-[10px] font-['Press_Start_2P'] uppercase tracking-widest stencil-text cursor-pointer bg-transparent border-none">About</button>
                 
                 <div class="relative group py-4 -my-4">
                     <button onclick="bootQuestEngine()" class="text-[10px] font-['Press_Start_2P'] uppercase tracking-widest stencil-text cursor-pointer flex items-center gap-2 bg-transparent border-none">
@@ -959,7 +983,7 @@
             </div>
             
             <div id="mobile-menu" class="absolute top-full left-0 w-full bg-zinc-900 border-b border-white/5 hidden flex-col items-center py-8 gap-6 shadow-2xl transition-all md:hidden z-50">
-                <button onclick="openAboutModal()" class="mobile-link text-[10px] font-['Press_Start_2P'] uppercase tracking-widest text-zinc-400 hover:text-yellow-400 transition-colors cursor-pointer">[ About Me ]</button>
+                <button onclick="navigateTo('#about')" class="mobile-link text-[10px] font-['Press_Start_2P'] uppercase tracking-widest text-zinc-400 hover:text-yellow-400 transition-colors cursor-pointer">[ About Me ]</button>
                 
                 <div class="flex flex-col items-center gap-5 w-full my-2">
                     <span class="text-[10px] font-['Press_Start_2P'] uppercase tracking-widest text-zinc-400">--- Resources ---</span>
@@ -1012,12 +1036,12 @@
         <div class="relative z-10 w-full h-full max-w-7xl mx-auto px-6 lg:px-12 flex flex-col items-start pt-[50vh] md:pt-[50vh]">
             
             <h1 class="pixel-title flex flex-col items-start text-left text-[22px] md:text-[38px]">
-                <span class="leading-none">BUILD GAMES</span>
-                <span class="leading-none mt-3 md:mt-5">WITH LESS BURNOUT</span>
+                <span class="leading-none">MAKE GAMES.</span>
+                <span class="leading-none mt-3 md:mt-5">KEEP YOUR HEALTH</span>
             </h1>
             
             <p class="text-white text-[18px] md:text-[22px] font-normal text-left leading-[1.4] mt-6 mb-10 max-w-[650px]" style="font-family: 'Open Sans', sans-serif;">
-                For gamedevs who are stuck in stress and conflict<br>and want to get their momentum back
+                For solodevs and teams who love making games but<br>are tired of crunch, conflict and burnout.
             </p>
 
             <button onclick="bootQuestEngine()" class="btn-8bit no-shimmer text-[8px] md:text-[12px] px-6 py-4 md:px-8 md:py-5 tracking-widest">
@@ -1273,20 +1297,20 @@
 
 <div id="quest-modal" class="fixed inset-0 z-[60] hidden bg-black/90 overflow-y-auto">
         <div class="min-h-screen flex items-center justify-center px-4 py-12 w-full">
-            <div id="quest-engine-prototype" class="w-full max-w-4xl mx-auto relative bg-zinc-900 border border-white/10 px-6 py-12 md:py-24 shadow-2xl transform-gpu scale-90 origin-center">
+            <div id="quest-engine-prototype" class="w-full max-w-4xl mx-auto relative bg-[#1B2933] border-4 border-black px-6 py-12 md:py-24 shadow-[12px_12px_0px_rgba(0,0,0,1)] transform-gpu scale-90 origin-center">
                 
-                <button onclick="closeModals()" class="absolute top-4 right-4 md:top-6 md:right-6 text-zinc-500 hover:text-white hover:scale-110 active:scale-95 transition-all p-2 z-50">
+                <button onclick="closeModals()" class="absolute top-4 right-4 md:top-6 md:right-6 text-[#AFD5DA] hover:text-white hover:scale-110 active:scale-95 transition-all p-2 z-50">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
         
 
         <div id="state-hub" class="text-center fade-in">
-            <h2 class="text-xl md:text-2xl font-['Press_Start_2P'] uppercase text-yellow-400 mb-8 md:mb-16 leading-tight tracking-wide text-shadow-sm">Resources</h2>
+            <h2 class="text-xl md:text-2xl font-['Press_Start_2P'] uppercase text-yellow-400 mb-8 md:mb-16 leading-tight tracking-wide [text-shadow:4px_4px_0px_#000000]">Resources</h2>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto text-left">
-                <button onclick="navigateTo('#guides'); closeModals();" data-desc="Choose and download guides on common topics!" class="hub-quest-btn canvas-tool-btn p-6 font-['Press_Start_2P'] text-[10px] uppercase tracking-widest leading-loose w-full">Free guides</button>
-                <button onclick="navigateTo('#workshops'); closeModals();" data-desc="I usually do these together with my clients. Try them out!" class="hub-quest-btn canvas-tool-btn p-6 font-['Press_Start_2P'] text-[10px] uppercase tracking-widest leading-loose w-full">Free workshops</button>
-                <button onclick="selectHubQuest(this, 'state-test')" data-desc="Answer 12 questions and get a suggested topic to work on!" class="hub-quest-btn canvas-tool-btn p-6 font-['Press_Start_2P'] text-[10px] uppercase tracking-widest leading-loose w-full">Do a Test</button>
+                <button onclick="navigateTo('#guides'); closeModals();" data-desc="Choose and download guides on common topics!" class="hub-quest-btn p-6 font-['Press_Start_2P'] text-[10px] uppercase tracking-widest leading-loose w-full bg-[#1B2933] text-[#AFD5DA] border-4 border-black shadow-[4px_4px_0px_#000000] hover:bg-[#AFD5DA] hover:text-[#1B2933] active:translate-x-[4px] active:translate-y-[4px] active:shadow-[0px_0px_0px_#000000] transition-all duration-75 step-end cursor-pointer">Free guides</button>
+                <button onclick="navigateTo('#workshops'); closeModals();" data-desc="I usually do these together with my clients. Try them out!" class="hub-quest-btn p-6 font-['Press_Start_2P'] text-[10px] uppercase tracking-widest leading-loose w-full bg-[#1B2933] text-[#AFD5DA] border-4 border-black shadow-[4px_4px_0px_#000000] hover:bg-[#AFD5DA] hover:text-[#1B2933] active:translate-x-[4px] active:translate-y-[4px] active:shadow-[0px_0px_0px_#000000] transition-all duration-75 step-end cursor-pointer">Free workshops</button>
+                <button onclick="selectHubQuest(this, 'state-test')" data-desc="Answer 12 questions and get a suggested topic to work on!" class="hub-quest-btn p-6 font-['Press_Start_2P'] text-[10px] uppercase tracking-widest leading-loose w-full bg-[#1B2933] text-[#AFD5DA] border-4 border-black shadow-[4px_4px_0px_#000000] hover:bg-[#AFD5DA] hover:text-[#1B2933] active:translate-x-[4px] active:translate-y-[4px] active:shadow-[0px_0px_0px_#000000] transition-all duration-75 step-end cursor-pointer">Do a Test</button>
             </div>
 
             <div id="guides-expansion-zone" class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl mx-auto text-left custom-scrollbar pr-2 md:pr-4 transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] max-h-0 opacity-0 pointer-events-none overflow-hidden">
@@ -1704,33 +1728,33 @@
 
 <div id="main-contact-gateway-modal" class="fixed inset-0 z-[60] hidden bg-black/90 overflow-y-auto">
         <div class="min-h-screen flex items-center justify-center px-4 py-12 w-full">
-            <div class="w-full max-w-2xl mx-auto relative bg-zinc-900 border border-white/10 p-6 md:p-12 rounded-none shadow-2xl my-auto transform-gpu">
+            <div class="w-full max-w-2xl mx-auto relative bg-[#1B2933] border border-white/10 p-6 md:p-12 rounded-none shadow-2xl my-auto transform-gpu">
                 <button onclick="closeModals()" class="absolute top-4 right-4 md:top-6 md:right-6 text-zinc-500 hover:text-white hover:scale-110 active:scale-95 transition-all p-2 z-50">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
 
                 <div class="text-center mb-12">
-                    <h2 class="text-2xl md:text-3xl font-['Press_Start_2P'] text-white mb-3 tracking-tight">Contact</h2>
-                    <p class="text-zinc-400">Email me or send me a message on Discord!</p>
+                    <h2 class="text-2xl md:text-3xl font-['Press_Start_2P'] text-yellow-400 mb-3 tracking-tight [text-shadow:4px_4px_0px_#000000]">CONTACT ME</h2>
+                    <p class="text-white">Email me or send me a message on Discord!</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center justify-items-center">
                     <button onclick="closeModals(); setTimeout(openContactModal, 300);" class="group flex flex-col items-center no-underline relative bg-transparent border-none appearance-none outline-none cursor-pointer">
-                        <div class="flex items-center justify-center w-28 h-28 mb-4 bg-zinc-800 border-4 border-black shadow-[6px_6px_0px_black] group-hover:bg-[#facc15] group-active:translate-x-[4px] group-active:translate-y-[4px] group-active:shadow-[2px_2px_0px_black] transition-all duration-75">
+                        <div class="flex items-center justify-center w-28 h-28 mb-4 bg-[#1B2933] border-4 border-black shadow-[6px_6px_0px_black] group-hover:bg-[#facc15] group-active:translate-x-[4px] group-active:translate-y-[4px] group-active:shadow-[2px_2px_0px_black] transition-all duration-75">
                             <svg class="w-14 h-14 text-white group-hover:text-black transition-colors duration-75 render-pixel contact-icon-jump" viewBox="0 0 24 24" fill="currentColor">
                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M2 5 h20 v14 H2 V5 z M4 7 h2 v2 H4 V7 z M18 7 h2 v2 h-2 V7 z M6 9 h2 v2 H6 V9 z M16 9 h2 v2 h-2 V9 z M8 11 h2 v2 H8 V11 z M14 11 h2 v2 h-2 V11 z M10 13 h4 v2 h-4 V13 z" />
                             </svg>
                         </div>
-                        <span class="font-['Press_Start_2P'] text-[10px] text-zinc-500 uppercase tracking-widest group-hover:text-white transition-colors duration-75 leading-relaxed contact-text-spring">Email Me</span>
+                        <span class="font-['Press_Start_2P'] text-[10px] text-white uppercase tracking-widest group-hover:text-white transition-colors duration-75 leading-relaxed contact-text-spring">Email Me</span>
                     </button>
 
                     <button onclick="copyDiscordId(this, 'block')" class="group flex flex-col items-center no-underline relative bg-transparent border-none outline-none cursor-pointer appearance-none">
-                        <div class="flex items-center justify-center w-28 h-28 mb-4 bg-zinc-800 border-4 border-black shadow-[6px_6px_0px_black] group-hover:bg-[#5865F2] group-active:translate-x-[4px] group-active:translate-y-[4px] group-active:shadow-[2px_2px_0px_black] transition-all duration-75">
+                        <div class="flex items-center justify-center w-28 h-28 mb-4 bg-[#1B2933] border-4 border-black shadow-[6px_6px_0px_black] group-hover:bg-[#5865F2] group-active:translate-x-[4px] group-active:translate-y-[4px] group-active:shadow-[2px_2px_0px_black] transition-all duration-75">
                             <svg class="w-14 h-14 text-white transition-colors duration-75 render-pixel contact-icon-jump" viewBox="0 0 24 24" fill="currentColor">
                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M6 4h4v2h4V4h4v4h2v8h-2v2h-4v-2h-4v2H6v-2H4V8h2V4zm3 6H7v2h2v-2zm6 0h-2v2h2v-2z" />
                             </svg>
                         </div>
-                        <span class="font-['Press_Start_2P'] text-[10px] text-zinc-500 uppercase tracking-widest group-hover:text-white transition-colors duration-75 leading-relaxed contact-text-spring">COPY DISCORD ID</span>
+                        <span class="font-['Press_Start_2P'] text-[10px] text-white uppercase tracking-widest group-hover:text-white transition-colors duration-75 leading-relaxed contact-text-spring">COPY DISCORD ID</span>
                     </button>
                 </div>
             </div>
@@ -1741,9 +1765,9 @@
 
         <div class="min-h-screen flex items-center justify-center px-4 py-12 md:py-20 w-full">
 
-            <div class="w-full max-w-2xl mx-auto relative bg-zinc-900 border border-white/10 p-6 md:p-12 rounded-none shadow-2xl my-auto transform-gpu">
+            <div class="w-full max-w-2xl mx-auto relative bg-[#1B2933] border-4 border-black p-6 md:p-12 rounded-none shadow-[12px_12px_0px_rgba(0,0,0,1)] my-auto transform-gpu">
 
-                <button onclick="closeModals()" class="absolute top-4 right-4 md:top-6 md:right-6 text-zinc-500 hover:text-white hover:scale-110 active:scale-95 transition-all p-2 z-50">
+                <button onclick="closeModals()" class="absolute top-4 right-4 md:top-6 md:right-6 text-[#AFD5DA] hover:text-white hover:scale-110 active:scale-95 transition-all p-2 z-50">
 
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
 
@@ -1752,26 +1776,26 @@
 
                 <div class="text-center mb-8">
 
-                    <h2 class="text-3xl md:text-4xl font-black text-white mb-3 tracking-tight">Email me</h2>
+                    <h2 class="text-2xl md:text-3xl font-['Press_Start_2P'] uppercase text-yellow-400 mb-3 tracking-tight [text-shadow:4px_4px_0px_#000000]">EMAIL ME</h2>
 
-                    <p class="text-zinc-400">I read all emails sent to me and I try to get back to you as soon as possible!</p>
+                    <p class="text-white">I read all emails sent to me and I try to get back to you as soon as possible!</p>
 
                 </div>
 
 
-                <div class="canvas-panel-8bit flex flex-col gap-4 w-full p-5 md:p-6">
+                <div class="canvas-panel-8bit !bg-[#1B2933] flex flex-col gap-4 w-full p-5 md:p-6">
 
                     <div class="flex flex-col sm:flex-row gap-4 w-full">
 
-                        <input type="text" id="contactName" placeholder="Your Name" class="w-full sm:w-1/2 bg-black border-4 border-zinc-800 text-white px-5 py-4 focus:outline-none focus:border-yellow-400 transition-colors font-mono text-sm placeholder:text-zinc-600">
+                        <input type="text" id="contactName" placeholder="Your Name" class="w-full sm:w-1/2 bg-[#FAF9F6] border-4 border-black text-[#1B2933] font-bold px-5 py-4 focus:outline-none focus:border-yellow-400 transition-colors font-mono text-sm placeholder:text-[#1B2933]/70">
 
-                        <input type="email" id="contactEmail" placeholder="Your Email" class="w-full sm:w-1/2 bg-black border-4 border-zinc-800 text-white px-5 py-4 focus:outline-none focus:border-yellow-400 transition-colors font-mono text-sm placeholder:text-zinc-600">
+                        <input type="email" id="contactEmail" placeholder="Your Email" class="w-full sm:w-1/2 bg-[#FAF9F6] border-4 border-black text-[#1B2933] font-bold px-5 py-4 focus:outline-none focus:border-yellow-400 transition-colors font-mono text-sm placeholder:text-[#1B2933]/70">
 
                     </div>
 
                     
 
-                    <textarea id="contactMessage" placeholder="Your Message" rows="4" class="w-full bg-black border-4 border-zinc-800 text-white px-5 py-4 focus:outline-none focus:border-yellow-400 transition-colors font-mono text-sm placeholder:text-zinc-600 resize-none"></textarea>
+                    <textarea id="contactMessage" placeholder="Your Message" rows="4" class="w-full bg-[#FAF9F6] border-4 border-black text-[#1B2933] font-bold px-5 py-4 focus:outline-none focus:border-yellow-400 transition-colors font-mono text-sm placeholder:text-[#1B2933]/70 resize-none"></textarea>
 
                     
 
@@ -1795,49 +1819,6 @@
         </div>
 
     </div>
-
-<div id="about-modal" class="fixed inset-0 z-[60] hidden bg-black/90 overflow-y-auto">
-        <div class="min-h-screen flex items-center justify-center px-4 py-12 md:py-20 w-full">
-            <div class="w-full max-w-4xl mx-auto relative bg-zinc-900 border border-white/10 p-6 md:p-12 rounded-none shadow-2xl my-auto transform-gpu">
-                
-                <button onclick="closeModals()" class="absolute top-4 right-4 md:top-6 md:right-6 text-zinc-500 hover:text-white hover:scale-110 active:scale-95 transition-all p-2 z-50">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-
-                <div class="max-w-4xl mx-auto px-2 flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-12">
-                    <div class="group relative w-48 h-48 md:w-64 md:h-64 flex-shrink-0 animate-float mt-0 md:mt-4">
-                        <div class="canvas-panel-8bit w-full h-full overflow-hidden">
-                            <img src="IMG_4416.jpg" alt="Magnus" class="w-full h-full object-cover">
-                        </div>
-                    </div>
-                    <div class="flex-1 text-center md:text-left z-10 w-full flex flex-col">
-                        <div class="flex items-center justify-between border-b-2 border-black pb-3 mb-4 text-[10px] font-['Press_Start_2P'] tracking-widest text-zinc-300">
-                            <span>About</span>
-                        </div>
-
-                        <div id="about-dialogue-wrapper" class="relative w-full mb-6 flex flex-col gap-4">
-                            
-                            <div class="relative w-full flex-1 overflow-hidden rounded-[8px]">
-                                <div id="about-dialogue-zone" class="dialogue-text-area w-full h-full overflow-y-auto custom-scrollbar transition-all duration-300 z-10 cursor-default" style="padding-bottom: 2.5rem;">
-                                    <p id="about-dialogue-text" class="font-mono text-sm md:text-base text-zinc-300 leading-relaxed text-left m-0"></p>
-                                </div>
-                            </div>
-
-                            <div id="about-choices-container" class="grid grid-cols-1 md:grid-cols-3 gap-3 w-full opacity-0 pointer-events-none transition-opacity duration-300 z-0 h-auto flex-shrink-0">
-                                <button onclick="selectAboutOption('a', this)" class="about-choice-btn canvas-tool-btn p-3 md:p-4 font-['Press_Start_2P'] text-[9px] md:text-[10px] uppercase tracking-widest leading-normal text-center transition-all duration-300">About the work</button>
-                                <button onclick="selectAboutOption('b', this)" class="about-choice-btn canvas-tool-btn p-3 md:p-4 font-['Press_Start_2P'] text-[9px] md:text-[10px] uppercase tracking-widest leading-normal text-center transition-all duration-300">My background</button>
-                                <button onclick="selectAboutOption('d', this)" class="about-choice-btn canvas-tool-btn p-3 md:p-4 font-['Press_Start_2P'] text-[9px] md:text-[10px] uppercase tracking-widest leading-normal text-center transition-all duration-300">What clients say</button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-                
-                </div>
-        </div>
-    </div>
-
-
 
     <!--<section id="gallery" class="max-w-6xl mx-auto px-6 py-12 md:py-24 text-center border-t border-white/5">
         <h2 class="text-xl md:text-2xl font-['Press_Start_2P'] uppercase text-yellow-400 mb-4 leading-tight tracking-wide">Drawings by other devs</h2>
@@ -1937,8 +1918,8 @@
                             <div class="flex flex-col pr-2 pb-6 md:pb-4 md:pr-10 text-left h-full">
                                 <span class="font-['Press_Start_2P'] text-[12px] md:text-[13px] text-black leading-relaxed tracking-widest uppercase mb-3">Relationship to Self & Others</span>
                                 <span class="font-mono text-sm text-zinc-700 leading-relaxed">Coming soon!</span>
-                            <!--</div>
-                            <div class="absolute bottom-4 right-4">
+                            </div>
+                            <!--<div class="absolute bottom-4 right-4">
                                 <svg viewBox="0 0 24 24" class="w-6 h-6 md:w-8 md:h-8 text-[#facc15] drop-shadow-[2px_2px_0_rgba(0,0,0,1)] render-pixel transition-transform duration-200 group-hover:-translate-y-1 group-active:translate-y-1 group-active:scale-90" fill="currentColor"><path d="M5 19h14v-4h2v6H3v-6h2v4Zm8-8h4v2h-2v2h-2v2h-2v-2H9v-2H7v-2h4V3h2v8Z"/></svg>
                             </div>-->
                         </button>
@@ -2031,12 +2012,51 @@
                                 <svg viewBox="0 0 24 24" class="w-6 h-6 md:w-8 md:h-8 text-[#facc15] drop-shadow-[2px_2px_0_rgba(0,0,0,1)] render-pixel transition-transform duration-200 group-hover:-translate-y-1 group-active:translate-y-1 group-active:scale-90" fill="currentColor">
                                     <path d="M11 7H5v12h12v-6h2v8H3V5h8v2Zm0 6v2H9v-2h2Zm2 0h-2v-2h2v2Zm2-2h-2V9h2v2Zm6 0h-2V7h-2V5h-4V3h8v8Zm-4-2h-2V7h2v2Z"/>
                                 </svg>
-                            </div>
+                            </div>-->
                         </button>
 
                         
                     </div>
                 </section>
+            </div>
+        </div>
+    </main>
+
+    <!-- VIEW 4: ABOUT (Dark home-world dialogue page) -->
+    <main id="view-about" class="spa-view spa-view-hidden" data-view="about">
+        <div class="min-h-screen w-full relative overflow-hidden">
+            <div class="about-hero-bg" aria-hidden="true"></div>
+            <div class="about-page-inner max-w-5xl mx-auto px-6 pt-32 pb-16 md:pt-40 md:pb-24">
+                <header class="mb-10 md:mb-14 text-left flex flex-col items-start">
+                    <h1 class="font-['Press_Start_2P'] text-xl md:text-3xl leading-relaxed tracking-wide uppercase mb-4 text-zinc-100">
+                        Meet Magnus Chirgwin
+                    </h1>
+                    <p class="font-mono text-sm md:text-base text-zinc-400 max-w-2xl leading-relaxed">
+                        Professional Coach · Licensed Physiotherapist · Gamedev
+                    </p>
+                </header>
+
+                <div class="flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-10">
+                    <!-- Portrait column: image only — no topic buttons here -->
+                    <div class="group relative w-48 h-48 md:w-64 md:h-64 flex-shrink-0 animate-float">
+                        <div class="canvas-panel-8bit w-full h-full overflow-hidden">
+                            <img src="./IMG_4416.jpg" alt="Magnus Chirgwin" class="w-full h-full object-cover" width="256" height="256">
+                        </div>
+                    </div>
+
+                    <!-- Dialogue column: text + choice buttons under text -->
+                    <div id="about-dialogue-wrapper" class="relative w-full flex-1 flex flex-col gap-4">
+                        <div id="about-dialogue-zone" class="dialogue-text-area w-full cursor-default z-10">
+                            <p id="about-dialogue-text" class="font-mono text-sm md:text-base text-zinc-300 leading-relaxed text-left m-0"></p>
+                        </div>
+
+                        <div id="about-choices-container" class="grid grid-cols-1 md:grid-cols-3 gap-3 w-full opacity-0 pointer-events-none transition-opacity duration-300 z-0 h-auto flex-shrink-0">
+                            <button onclick="selectAboutOption('a', this)" class="about-choice-btn canvas-tool-btn p-3 md:p-4 font-['Press_Start_2P'] text-[9px] md:text-[10px] uppercase tracking-widest leading-normal text-center transition-all duration-300">About the work</button>
+                            <button onclick="selectAboutOption('b', this)" class="about-choice-btn canvas-tool-btn p-3 md:p-4 font-['Press_Start_2P'] text-[9px] md:text-[10px] uppercase tracking-widest leading-normal text-center transition-all duration-300">My background</button>
+                            <button onclick="selectAboutOption('d', this)" class="about-choice-btn canvas-tool-btn p-3 md:p-4 font-['Press_Start_2P'] text-[9px] md:text-[10px] uppercase tracking-widest leading-normal text-center transition-all duration-300">What clients say</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -2048,7 +2068,7 @@
 
         // ================= HTML5 BROWSER ROUTING ENGINE =================
 
-        const SPA_VIEWS = ['view-home', 'view-guides', 'view-workshops'];
+        const SPA_VIEWS = ['view-home', 'view-guides', 'view-workshops', 'view-about'];
         let activeViewId = null;
 
         function pathToViewId(path) {
@@ -2059,6 +2079,9 @@
                 case 'workshops':
                 case '#workshops':
                     return 'view-workshops';
+                case 'about':
+                case '#about':
+                    return 'view-about';
                 case 'home':
                 case '#home':
                 case '':
@@ -2073,7 +2096,10 @@
             if (!nextEl) return;
 
             const currentEl = activeViewId ? document.getElementById(activeViewId) : null;
-            if (currentEl === nextEl) return;
+            if (currentEl === nextEl) {
+                if (targetId === 'view-about') initAboutPage();
+                return;
+            }
 
             window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
             activeViewId = targetId;
@@ -2082,6 +2108,7 @@
                 nextEl.classList.remove('spa-view-hidden');
                 void nextEl.offsetWidth; // Force hardware reflow
                 nextEl.classList.add('spa-view-active');
+                if (targetId === 'view-about') initAboutPage();
             };
 
             if (currentEl) {
@@ -2939,144 +2966,54 @@
         };
 
         let currentAboutTopic = 'intro';
-        let aboutReadOptions = new Set(); // Tracks unique options read to unlock the shiny buttons
-        let visitedAboutButtons = new Set(); // Tracks which buttons have been clicked globally
+        let visitedAboutButtons = new Set();
 
         function renderAboutDialogue() {
             const textEl = document.getElementById('about-dialogue-text');
             const choicesEl = document.getElementById('about-choices-container');
-            const dialogueZone = document.getElementById('about-dialogue-zone');
-            const ctaContainer = document.getElementById('about-cta-container');
-            const ctaDull = document.getElementById('about-cta-dull');
-            const ctaShiny = document.getElementById('about-cta-shiny');
-            
-            // Merge all array strings into one solid block
+            if (!textEl || !choicesEl) return;
+
             const pages = aboutDialogueData[currentAboutTopic];
             textEl.innerHTML = pages.join('<br><br><br>');
-            
-            // Re-trigger the fade-in animation on the text
+
             textEl.classList.remove('fade-in');
-            void textEl.offsetWidth; 
+            void textEl.offsetWidth;
             textEl.classList.add('fade-in');
 
-            // Instantly reset hardware scroll coordinates to the top
-            dialogueZone.scrollTop = 0;
-            
-            // Reveal choices immediately 
             choicesEl.classList.remove('opacity-0', 'pointer-events-none');
             choicesEl.classList.add('opacity-100', 'pointer-events-auto');
-            
-            // --- TELEMETRY ENGINE: Scroll Awareness ---
-            const checkScroll = () => {
-                // If scrolled to the bottom (with a 5px buffer for float rounding issues)
-                if (dialogueZone.scrollTop + dialogueZone.clientHeight >= dialogueZone.scrollHeight - 5) {
-                    
-                    // Track read completion logic here when they hit the bottom of the content
-                    if (currentAboutTopic !== 'intro') {
-                        aboutReadOptions.add(currentAboutTopic);
-                    }
-
-                    // Unlock CTAs
-                    if (aboutReadOptions.size > 0 && ctaContainer) {
-                        ctaContainer.classList.remove('opacity-0', 'pointer-events-none');
-                        ctaContainer.classList.add('opacity-100');
-                        
-                        // If they have explored all 4 paths, upgrade the buttons to SHINY
-                        if (aboutReadOptions.size === 4 && ctaDull && ctaShiny && !ctaDull.classList.contains('hidden')) {
-                            ctaDull.classList.remove('flex');
-                            ctaDull.classList.add('hidden');
-                            
-                            ctaShiny.classList.remove('hidden');
-                            ctaShiny.classList.add('flex');
-                            
-                            setTimeout(() => {
-                                ctaShiny.classList.remove('opacity-0');
-                                ctaShiny.classList.add('opacity-100');
-                            }, 50);
-                        }
-                    }
-                }
-            };
-
-            // Bind the scroll listener dynamically
-            dialogueZone.onscroll = checkScroll;
-            
-            // Trigger check instantly in case the content doesn't overflow the box
-            setTimeout(checkScroll, 50); 
         }
 
         function selectAboutOption(optionId, btnElement) {
-            // Track this button globally so it stays gray if the modal is closed
             visitedAboutButtons.add(btnElement);
 
-            // 1. Find the currently active button and turn it gray (completed)
             document.querySelectorAll('.about-choice-btn.is-active').forEach(btn => {
                 btn.classList.remove('is-active');
                 btn.classList.add('opacity-40', 'grayscale');
             });
 
-            // 2. Make the newly clicked button bright yellow (active)
             btnElement.classList.remove('opacity-40', 'grayscale');
             btnElement.classList.add('is-active');
 
-            // Instant UI snap: expand to full height for scrollable lore
-            const wrapper = document.getElementById('about-dialogue-wrapper');
-            if (wrapper) {
-                wrapper.classList.add('h-[520px]', 'md:h-[420px]');
-            }
-
-            // --- THE NEW ANIMATION SEQUENCE ---
             const textEl = document.getElementById('about-dialogue-text');
-            
-            // 1. Clear previous animation and force reflow
+            if (!textEl) return;
+
             textEl.classList.remove('fade-in');
             void textEl.offsetWidth;
-            
-            // 2. Trigger a snappy 120ms slide-up fade-out using your existing CSS keyframes
             textEl.style.animation = 'fadeOut 0.12s ease-in forwards';
 
-            // 3. Wait exactly 120ms for it to finish, then swap content and fade in
             setTimeout(() => {
-                textEl.style.animation = ''; // Clear inline style so the class takes over again
+                textEl.style.animation = '';
                 currentAboutTopic = optionId;
                 renderAboutDialogue();
             }, 120);
         }
 
-        function openAboutModal() {
-            document.body.style.overflow = 'hidden';
-            
-            // Instant UI snap: reset box size to tightly hug the intro text
-            const wrapper = document.getElementById('about-dialogue-wrapper');
-            if (wrapper) {
-                wrapper.classList.remove('h-[520px]', 'md:h-[420px]');
-            }
-
-            // Hard reset the state machine every time the modal opens
+        function initAboutPage() {
             currentAboutTopic = 'intro';
-            // Removed aboutReadOptions.clear() so CTA progress is permanently saved!
-            
-            // Instantly hide the CTAs and reset to Dull state
-            const ctaContainer = document.getElementById('about-cta-container');
-            const ctaDull = document.getElementById('about-cta-dull');
-            const ctaShiny = document.getElementById('about-cta-shiny');
-            
-            if (ctaContainer) {
-                ctaContainer.classList.remove('opacity-100');
-                ctaContainer.classList.add('opacity-0', 'pointer-events-none');
-            }
-            if (ctaDull && ctaShiny) {
-                ctaDull.classList.remove('hidden', 'opacity-0');
-                ctaDull.classList.add('flex');
-                ctaShiny.classList.remove('flex', 'opacity-100');
-                ctaShiny.classList.add('hidden', 'opacity-0');
-            }
-            
-            // Reset visual states based on global memory
+
             document.querySelectorAll('.about-choice-btn').forEach(btn => {
-                btn.classList.remove('is-active'); // Always remove the yellow active state when going back to intro
-                
-                // If it was clicked previously, lock it into the grayed-out state
+                btn.classList.remove('is-active');
                 if (visitedAboutButtons.has(btn)) {
                     btn.classList.add('opacity-40', 'grayscale');
                 } else {
@@ -3084,9 +3021,7 @@
                 }
             });
 
-            // Initialize the UI instantly
             renderAboutDialogue();
-            document.getElementById('about-modal').classList.remove('hidden');
         }
 
 function openMainContactGateway() {
@@ -3150,7 +3085,6 @@ function openMainContactGateway() {
                 document.getElementById('topic-modal'),
                 document.getElementById('contact-modal'),
                 document.getElementById('main-contact-gateway-modal'), // <-- Added
-                document.getElementById('about-modal'),
                 document.getElementById('quest-contact-modal'),
                 questModal
             ];
@@ -3987,15 +3921,27 @@ function openMainContactGateway() {
         });
 
         // --- HUD SCROLL PHYSICS ---
-        window.addEventListener('scroll', () => {
+        function evaluateNavPhysics() {
             const nav = document.getElementById('main-nav');
             if (!nav) return;
-            if (window.scrollY > 50) {
+            
+            // The About page has a dark atmosphere at the top, so we physically lock 
+            // the HUD into its illuminated "scrolled" state while viewing it.
+            if (window.scrollY > 50 || activeViewId === 'view-about') {
                 nav.classList.add('is-scrolled');
             } else {
                 nav.classList.remove('is-scrolled');
             }
-        }, { passive: true });
+        }
+
+        window.addEventListener('scroll', evaluateNavPhysics, { passive: true });
+        
+        // Intercept the SPA router to snap the HUD physics instantly on view change
+        const _originalShowView = showView;
+        showView = function(viewId, isInstant = false) {
+            _originalShowView(viewId, isInstant);
+            evaluateNavPhysics();
+        };
 
 // --- DISCORD ID COPY ENGINE ---
         const TARGET_DISCORD_ID = "198813370441269249";
