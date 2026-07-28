@@ -455,34 +455,84 @@
         }
         
         
-        /* --- PIXEL HERO PHYSICS --- */
+        /* --- PIXEL HERO PHYSICS (2.5D ENGINE) --- */
         .hero-container {
             position: relative;
-            width: 100%; /* Prevents horizontal scrollbar glitches */
-            /* Artificial margin removed. The sticky navbar acts as the physical ceiling. */
-            aspect-ratio: 9 / 16; /* Locks to your exact mobile art */
-            background: #7dd3fc;
+            width: 100%; 
+            aspect-ratio: 9 / 16; 
+            background: #1B2933; /* Fallback underneath the sky */
         }
 
-        /* Mobile-First Default (Portrait Image) */
-        .static-hero-bg {
+        /* Master wrapper forcing 8-bit crispness on all child layers */
+        .parallax-wrapper {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            image-rendering: pixelated; 
+        }
+
+        /* LAYER 1: DEEP SKY BACKDROP */
+        .hero-layer-sky {
+            position: absolute;
+            inset: 0;
+            background-image: url('./hero_img_sky.png');
+            background-size: cover;
+            background-position: top center;
+            background-repeat: no-repeat;
+        }
+
+        /* LAYER 2: HEAVY INFINITE CLOUDS */
+        .hero-layer-clouds {
+            position: absolute;
+            inset: 0;
+            background-image: url('./hero_img_clouds.png');
+            background-size: auto 100%; /* Locks height to the container */
+            background-repeat: repeat-x;
+            background-position: top left;
+            /* 160s = Half speed (50% slower) for massive scale and atmosphere */
+            animation: cloudDrift 160s linear infinite; 
+            will-change: background-position;
+        }
+
+        @keyframes cloudDrift {
+            from { background-position: 0px 0px; }
+            /* Positive X translation forces a Left-to-Right drift using the exact 3840px width */
+            to { background-position: 3840px 0px; } 
+        }
+
+        /* LAYER 3: STATIC CORE STAGE */
+        .hero-layer-base {
             position: absolute;
             inset: 0; 
-            background-image: url('https://raw.githubusercontent.com/Sondim/Sondim.github.io/a5c1da5798644088ba738233daa1c9828c136766/staticmobileheroimage.jpg');
+            background-image: url('./hero_img_no_flags.png'); 
             background-size: cover;
-            background-position: top center; /* Hard-anchors the art flush against the ceiling */
+            background-position: top center; 
             background-repeat: no-repeat;
-            image-rendering: pixelated; 
+        }
+
+        /* LAYER 4: RIGID FLUTTERING FLAGS (3 Frames) */
+        .hero-layer-flags {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: top center;
+            background-repeat: no-repeat;
+            /* 0.8s total (25% slower) = ~0.266s snap per frame. Heavier wind tension. */
+            animation: flagFlutter 0.8s step-end infinite; 
+        }
+
+        @keyframes flagFlutter {
+            0% { background-image: url('./hero_img_flag_1.png'); }
+            33.33% { background-image: url('./hero_img_flag_2.png'); }
+            66.66% { background-image: url('./hero_img_flag_3.png'); }
+            100% { background-image: url('./hero_img_flag_1.png'); }
         }
 
         /* Desktop Override (Landscape Image) */
         @media (min-width: 768px) {
             .hero-container {
-                aspect-ratio: 16 / 9; /* Locks to your exact desktop art */
-            }
-            .static-hero-bg {
-                /* Injected new upscaled hero art */
-                background-image: url('https://raw.githubusercontent.com/Sondim/Sondim.github.io/cee6b24ef804d577a0a95c4784bbb201d5043a8f/upscaled_Hero.png');
+                aspect-ratio: 16 / 9; 
             }
         }
 
@@ -1031,7 +1081,20 @@
 
 
     <section class="hero-container relative overflow-hidden">
-        <div class="static-hero-bg"></div>
+        <!-- 2.5D PARALLAX ENGINE BASE -->
+        <div class="parallax-wrapper absolute inset-0 overflow-hidden pointer-events-none z-0">
+            <!-- Layer 1: Deep Sky Backdrop -->
+            <div class="hero-layer-sky absolute inset-0"></div>
+            
+            <!-- Layer 2: Infinite Cloud Scroll (Left to Right) -->
+            <div class="hero-layer-clouds absolute inset-0"></div>
+            
+            <!-- Layer 3: The Main Castle and Mountains (Transparent Sky, No Flags) -->
+            <div class="hero-layer-base absolute inset-0"></div>
+            
+            <!-- Layer 4: The Snappy Pixel Flags (3 Frames) -->
+            <div class="hero-layer-flags absolute inset-0"></div>
+        </div>
 
         <div class="relative z-10 w-full h-full max-w-7xl mx-auto px-6 lg:px-12 flex flex-col items-start pt-[50vh] md:pt-[50vh]">
             
