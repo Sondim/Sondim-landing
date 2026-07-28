@@ -487,18 +487,17 @@
             position: absolute;
             inset: 0;
             background-image: url('./hero_img_clouds.png');
-            background-size: auto 100%; /* Locks height to the container */
+            background-size: auto 100%; /* Resets the perfect vertical alignment */
             background-repeat: repeat-x;
-            background-position: top left;
-            /* 160s = Half speed (50% slower) for massive scale and atmosphere */
+            background-position: 0px top;
             animation: cloudDrift 160s linear infinite; 
             will-change: background-position;
         }
 
         @keyframes cloudDrift {
-            from { background-position: 0px 0px; }
-            /* Positive X translation forces a Left-to-Right drift using the exact 3840px width */
-            to { background-position: 3840px 0px; } 
+            from { background-position: 0px top; }
+            /* Powered by the dynamic physics engine, falls back to 3840px if needed */
+            to { background-position: var(--drift-distance, 3840px) top; } 
         }
 
         /* LAYER 3: STATIC CORE STAGE */
@@ -2158,6 +2157,28 @@
     <!-- ========================================== -->
 
     <script>
+
+        // --- 2.5D CLOUD PHYSICS SYNC ---
+        // Dynamically calculates the true rendered width of the clouds when zooming or resizing
+        // ensuring the keyframe loop perfectly matches the screen without jumping or shifting speed.
+        function syncCloudPhysics() {
+            const clouds = document.querySelector('.hero-layer-clouds');
+            if (!clouds) return;
+            
+            // Create a temporary off-screen image to read the intrinsic asset ratio
+            const img = new Image();
+            img.src = './hero_img_clouds.png';
+            img.onload = () => {
+                const aspectRatio = img.naturalWidth / img.naturalHeight;
+                // Calculate exact rendered pixel width based on current container height
+                const renderedWidth = clouds.clientHeight * aspectRatio;
+                // Inject the exact pixel value into the CSS keyframe engine
+                document.documentElement.style.setProperty('--drift-distance', `${renderedWidth}px`);
+            };
+        }
+        
+        window.addEventListener('resize', syncCloudPhysics);
+        window.addEventListener('DOMContentLoaded', syncCloudPhysics);
 
         // ================= HTML5 BROWSER ROUTING ENGINE =================
 
