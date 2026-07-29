@@ -970,23 +970,23 @@
             transition: stroke 0.15s ease, color 0.15s ease;
         }
 
-        /* 2. Airborne State (Scrolled): Illuminated solid text */
+        /* 2. Airborne State (Scrolled): Base color turns yellow */
         #main-nav.is-scrolled .stencil-text {
-            color: #AFD5DA !important;
+            color: #facc15 !important;
             -webkit-text-stroke: 0px transparent;
         }
 
         #main-nav.is-scrolled .stencil-svg {
-            stroke: #AFD5DA;
+            stroke: #facc15;
         }
 
-        /* 3. Hardware Override (Hover) */
+        /* 3. Hardware Override (Hover at y=0) */
         /* Wired to the parent .group so it stays illuminated while using dropdowns */
         .stencil-text:hover,
         .group:hover .stencil-text {
             color: #facc15 !important; 
             -webkit-text-stroke: 0px transparent !important;
-            /* Solid isometric extrusion: fills the 1px gap and extends to 2px */
+            /* Solid isometric extrusion shadow for grounded state */
             text-shadow: 1px 1px 0px #1B2933, 2px 2px 0px #1B2933 !important; 
         }
         
@@ -1002,16 +1002,68 @@
         }
 
         /* 4. Airborne Hover Physics (Scrolled) */
-        /* When the navbar background is dark blue, the shadow must deepen to pure black to stay visible */
+        /* When scrolled, items turn light blue on hover without shadow */
         #main-nav.is-scrolled .stencil-text:hover,
         #main-nav.is-scrolled .group:hover .stencil-text {
-            color: #facc15 !important; /* Overrides the airborne light blue with a hardware yellow flash */
-            text-shadow: 1px 1px 0px #000000, 2px 2px 0px #000000 !important;
+            color: #AFD5DA !important;
+            text-shadow: none !important;
         }
 
         #main-nav.is-scrolled .stencil-text:hover .group-hover\:rotate-180,
         #main-nav.is-scrolled .group:hover .stencil-text .group-hover\:rotate-180 {
-            text-shadow: -1px -1px 0px #000000, -2px -2px 0px #000000 !important;
+            text-shadow: none !important;
+        }
+
+        #main-nav.is-scrolled .stencil-svg:hover,
+        #main-nav.is-scrolled .group:hover .stencil-svg {
+            stroke: #AFD5DA !important;
+        }
+
+        /* --- MOBILE MENU HAMBURGER STYLING --- */
+        #mobile-menu-btn {
+            color: #1B2933 !important;
+            stroke: #1B2933 !important;
+            transition: color 0.15s ease, stroke 0.15s ease;
+        }
+
+        /* Force dark blue on hover/active/open states while unscrolled (y=0) */
+        #mobile-menu-btn:hover,
+        #mobile-menu-btn:active,
+        #mobile-menu-btn:focus {
+            color: #1B2933 !important;
+            stroke: #1B2933 !important;
+        }
+
+        /* Scrolled state override: ignite to yellow when navbar turns dark blue */
+        #main-nav.is-scrolled #mobile-menu-btn,
+        #main-nav.is-scrolled #mobile-menu-btn:hover,
+        #main-nav.is-scrolled #mobile-menu-btn:active,
+        #main-nav.is-scrolled #mobile-menu-btn:focus {
+            color: #facc15 !important;
+            stroke: #facc15 !important;
+        }
+
+        /* --- MOBILE ACCORDION ENGINE --- */
+        #mobile-resources-content {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            padding-top: 0;
+            transition: max-height 0.3s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.25s ease, padding-top 0.3s ease;
+        }
+
+        #mobile-resources-content.is-open {
+            max-height: 200px;
+            opacity: 1;
+            padding-top: 1rem;
+        }
+
+        .accordion-arrow {
+            transition: transform 0.2s ease;
+        }
+
+        .accordion-arrow.is-open {
+            transform: rotate(180deg);
         }
 
     </style>
@@ -1045,9 +1097,9 @@
                         Resources <span class="text-[8px] transform group-hover:rotate-180 transition-transform" style="-webkit-text-stroke: 0;">▼</span>
                     </button>
                     <div class="absolute top-full left-1/2 -translate-x-1/2 mt-0 w-64 bg-[#AFD5DA] border-4 border-[#1B2933] opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-150 flex flex-col z-50">
-                        <button onclick="navigateTo('#guides')" class="text-left px-5 py-4 text-[9px] font-['Press_Start_2P'] uppercase tracking-widest text-[#1B2933] hover:bg-[#1B2933] hover:text-[#facc15] hover:[text-shadow:1px_1px_0px_#000000,2px_2px_0px_#000000] transition-all border-b-2 border-[#1B2933] bg-transparent">Free guides</button>
-                        <button onclick="navigateTo('#workshops')" class="text-left px-5 py-4 text-[9px] font-['Press_Start_2P'] uppercase tracking-widest text-[#1B2933] hover:bg-[#1B2933] hover:text-[#facc15] hover:[text-shadow:1px_1px_0px_#000000,2px_2px_0px_#000000] transition-all border-b-2 border-[#1B2933] bg-transparent">Free workshops</button>
-                        <button onclick="fastTravelQuest('state-test')" class="text-left px-5 py-4 text-[9px] font-['Press_Start_2P'] uppercase tracking-widest text-[#1B2933] hover:bg-[#1B2933] hover:text-[#facc15] hover:[text-shadow:1px_1px_0px_#000000,2px_2px_0px_#000000] transition-all bg-transparent">Do a quick test</button>
+                        <button onclick="navigateTo('#guides')" class="text-left px-5 py-4 text-[9px] font-['Press_Start_2P'] uppercase tracking-widest text-[#1B2933] hover:bg-[#1B2933] hover:text-[#facc15] transition-all border-b-2 border-[#1B2933] bg-transparent">Free guides</button>
+                        <button onclick="navigateTo('#workshops')" class="text-left px-5 py-4 text-[9px] font-['Press_Start_2P'] uppercase tracking-widest text-[#1B2933] hover:bg-[#1B2933] hover:text-[#facc15] transition-all border-b-2 border-[#1B2933] bg-transparent">Free workshops</button>
+                        <button onclick="fastTravelQuest('state-test')" class="text-left px-5 py-4 text-[9px] font-['Press_Start_2P'] uppercase tracking-widest text-[#1B2933] hover:bg-[#1B2933] hover:text-[#facc15] transition-all bg-transparent">Do a quick test</button>
                     </div>
                 </div>
 
@@ -1055,18 +1107,24 @@
                 <button onclick="navigateToHomeAndScroll('book')" class="text-[10px] font-['Press_Start_2P'] uppercase tracking-widest stencil-text cursor-pointer bg-transparent border-none">Book a session</button>
             </div>
             
-            <div id="mobile-menu" class="absolute top-full left-0 w-full bg-zinc-900 border-b border-white/5 hidden flex-col items-center py-8 gap-6 shadow-2xl transition-all md:hidden z-50">
-                <button onclick="navigateTo('#about')" class="mobile-link text-[10px] font-['Press_Start_2P'] uppercase tracking-widest text-zinc-400 hover:text-yellow-400 transition-colors cursor-pointer">[ About Me ]</button>
+            <div id="mobile-menu" class="absolute top-full left-0 w-full bg-[#1B2933] border-b-2 border-black hidden flex-col items-start py-6 px-8 gap-5 shadow-2xl transition-all md:hidden z-50">
+                <button onclick="navigateTo('#about')" class="mobile-link text-[11px] font-['Press_Start_2P'] uppercase tracking-widest text-[#AFD5DA] hover:text-yellow-400 transition-colors cursor-pointer bg-transparent border-none text-left p-0">About</button>
                 
-                <div class="flex flex-col items-center gap-5 w-full my-2">
-                    <span class="text-[10px] font-['Press_Start_2P'] uppercase tracking-widest text-zinc-400">--- Resources ---</span>
-                    <button onclick="navigateTo('#guides');" class="mobile-link text-[9px] font-['Press_Start_2P'] uppercase tracking-widest text-zinc-400 hover:text-yellow-400 transition-colors cursor-pointer">> Free guides</button>
-                    <button onclick="navigateTo('#workshops');" class="mobile-link text-[9px] font-['Press_Start_2P'] uppercase tracking-widest text-zinc-400 hover:text-yellow-400 transition-colors cursor-pointer">> Free workshops</button>
-                    <button onclick="fastTravelQuest('state-test');" class="mobile-link text-[9px] font-['Press_Start_2P'] uppercase tracking-widest text-zinc-400 hover:text-yellow-400 transition-colors cursor-pointer">> Do quick diagnostic</button>
+                <div class="w-full flex flex-col items-start">
+                    <button onclick="toggleMobileResources()" class="text-[11px] font-['Press_Start_2P'] uppercase tracking-widest text-[#AFD5DA] hover:text-yellow-400 transition-colors cursor-pointer bg-transparent border-none flex items-center justify-between w-full p-0">
+                        <span>Resources</span>
+                        <span id="mobile-resources-arrow" class="text-[9px] accordion-arrow text-[#AFD5DA]">▼</span>
+                    </button>
+                    
+                    <div id="mobile-resources-content" class="flex flex-col items-start gap-4 pl-4 w-full">
+                        <button onclick="navigateTo('#guides');" class="mobile-link text-[10px] font-['Press_Start_2P'] uppercase tracking-widest text-[#AFD5DA] hover:text-yellow-400 transition-colors cursor-pointer bg-transparent border-none text-left p-0">Free guides</button>
+                        <button onclick="navigateTo('#workshops');" class="mobile-link text-[10px] font-['Press_Start_2P'] uppercase tracking-widest text-[#AFD5DA] hover:text-yellow-400 transition-colors cursor-pointer bg-transparent border-none text-left p-0">Free workshops</button>
+                        <button onclick="fastTravelQuest('state-test');" class="mobile-link text-[10px] font-['Press_Start_2P'] uppercase tracking-widest text-[#AFD5DA] hover:text-yellow-400 transition-colors cursor-pointer bg-transparent border-none text-left p-0">Do a quick test</button>
+                    </div>
                 </div>
                 
-                <button onclick="openMainContactGateway()" class="mobile-link text-[10px] font-['Press_Start_2P'] uppercase tracking-widest text-zinc-400 hover:text-yellow-400 transition-colors cursor-pointer bg-transparent border-none">[ Contact ]</button>
-                <button onclick="navigateToHomeAndScroll('book')" class="mobile-link text-[10px] font-['Press_Start_2P'] uppercase tracking-widest text-yellow-400 hover:text-yellow-400 transition-colors cursor-pointer bg-transparent border-none">[ Book a session ]</button>
+                <button onclick="openMainContactGateway()" class="mobile-link text-[11px] font-['Press_Start_2P'] uppercase tracking-widest text-[#AFD5DA] hover:text-yellow-400 transition-colors cursor-pointer bg-transparent border-none text-left p-0">Contact</button>
+                <button onclick="navigateToHomeAndScroll('book')" class="mobile-link text-[11px] font-['Press_Start_2P'] uppercase tracking-widest text-[#AFD5DA] hover:text-yellow-400 transition-colors cursor-pointer bg-transparent border-none text-left p-0">Book a session</button>
             </div>
         </div>
         
@@ -3951,6 +4009,15 @@ function openMainContactGateway() {
         const hamburgerIcon = document.getElementById('hamburger-icon');
         const closeIcon = document.getElementById('close-icon');
         const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        function toggleMobileResources() {
+            const content = document.getElementById('mobile-resources-content');
+            const arrow = document.getElementById('mobile-resources-arrow');
+            if (content && arrow) {
+                content.classList.toggle('is-open');
+                arrow.classList.toggle('is-open');
+            }
+        }
 
         function toggleMenu() {
             mobileMenu.classList.toggle('hidden');
