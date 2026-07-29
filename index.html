@@ -3,8 +3,15 @@
 <html lang="en">
 
 <head>
-    <!-- HTML5 Routing Anchor: Forces all relative assets (images, PDFs) to resolve from the root domain -->
-    <base href="/">
+    <!-- SMART ROUTING ANCHOR -->
+    <!-- Automatically disables the base tag for local file viewing, but injects it for GitHub Pages -->
+    <script>
+        if (window.location.protocol !== 'file:') {
+            const base = document.createElement('base');
+            base.href = '/';
+            document.head.prepend(base);
+        }
+    </script>
 
     <meta charset="UTF-8">
 
@@ -14,7 +21,11 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
 
-    
+    <!-- SECURE GOOGLE FONTS PAYLOAD -->
+    <!-- Preconnects establish early, secure connections to prevent Incognito/CORS blocking -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600&family=Press+Start+2P&display=swap" rel="stylesheet">
 
     <style>
         /* --- TYPOGRAPHIC ENGINE ENFORCEMENT --- */
@@ -37,8 +48,6 @@
             font-family: var(--font-ui) !important;
         }
         
-        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600&display=swap');
         html { scroll-behavior: smooth; }
 
         :root {
@@ -487,10 +496,10 @@
             position: absolute;
             inset: 0;
             background-image: url('./hero_img_clouds.png');
-            background-size: auto 100%; /* Resets the perfect vertical alignment */
+            background-size: auto 100%; /* Re-anchors height perfectly */
             background-repeat: repeat-x;
             background-position: 0px top;
-            animation: cloudDrift 160s linear infinite; 
+            animation: cloudDrift 215s linear infinite; 
             will-change: background-position;
         }
 
