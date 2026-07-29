@@ -1107,24 +1107,24 @@
                 <button onclick="navigateToHomeAndScroll('book')" class="text-[10px] font-['Press_Start_2P'] uppercase tracking-widest stencil-text cursor-pointer bg-transparent border-none">Book a session</button>
             </div>
             
-            <div id="mobile-menu" class="absolute top-full left-0 w-full bg-[#1B2933] border-b-2 border-black hidden flex-col items-start py-6 px-8 gap-5 shadow-2xl transition-all md:hidden z-50">
-                <button onclick="navigateTo('#about')" class="mobile-link text-[11px] font-['Press_Start_2P'] uppercase tracking-widest text-[#AFD5DA] hover:text-yellow-400 transition-colors cursor-pointer bg-transparent border-none text-left p-0">About</button>
+            <div id="mobile-menu" class="absolute top-full left-0 w-full bg-[#1B2933] border-b-2 border-black hidden flex-col items-start py-8 px-8 gap-7 shadow-2xl transition-all md:hidden z-50">
+                <button onclick="navigateTo('#about')" class="mobile-link text-[11px] font-['Press_Start_2P'] uppercase tracking-widest text-[#AFD5DA] hover:text-yellow-400 transition-colors cursor-pointer bg-transparent border-none text-left py-2.5 w-full">About</button>
                 
                 <div class="w-full flex flex-col items-start">
-                    <button onclick="toggleMobileResources()" class="text-[11px] font-['Press_Start_2P'] uppercase tracking-widest text-[#AFD5DA] hover:text-yellow-400 transition-colors cursor-pointer bg-transparent border-none flex items-center justify-between w-full p-0">
+                    <button onclick="toggleMobileResources()" class="text-[11px] font-['Press_Start_2P'] uppercase tracking-widest text-[#AFD5DA] hover:text-yellow-400 transition-colors cursor-pointer bg-transparent border-none flex items-center justify-between w-full py-2.5">
                         <span>Resources</span>
                         <span id="mobile-resources-arrow" class="text-[9px] accordion-arrow text-[#AFD5DA]">▼</span>
                     </button>
                     
-                    <div id="mobile-resources-content" class="flex flex-col items-start gap-4 pl-4 w-full">
-                        <button onclick="navigateTo('#guides');" class="mobile-link text-[10px] font-['Press_Start_2P'] uppercase tracking-widest text-[#AFD5DA] hover:text-yellow-400 transition-colors cursor-pointer bg-transparent border-none text-left p-0">Free guides</button>
-                        <button onclick="navigateTo('#workshops');" class="mobile-link text-[10px] font-['Press_Start_2P'] uppercase tracking-widest text-[#AFD5DA] hover:text-yellow-400 transition-colors cursor-pointer bg-transparent border-none text-left p-0">Free workshops</button>
-                        <button onclick="fastTravelQuest('state-test');" class="mobile-link text-[10px] font-['Press_Start_2P'] uppercase tracking-widest text-[#AFD5DA] hover:text-yellow-400 transition-colors cursor-pointer bg-transparent border-none text-left p-0">Do a quick test</button>
+                    <div id="mobile-resources-content" class="flex flex-col items-start gap-5 pl-4 w-full">
+                        <button onclick="navigateTo('#guides');" class="mobile-link text-[10px] font-['Press_Start_2P'] uppercase tracking-widest text-[#AFD5DA] hover:text-yellow-400 transition-colors cursor-pointer bg-transparent border-none text-left py-2 w-full">Free guides</button>
+                        <button onclick="navigateTo('#workshops');" class="mobile-link text-[10px] font-['Press_Start_2P'] uppercase tracking-widest text-[#AFD5DA] hover:text-yellow-400 transition-colors cursor-pointer bg-transparent border-none text-left py-2 w-full">Free workshops</button>
+                        <button onclick="fastTravelQuest('state-test');" class="mobile-link text-[10px] font-['Press_Start_2P'] uppercase tracking-widest text-[#AFD5DA] hover:text-yellow-400 transition-colors cursor-pointer bg-transparent border-none text-left py-2 w-full">Do a quick test</button>
                     </div>
                 </div>
                 
-                <button onclick="openMainContactGateway()" class="mobile-link text-[11px] font-['Press_Start_2P'] uppercase tracking-widest text-[#AFD5DA] hover:text-yellow-400 transition-colors cursor-pointer bg-transparent border-none text-left p-0">Contact</button>
-                <button onclick="navigateToHomeAndScroll('book')" class="mobile-link text-[11px] font-['Press_Start_2P'] uppercase tracking-widest text-[#AFD5DA] hover:text-yellow-400 transition-colors cursor-pointer bg-transparent border-none text-left p-0">Book a session</button>
+                <button onclick="openMainContactGateway()" class="mobile-link text-[11px] font-['Press_Start_2P'] uppercase tracking-widest text-[#AFD5DA] hover:text-yellow-400 transition-colors cursor-pointer bg-transparent border-none text-left py-2.5 w-full">Contact</button>
+                <button onclick="navigateToHomeAndScroll('book')" class="mobile-link text-[11px] font-['Press_Start_2P'] uppercase tracking-widest text-[#AFD5DA] hover:text-yellow-400 transition-colors cursor-pointer bg-transparent border-none text-left py-2.5 w-full">Book a session</button>
             </div>
         </div>
         
@@ -1201,23 +1201,24 @@
         <div class="overflow-hidden w-full max-w-7xl mx-auto relative">
             <div id="testi-track" class="flex transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)]">
                 
-                <!-- Actor 1 (Padding applied internally) -->
+                <!-- Actor 1 -->
                 <div class="w-full flex-shrink-0 px-6">
                     <div class="flex flex-col md:flex-row items-center md:items-center justify-start md:justify-between gap-6 md:gap-12 text-zinc-300 min-h-[100px] w-full">
                         <!-- Author Block -->
-                        <div class="flex flex-col md:flex-row items-center gap-3 md:gap-5 flex-shrink-0 w-full md:w-[320px]">
-                            <div class="flex items-center justify-center w-16 h-16 rounded-full bg-[#AFD5DA] border-2 border-[#AFD5DA] flex-shrink-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-8 h-8 text-[#1B2933] opacity-100 render-pixel"><path d="M6 22H4v-4h2v4Zm14 0h-2v-4h2v4ZM8 18H6v-2h2v2Zm10 0h-2v-2h2v2Zm-2-2H8v-2h8v2Zm-1-4H9v-2h6v2Zm-6-2H7V4h2v6Zm8 0h-2V4h2v6Zm-2-6H9V2h6v2Z"/></svg>
+                        <div class="flex flex-col md:flex-row items-center justify-center md:justify-start gap-2 md:gap-5 flex-shrink-0 w-full md:w-[320px] text-center md:text-left">
+                            <div class="flex items-center justify-center w-12 h-12 md:w-16 md:h-16 rounded-full bg-[#AFD5DA] border-2 border-[#AFD5DA] flex-shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6 md:w-8 md:h-8 text-[#1B2933] opacity-100 render-pixel"><path d="M6 22H4v-4h2v4Zm14 0h-2v-4h2v4ZM8 18H6v-2h2v2Zm10 0h-2v-2h2v2Zm-2-2H8v-2h8v2Zm-1-4H9v-2h6v2Zm-6-2H7V4h2v6Zm8 0h-2V4h2v6Zm-2-6H9V2h6v2Z"/></svg>
                             </div>
                             <div class="flex flex-col items-center md:items-start text-center md:text-left">
-                                <span class="text-zinc-300 font-bold text-lg tracking-widest font-mono">E.A.</span>
-                                <span class="text-xs text-[#AFD5DA] font-mono uppercase tracking-widest mt-1">CEO</span>
+                                <span class="text-white font-bold text-lg tracking-wide leading-tight">E.A</span>
+                                <span class="text-sm text-zinc-400 font-mono leading-tight">CEO</span>
                             </div>
                         </div>
                         <!-- Quote Block -->
-                        <div class="flex-1 w-full text-left">
-                            <p class="text-sm md:text-base leading-relaxed font-mono">
-                                <span class="font-['Pixelify_Sans'] text-lg md:text-xl text-white mr-1">"</span>I felt completely safe with Magnus's as a coach, which allowed me to be truly open. I never once felt judged.<span class="font-['Pixelify_Sans'] text-lg md:text-xl text-white ml-1">"</span>
+                        <div class="flex-1 w-full text-left pl-2.5 relative">
+                            <span class="absolute left-0 top-0 font-['Pixelify_Sans'] text-lg md:text-xl text-white select-none">"</span>
+                            <p class="text-sm md:text-base leading-relaxed font-mono m-0">
+                                I felt completely safe with Magnus's as a coach, which allowed me to be truly open. I never once felt judged.<span class="font-['Pixelify_Sans'] text-lg md:text-xl text-white ml-1">"</span>
                             </p>
                         </div>
                     </div>
@@ -1227,19 +1228,20 @@
                 <div class="w-full flex-shrink-0 px-6">
                     <div class="flex flex-col md:flex-row items-center md:items-center justify-start md:justify-between gap-6 md:gap-12 text-zinc-300 min-h-[100px] w-full">
                         <!-- Author Block -->
-                        <div class="flex flex-col md:flex-row items-center gap-3 md:gap-5 flex-shrink-0 w-full md:w-[320px]">
-                            <div class="flex items-center justify-center w-16 h-16 rounded-full bg-[#AFD5DA] border-2 border-[#AFD5DA] flex-shrink-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-8 h-8 text-[#1B2933] opacity-100 render-pixel"><path d="M6 22H4v-4h2v4Zm14 0h-2v-4h2v4ZM8 18H6v-2h2v2Zm10 0h-2v-2h2v2Zm-2-2H8v-2h8v2Zm-1-4H9v-2h6v2Zm-6-2H7V4h2v6Zm8 0h-2V4h2v6Zm-2-6H9V2h6v2Z"/></svg>
+                        <div class="flex flex-col md:flex-row items-center justify-center md:justify-start gap-2 md:gap-5 flex-shrink-0 w-full md:w-[320px] text-center md:text-left">
+                            <div class="flex items-center justify-center w-12 h-12 md:w-16 md:h-16 rounded-full bg-[#AFD5DA] border-2 border-[#AFD5DA] flex-shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6 md:w-8 md:h-8 text-[#1B2933] opacity-100 render-pixel"><path d="M6 22H4v-4h2v4Zm14 0h-2v-4h2v4ZM8 18H6v-2h2v2Zm10 0h-2v-2h2v2Zm-2-2H8v-2h8v2Zm-1-4H9v-2h6v2Zm-6-2H7V4h2v6Zm8 0h-2V4h2v6Zm-2-6H9V2h6v2Z"/></svg>
                             </div>
                             <div class="flex flex-col items-center md:items-start text-center md:text-left">
-                                <span class="text-white font-bold text-lg tracking-wide">A.K.</span>
-                                <span class="text-sm text-zinc-400 font-mono">Indie Developer</span>
+                                <span class="text-white font-bold text-lg tracking-wide leading-tight">A.K</span>
+                                <span class="text-sm text-zinc-400 font-mono leading-tight">Indie Developer</span>
                             </div>
                         </div>
                         <!-- Quote Block -->
-                        <div class="flex-1 w-full text-left">
-                            <p class="text-sm md:text-base leading-relaxed font-mono">
-                                <span class="font-['Pixelify_Sans'] text-lg md:text-xl text-white mr-1">"</span>With Magnus's help, those overwhelming tasks suddenly felt easy to do!<span class="font-['Pixelify_Sans'] text-lg md:text-xl text-white ml-1">"</span>
+                        <div class="flex-1 w-full text-left pl-2.5 relative">
+                            <span class="absolute left-0 top-0 font-['Pixelify_Sans'] text-lg md:text-xl text-white select-none">"</span>
+                            <p class="text-sm md:text-base leading-relaxed font-mono m-0">
+                                With Magnus's help, those overwhelming tasks suddenly felt easy to do!<span class="font-['Pixelify_Sans'] text-lg md:text-xl text-white ml-1">"</span>
                             </p>
                         </div>
                     </div>
@@ -1249,19 +1251,20 @@
                 <div class="w-full flex-shrink-0 px-6">
                     <div class="flex flex-col md:flex-row items-center md:items-center justify-start md:justify-between gap-6 md:gap-12 text-zinc-300 min-h-[100px] w-full">
                         <!-- Author Block -->
-                        <div class="flex flex-col md:flex-row items-center gap-3 md:gap-5 flex-shrink-0 w-full md:w-[320px]">
-                            <div class="flex items-center justify-center w-16 h-16 rounded-full bg-[#AFD5DA] border-2 border-[#AFD5DA] flex-shrink-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-8 h-8 text-[#1B2933] opacity-100 render-pixel"><path d="M6 22H4v-4h2v4Zm14 0h-2v-4h2v4ZM8 18H6v-2h2v2Zm10 0h-2v-2h2v2Zm-2-2H8v-2h8v2Zm-1-4H9v-2h6v2Zm-6-2H7V4h2v6Zm8 0h-2V4h2v6Zm-2-6H9V2h6v2Z"/></svg>
+                        <div class="flex flex-col md:flex-row items-center justify-center md:justify-start gap-2 md:gap-5 flex-shrink-0 w-full md:w-[320px] text-center md:text-left">
+                            <div class="flex items-center justify-center w-12 h-12 md:w-16 md:h-16 rounded-full bg-[#AFD5DA] border-2 border-[#AFD5DA] flex-shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6 md:w-8 md:h-8 text-[#1B2933] opacity-100 render-pixel"><path d="M6 22H4v-4h2v4Zm14 0h-2v-4h2v4ZM8 18H6v-2h2v2Zm10 0h-2v-2h2v2Zm-2-2H8v-2h8v2Zm-1-4H9v-2h6v2Zm-6-2H7V4h2v6Zm8 0h-2V4h2v6Zm-2-6H9V2h6v2Z"/></svg>
                             </div>
                             <div class="flex flex-col items-center md:items-start text-center md:text-left">
-                                <span class="text-white font-bold text-lg tracking-wide">V.W.</span>
-                                <span class="text-sm text-zinc-400 font-mono">Game designer</span>
+                                <span class="text-white font-bold text-lg tracking-wide leading-tight">V.W</span>
+                                <span class="text-sm text-zinc-400 font-mono leading-tight">Game designer</span>
                             </div>
                         </div>
                         <!-- Quote Block -->
-                        <div class="flex-1 w-full text-left">
-                            <p class="text-sm md:text-base leading-relaxed font-mono">
-                                <span class="font-['Pixelify_Sans'] text-lg md:text-xl text-white mr-1">"</span>The coaching was extremely professional.<span class="font-['Pixelify_Sans'] text-lg md:text-xl text-white ml-1">"</span>
+                        <div class="flex-1 w-full text-left pl-2.5 relative">
+                            <span class="absolute left-0 top-0 font-['Pixelify_Sans'] text-lg md:text-xl text-white select-none">"</span>
+                            <p class="text-sm md:text-base leading-relaxed font-mono m-0">
+                                The coaching was extremely professional.<span class="font-['Pixelify_Sans'] text-lg md:text-xl text-white ml-1">"</span>
                             </p>
                         </div>
                     </div>
@@ -1271,19 +1274,20 @@
                 <div class="w-full flex-shrink-0 px-6">
                     <div class="flex flex-col md:flex-row items-center md:items-center justify-start md:justify-between gap-6 md:gap-12 text-zinc-300 min-h-[100px] w-full">
                         <!-- Author Block -->
-                        <div class="flex flex-col md:flex-row items-center gap-3 md:gap-5 flex-shrink-0 w-full md:w-[320px]">
-                            <div class="flex items-center justify-center w-16 h-16 rounded-full bg-[#AFD5DA] border-2 border-[#AFD5DA] flex-shrink-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-8 h-8 text-[#1B2933] opacity-100 render-pixel"><path d="M6 22H4v-4h2v4Zm14 0h-2v-4h2v4ZM8 18H6v-2h2v2Zm10 0h-2v-2h2v2Zm-2-2H8v-2h8v2Zm-1-4H9v-2h6v2Zm-6-2H7V4h2v6Zm8 0h-2V4h2v6Zm-2-6H9V2h6v2Z"/></svg>
+                        <div class="flex flex-col md:flex-row items-center justify-center md:justify-start gap-2 md:gap-5 flex-shrink-0 w-full md:w-[320px] text-center md:text-left">
+                            <div class="flex items-center justify-center w-12 h-12 md:w-16 md:h-16 rounded-full bg-[#AFD5DA] border-2 border-[#AFD5DA] flex-shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6 md:w-8 md:h-8 text-[#1B2933] opacity-100 render-pixel"><path d="M6 22H4v-4h2v4Zm14 0h-2v-4h2v4ZM8 18H6v-2h2v2Zm10 0h-2v-2h2v2Zm-2-2H8v-2h8v2Zm-1-4H9v-2h6v2Zm-6-2H7V4h2v6Zm8 0h-2V4h2v6Zm-2-6H9V2h6v2Z"/></svg>
                             </div>
                             <div class="flex flex-col items-center md:items-start text-center md:text-left">
-                                <span class="text-white font-bold text-lg tracking-wide">J.N.</span>
-                                <span class="text-sm text-zinc-400 font-mono">Programmer</span>
+                                <span class="text-white font-bold text-lg tracking-wide leading-tight">J.N</span>
+                                <span class="text-sm text-zinc-400 font-mono leading-tight">Programmer</span>
                             </div>
                         </div>
                         <!-- Quote Block -->
-                        <div class="flex-1 w-full text-left">
-                            <p class="text-sm md:text-base leading-relaxed font-mono">
-                                <span class="font-['Pixelify_Sans'] text-lg md:text-xl text-white mr-1">"</span>Magnus pushed for the really constructive way forward in some our toughest meetings.<span class="font-['Pixelify_Sans'] text-lg md:text-xl text-white ml-1">"</span>
+                        <div class="flex-1 w-full text-left pl-2.5 relative">
+                            <span class="absolute left-0 top-0 font-['Pixelify_Sans'] text-lg md:text-xl text-white select-none">"</span>
+                            <p class="text-sm md:text-base leading-relaxed font-mono m-0">
+                                Magnus pushed for the really constructive way forward in some our toughest meetings.<span class="font-['Pixelify_Sans'] text-lg md:text-xl text-white ml-1">"</span>
                             </p>
                         </div>
                     </div>
@@ -1293,19 +1297,20 @@
                 <div class="w-full flex-shrink-0 px-6">
                     <div class="flex flex-col md:flex-row items-center md:items-center justify-start md:justify-between gap-6 md:gap-12 text-zinc-300 min-h-[100px] w-full">
                         <!-- Author Block -->
-                        <div class="flex flex-col md:flex-row items-center gap-3 md:gap-5 flex-shrink-0 w-full md:w-[320px]">
-                            <div class="flex items-center justify-center w-16 h-16 rounded-full bg-[#AFD5DA] border-2 border-[#AFD5DA] flex-shrink-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-8 h-8 text-[#1B2933] opacity-100 render-pixel"><path d="M6 22H4v-4h2v4Zm14 0h-2v-4h2v4ZM8 18H6v-2h2v2Zm10 0h-2v-2h2v2Zm-2-2H8v-2h8v2Zm-1-4H9v-2h6v2Zm-6-2H7V4h2v6Zm8 0h-2V4h2v6Zm-2-6H9V2h6v2Z"/></svg>
+                        <div class="flex flex-col md:flex-row items-center justify-center md:justify-start gap-2 md:gap-5 flex-shrink-0 w-full md:w-[320px] text-center md:text-left">
+                            <div class="flex items-center justify-center w-12 h-12 md:w-16 md:h-16 rounded-full bg-[#AFD5DA] border-2 border-[#AFD5DA] flex-shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6 md:w-8 md:h-8 text-[#1B2933] opacity-100 render-pixel"><path d="M6 22H4v-4h2v4Zm14 0h-2v-4h2v4ZM8 18H6v-2h2v2Zm10 0h-2v-2h2v2Zm-2-2H8v-2h8v2Zm-1-4H9v-2h6v2Zm-6-2H7V4h2v6Zm8 0h-2V4h2v6Zm-2-6H9V2h6v2Z"/></svg>
                             </div>
                             <div class="flex flex-col items-center md:items-start text-center md:text-left">
-                                <span class="text-white font-bold text-lg tracking-wide">G.M</span>
-                                <span class="text-sm text-zinc-400 font-mono">Senior UI Designer</span>
+                                <span class="text-white font-bold text-lg tracking-wide leading-tight">G.M</span>
+                                <span class="text-sm text-zinc-400 font-mono leading-tight">Senior UI Designer</span>
                             </div>
                         </div>
                         <!-- Quote Block -->
-                        <div class="flex-1 w-full text-left">
-                            <p class="text-sm md:text-base leading-relaxed font-mono">
-                                <span class="font-['Pixelify_Sans'] text-lg md:text-xl text-white mr-1">"</span>Magnus is one of the rare professionals who not only has a lot of talent, but has a plethora of strong soft skills.<span class="font-['Pixelify_Sans'] text-lg md:text-xl text-white ml-1">"</span>
+                        <div class="flex-1 w-full text-left pl-2.5 relative">
+                            <span class="absolute left-0 top-0 font-['Pixelify_Sans'] text-lg md:text-xl text-white select-none">"</span>
+                            <p class="text-sm md:text-base leading-relaxed font-mono m-0">
+                                Magnus is one of the rare professionals who not only has a lot of talent, but has a plethora of strong soft skills.<span class="font-['Pixelify_Sans'] text-lg md:text-xl text-white ml-1">"</span>
                             </p>
                         </div>
                     </div>
@@ -1315,19 +1320,20 @@
                 <div class="w-full flex-shrink-0 px-6">
                     <div class="flex flex-col md:flex-row items-center md:items-center justify-start md:justify-between gap-6 md:gap-12 text-zinc-300 min-h-[100px] w-full">
                         <!-- Author Block -->
-                        <div class="flex flex-col md:flex-row items-center gap-3 md:gap-5 flex-shrink-0 w-full md:w-[320px]">
-                            <div class="flex items-center justify-center w-16 h-16 rounded-full bg-[#AFD5DA] border-2 border-[#AFD5DA] flex-shrink-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-8 h-8 text-[#1B2933] opacity-100 render-pixel"><path d="M6 22H4v-4h2v4Zm14 0h-2v-4h2v4ZM8 18H6v-2h2v2Zm10 0h-2v-2h2v2Zm-2-2H8v-2h8v2Zm-1-4H9v-2h6v2Zm-6-2H7V4h2v6Zm8 0h-2V4h2v6Zm-2-6H9V2h6v2Z"/></svg>
+                        <div class="flex flex-col md:flex-row items-center justify-center md:justify-start gap-2 md:gap-5 flex-shrink-0 w-full md:w-[320px] text-center md:text-left">
+                            <div class="flex items-center justify-center w-12 h-12 md:w-16 md:h-16 rounded-full bg-[#AFD5DA] border-2 border-[#AFD5DA] flex-shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6 md:w-8 md:h-8 text-[#1B2933] opacity-100 render-pixel"><path d="M6 22H4v-4h2v4Zm14 0h-2v-4h2v4ZM8 18H6v-2h2v2Zm10 0h-2v-2h2v2Zm-2-2H8v-2h8v2Zm-1-4H9v-2h6v2Zm-6-2H7V4h2v6Zm8 0h-2V4h2v6Zm-2-6H9V2h6v2Z"/></svg>
                             </div>
                             <div class="flex flex-col items-center md:items-start text-center md:text-left">
-                                <span class="text-white font-bold text-lg tracking-wide">G.R.</span>
-                                <span class="text-sm text-zinc-400 font-mono">Creative Director</span>
+                                <span class="text-white font-bold text-lg tracking-wide leading-tight">G.R</span>
+                                <span class="text-sm text-zinc-400 font-mono leading-tight">Creative Director</span>
                             </div>
                         </div>
                         <!-- Quote Block -->
-                        <div class="flex-1 w-full text-left">
-                            <p class="text-sm md:text-base leading-relaxed font-mono">
-                                <span class="font-['Pixelify_Sans'] text-lg md:text-xl text-white mr-1">"</span>We can rely on Magnus to ask the right questions, then get the work done to a very high standard.<span class="font-['Pixelify_Sans'] text-lg md:text-xl text-white ml-1">"</span>
+                        <div class="flex-1 w-full text-left pl-2.5 relative">
+                            <span class="absolute left-0 top-0 font-['Pixelify_Sans'] text-lg md:text-xl text-white select-none">"</span>
+                            <p class="text-sm md:text-base leading-relaxed font-mono m-0">
+                                We can rely on Magnus to ask the right questions, then get the work done to a very high standard.<span class="font-['Pixelify_Sans'] text-lg md:text-xl text-white ml-1">"</span>
                             </p>
                         </div>
                     </div>
@@ -1337,7 +1343,7 @@
         </div>
     </section>
 
-    <!-- RPG DIALOGUE SECTION MOVED DOWN -->
+    <!-- RPG DIALOGUE SECTION (COMMENTED OUT)
     <section id="dialogue-section" class="w-full bg-[#1B2933] py-8 md:py-12 relative z-20 flex justify-center">
         <div id="hero-panel" class="canvas-panel-8bit w-full max-w-3xl p-5 md:p-6 text-left flex flex-col md:flex-row gap-6 items-center md:items-start mx-4" style="background-color: rgba(24, 24, 27, 1); box-shadow: 8px 8px 0px rgba(0, 0, 0, 1); border-color: rgba(0, 0, 0, 1);">
             <div class="flex flex-col items-center flex-shrink-0 relative">
@@ -1378,9 +1384,10 @@
             </div>
         </div>
     </section>
+    -->
 
     <!-- MOVED UP: Contact and Book Sections -->
-    <section id="contact" class="w-full bg-[#3F5A61] py-24">
+    <section id="contact" class="w-full bg-[#1B2933] py-24">
         <div class="max-w-4xl mx-auto px-6">
             <div class="text-center mb-16">
 
@@ -1446,9 +1453,9 @@
     <!-- CLOSE VIEW-HOME HERE. Modals below are now Global Scene Nodes -->
     </main>
 
-<div id="quest-modal" class="fixed inset-0 z-[60] hidden bg-black/90 overflow-y-auto">
+<div id="quest-modal" class="fixed inset-0 z-[60] hidden bg-black/50 overflow-y-auto">
         <div class="min-h-screen flex items-center justify-center px-4 py-12 w-full">
-            <div id="quest-engine-prototype" class="w-full max-w-4xl mx-auto relative bg-[#1B2933] border-4 border-black px-6 py-12 md:py-24 shadow-[12px_12px_0px_rgba(0,0,0,1)] transform-gpu scale-90 origin-center">
+            <div id="quest-engine-prototype" class="w-full max-w-4xl mx-auto relative bg-[#1B2933] border-4 border-black p-6 md:p-12 my-auto transform-gpu">
                 
                 <button onclick="closeModals()" class="absolute top-4 right-4 md:top-6 md:right-6 text-[#AFD5DA] hover:text-white hover:scale-110 active:scale-95 transition-all p-2 z-50">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -1456,7 +1463,8 @@
         
 
         <div id="state-hub" class="text-center fade-in">
-            <h2 class="text-xl md:text-2xl font-['Press_Start_2P'] uppercase text-yellow-400 mb-8 md:mb-16 leading-tight tracking-wide">Resources</h2>
+            <h2 class="text-2xl md:text-3xl font-['Press_Start_2P'] text-yellow-400 mb-3 tracking-tight">RESOURCES</h2>
+            <p class="text-white mb-12">Choose an option below or do a quick test to find a good starting point!</p>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto text-left">
                 <button onclick="navigateTo('#guides'); closeModals();" data-desc="Choose and download guides on common topics!" class="hub-quest-btn p-6 font-['Press_Start_2P'] text-[10px] uppercase tracking-widest leading-loose w-full bg-[#1B2933] text-[#AFD5DA] border-4 border-black shadow-[4px_4px_0px_#000000] hover:bg-[#AFD5DA] hover:text-[#1B2933] active:translate-x-[4px] active:translate-y-[4px] active:shadow-[0px_0px_0px_#000000] transition-all duration-75 step-end cursor-pointer">Free guides</button>
@@ -1560,12 +1568,8 @@
             <div id="hub-confirm-container" class="flex flex-col items-center transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] max-h-0 opacity-0 pointer-events-none overflow-hidden">
                 <p id="quest-desc-text" class="text-sm md:text-base text-white font-mono mb-6 min-h-[32px] px-4 flex items-center justify-center text-center"></p>
                 
-                <button id="hub-confirm-btn" disabled onclick="confirmHubQuest()" style="--sparkle-color: rgba(255, 255, 255, 0.9);" class="btn-8bit sparkle-btn w-full max-w-md disabled:opacity-50 disabled:grayscale transition-all duration-300">
-                    <svg viewBox="0 0 96 96" fill="none"><path d="M93.781 51.578C95 50.969 96 49.359 96 48c0-1.375-1-2.969-2.219-3.578 0 0-22.868-1.514-31.781-10.422-8.915-8.91-10.438-31.781-10.438-31.781C50.969 1 49.375 0 48 0s-2.969 1-3.594 2.219c0 0-1.5 22.87-10.406 31.781-8.908 8.913-31.781 10.422-31.781 10.422C1 45.031 0 46.625 0 48c0 1.359 1 2.969 2.219 3.578 0 0 22.873 1.51 31.781 10.422 8.906 8.911 10.406 31.781 10.406 31.781C45.031 95 46.625 96 48 96s2.969-1 3.562-2.219c0 0 1.523-22.871 10.438-31.781 8.913-8.908 31.781-10.422 31.781-10.422Z"/></svg>
-                    <svg viewBox="0 0 96 96" fill="none"><path d="M93.781 51.578C95 50.969 96 49.359 96 48c0-1.375-1-2.969-2.219-3.578 0 0-22.868-1.514-31.781-10.422-8.915-8.91-10.438-31.781-10.438-31.781C50.969 1 49.375 0 48 0s-2.969 1-3.594 2.219c0 0-1.5 22.87-10.406 31.781-8.908 8.913-31.781 10.422-31.781 10.422C1 45.031 0 46.625 0 48c0 1.359 1 2.969 2.219 3.578 0 0 22.873 1.51 31.781 10.422 8.906 8.911 10.406 31.781 10.406 31.781C45.031 95 46.625 96 48 96s2.969-1 3.562-2.219c0 0 1.523-22.871 10.438-31.781 8.913-8.908 31.781-10.422 31.781-10.422Z"/></svg>
-                    <svg viewBox="0 0 96 96" fill="none"><path d="M93.781 51.578C95 50.969 96 49.359 96 48c0-1.375-1-2.969-2.219-3.578 0 0-22.868-1.514-31.781-10.422-8.915-8.91-10.438-31.781-10.438-31.781C50.969 1 49.375 0 48 0s-2.969 1-3.594 2.219c0 0-1.5 22.87-10.406 31.781-8.908 8.913-31.781 10.422-31.781 10.422C1 45.031 0 46.625 0 48c0 1.359 1 2.969 2.219 3.578 0 0 22.873 1.51 31.781 10.422 8.906 8.911 10.406 31.781 10.406 31.781C45.031 95 46.625 96 48 96s2.969-1 3.562-2.219c0 0 1.523-22.871 10.438-31.781 8.913-8.908 31.781-10.422 31.781-10.422Z"/></svg>
-                    <span class="btn-text-back font-['Press_Start_2P'] text-[10px] tracking-widest" aria-hidden="true">START TEST</span>
-                    <span class="btn-text-front font-['Press_Start_2P'] text-[10px] tracking-widest text-black">START TEST</span>
+                <button id="hub-confirm-btn" disabled onclick="confirmHubQuest()" class="btn-8bit no-shimmer w-full max-w-md disabled:opacity-50 disabled:grayscale transition-all duration-300 font-['Press_Start_2P'] text-[10px] tracking-widest">
+                    START TEST
                 </button>
             </div>
         </div>
@@ -1599,14 +1603,14 @@
             
             <h2 id="quest-question-counter" class="text-xl md:text-2xl font-['Press_Start_2P'] uppercase text-yellow-400 mb-8 leading-tight tracking-wide transition-opacity duration-300">Free assessment</h2>
             
-            <div id="quest-xp-bar-container" class="w-full h-6 bg-[#1a2e0b] border-4 border-black mb-8 relative overflow-visible drop-shadow-[0_4px_0_rgba(0,0,0,0.8)]" style="image-rendering: pixelated; transform-origin: bottom center;">
+            <div id="quest-xp-bar-container" class="w-full h-6 bg-[#2a2200] border-4 border-black mb-8 relative overflow-visible drop-shadow-[0_4px_0_rgba(0,0,0,0.8)]" style="image-rendering: pixelated; transform-origin: bottom center;">
                 <div id="quest-quiz-progress" class="h-full w-0 transition-[width] duration-500 ease-out relative" 
                     style="background: linear-gradient(to bottom, 
-                        #315c10 0%, #315c10 16.6%, 
-                        #5ca826 16.6%, #5ca826 33.3%, 
-                        #a4ff45 33.3%, #a4ff45 66.6%, 
-                        #76cd2d 66.6%, #76cd2d 83.3%, 
-                        #467b22 83.3%, #467b22 100%
+                        #7a5a00 0%, #7a5a00 16.6%, 
+                        #d4a017 16.6%, #d4a017 33.3%, 
+                        #facc15 33.3%, #facc15 66.6%, 
+                        #e8c857 66.6%, #e8c857 83.3%, 
+                        #a17800 83.3%, #a17800 100%
                     );">
                     <div id="quest-flash-overlay" class="absolute inset-0 bg-white opacity-0 pointer-events-none z-10"></div>
                 </div>
@@ -1616,10 +1620,10 @@
                 [ INIT_DIAGNOSTIC_ENGINE... ]
             </h2>
             <div id="quest-answers-container" class="flex flex-col gap-3 md:gap-4 transition-opacity duration-300">
-                <button class="quest-quiz-btn canvas-tool-btn p-4 text-left font-['Press_Start_2P'] text-[10px] uppercase tracking-widest text-zinc-300" data-val="1">Strongly Disagree</button>
-                <button class="quest-quiz-btn canvas-tool-btn p-4 text-left font-['Press_Start_2P'] text-[10px] uppercase tracking-widest text-zinc-300" data-val="2">Disagree</button>
-                <button class="quest-quiz-btn canvas-tool-btn p-4 text-left font-['Press_Start_2P'] text-[10px] uppercase tracking-widest text-zinc-300" data-val="3">Agree</button>
-                <button class="quest-quiz-btn canvas-tool-btn p-4 text-left font-['Press_Start_2P'] text-[10px] uppercase tracking-widest text-zinc-300" data-val="4">Strongly Agree</button>
+                <button class="quest-quiz-btn p-4 md:p-5 text-left font-['Press_Start_2P'] text-[10px] uppercase tracking-widest bg-[#1B2933] text-[#AFD5DA] border-4 border-black shadow-[4px_4px_0px_#000000] hover:bg-[#AFD5DA] hover:text-[#1B2933] active:translate-x-[4px] active:translate-y-[4px] active:shadow-[0px_0px_0px_#000000] transition-all duration-75 step-end cursor-pointer" data-val="1">Strongly Disagree</button>
+                <button class="quest-quiz-btn p-4 md:p-5 text-left font-['Press_Start_2P'] text-[10px] uppercase tracking-widest bg-[#1B2933] text-[#AFD5DA] border-4 border-black shadow-[4px_4px_0px_#000000] hover:bg-[#AFD5DA] hover:text-[#1B2933] active:translate-x-[4px] active:translate-y-[4px] active:shadow-[0px_0px_0px_#000000] transition-all duration-75 step-end cursor-pointer" data-val="2">Disagree</button>
+                <button class="quest-quiz-btn p-4 md:p-5 text-left font-['Press_Start_2P'] text-[10px] uppercase tracking-widest bg-[#1B2933] text-[#AFD5DA] border-4 border-black shadow-[4px_4px_0px_#000000] hover:bg-[#AFD5DA] hover:text-[#1B2933] active:translate-x-[4px] active:translate-y-[4px] active:shadow-[0px_0px_0px_#000000] transition-all duration-75 step-end cursor-pointer" data-val="3">Agree</button>
+                <button class="quest-quiz-btn p-4 md:p-5 text-left font-['Press_Start_2P'] text-[10px] uppercase tracking-widest bg-[#1B2933] text-[#AFD5DA] border-4 border-black shadow-[4px_4px_0px_#000000] hover:bg-[#AFD5DA] hover:text-[#1B2933] active:translate-x-[4px] active:translate-y-[4px] active:shadow-[0px_0px_0px_#000000] transition-all duration-75 step-end cursor-pointer" data-val="4">Strongly Agree</button>
             </div>
         </div>
 
@@ -1628,24 +1632,33 @@
                 <h2 id="quest-complete-header" class="text-2xl md:text-3xl text-yellow-400 mb-6 md:mb-8 font-['Press_Start_2P']">Test complete!</h2>
             </div>
             
-            <div id="quest-dynamic-content" class="hidden mb-4 text-left text-zinc-300 leading-relaxed canvas-panel-8bit px-4 py-3 md:p-6 text-sm md:text-base"></div>
+            <div id="quest-dynamic-content" class="hidden mb-4 text-left leading-relaxed bg-[#1B2933] border-4 border-black shadow-[4px_4px_0px_#000000] p-0 w-full relative"></div>
             
-            <p class="text-zinc-300 text-sm md:text-base leading-relaxed text-center max-w-2xl mx-auto my-8 px-4">I hope this guide helps you! If you need help or have any questions just reach out by pressing contact me!</p>
+            <div class="mt-12 mb-8 text-center px-4">
+                <div class="mt-12 mb-8 text-center px-4">
+                <h3 class="font-['Press_Start_2P'] text-sm md:text-base text-[#facc15] uppercase tracking-widest mb-4">I invite you to go deeper</h3>
+                <p class="text-white text-sm md:text-base leading-relaxed max-w-2xl mx-auto">I offer everyone who completes this test a free 60 min coaching session, contact me if you're interested!</p>
+            </div>
+            </div>
             
-            <div id="general-action-choices" class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mb-4 mt-2">
-                <div class="flex flex-col items-center text-center">
-                    <a id="general-download-btn" href="#" target="_blank" rel="noopener noreferrer" class="btn-8bit w-full text-center transition-colors" style="text-decoration: none;">Launch Guide</a>
-                </div>
-                
-                <div class="flex flex-col items-center text-center">
-                    <button onclick="openQuestContactModal()" style="--sparkle-color: rgba(255, 255, 255, 0.9);" class="btn-8bit sparkle-btn w-full text-center">
-                        <svg viewBox="0 0 96 96" fill="none"><path d="M93.781 51.578C95 50.969 96 49.359 96 48c0-1.375-1-2.969-2.219-3.578 0 0-22.868-1.514-31.781-10.422-8.915-8.91-10.438-31.781-10.438-31.781C50.969 1 49.375 0 48 0s-2.969 1-3.594 2.219c0 0-1.5 22.87-10.406 31.781-8.908 8.913-31.781 10.422-31.781 10.422C1 45.031 0 46.625 0 48c0 1.359 1 2.969 2.219 3.578 0 0 22.873 1.51 31.781 10.422 8.906 8.911 10.406 31.781 10.406 31.781C45.031 95 46.625 96 48 96s2.969-1 3.562-2.219c0 0 1.523-22.871 10.438-31.781 8.913-8.908 31.781-10.422 31.781-10.422Z"/></svg>
-                        <svg viewBox="0 0 96 96" fill="none"><path d="M93.781 51.578C95 50.969 96 49.359 96 48c0-1.375-1-2.969-2.219-3.578 0 0-22.868-1.514-31.781-10.422-8.915-8.91-10.438-31.781-10.438-31.781C50.969 1 49.375 0 48 0s-2.969 1-3.594 2.219c0 0-1.5 22.87-10.406 31.781-8.908 8.913-31.781 10.422-31.781 10.422C1 45.031 0 46.625 0 48c0 1.359 1 2.969 2.219 3.578 0 0 22.873 1.51 31.781 10.422 8.906 8.911 10.406 31.781 10.406 31.781C45.031 95 46.625 96 48 96s2.969-1 3.562-2.219c0 0 1.523-22.871 10.438-31.781 8.913-8.908 31.781-10.422 31.781-10.422Z"/></svg>
-                        <svg viewBox="0 0 96 96" fill="none"><path d="M93.781 51.578C95 50.969 96 49.359 96 48c0-1.375-1-2.969-2.219-3.578 0 0-22.868-1.514-31.781-10.422-8.915-8.91-10.438-31.781-10.438-31.781C50.969 1 49.375 0 48 0s-2.969 1-3.594 2.219c0 0-1.5 22.87-10.406 31.781-8.908 8.913-31.781 10.422-31.781 10.422C1 45.031 0 46.625 0 48c0 1.359 1 2.969 2.219 3.578 0 0 22.873 1.51 31.781 10.422 8.906 8.911 10.406 31.781 10.406 31.781C45.031 95 46.625 96 48 96s2.969-1 3.562-2.219c0 0 1.523-22.871 10.438-31.781 8.913-8.908 31.781-10.422 31.781-10.422Z"/></svg>
-                        <span class="btn-text-back font-['Press_Start_2P'] text-[10px] tracking-widest" aria-hidden="true">CONTACT ME</span>
-                        <span class="btn-text-front font-['Press_Start_2P'] text-[10px] tracking-widest text-black">CONTACT ME</span>
-                    </button>
-                </div>
+            <div id="general-action-choices" class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center justify-items-center w-full mb-4 mt-2">
+                <button onclick="closeModals(); setTimeout(openContactModal, 300);" class="group flex flex-col items-center no-underline relative bg-transparent border-none appearance-none outline-none cursor-pointer">
+                    <div class="flex items-center justify-center w-28 h-28 mb-4 bg-[#1B2933] border-4 border-black shadow-[6px_6px_0px_black] group-hover:bg-[#facc15] group-active:translate-x-[4px] group-active:translate-y-[4px] group-active:shadow-[2px_2px_0px_black] transition-all duration-75">
+                        <svg class="w-14 h-14 text-white group-hover:text-black transition-colors duration-75 render-pixel contact-icon-jump" viewBox="0 0 24 24" fill="currentColor">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M2 5 h20 v14 H2 V5 z M4 7 h2 v2 H4 V7 z M18 7 h2 v2 h-2 V7 z M6 9 h2 v2 H6 V9 z M16 9 h2 v2 h-2 V9 z M8 11 h2 v2 H8 V11 z M14 11 h2 v2 h-2 V11 z M10 13 h4 v2 h-4 V13 z" />
+                        </svg>
+                    </div>
+                    <span class="font-['Press_Start_2P'] text-[10px] text-white uppercase tracking-widest group-hover:text-yellow-400 transition-colors duration-75 leading-relaxed contact-text-spring">Email Me</span>
+                </button>
+
+                <button onclick="copyDiscordId(this, 'block')" class="group flex flex-col items-center no-underline relative bg-transparent border-none outline-none cursor-pointer appearance-none">
+                    <div class="flex items-center justify-center w-28 h-28 mb-4 bg-[#1B2933] border-4 border-black shadow-[6px_6px_0px_black] group-hover:bg-[#5865F2] group-active:translate-x-[4px] group-active:translate-y-[4px] group-active:shadow-[2px_2px_0px_black] transition-all duration-75">
+                        <svg class="w-14 h-14 text-white transition-colors duration-75 render-pixel contact-icon-jump" viewBox="0 0 24 24" fill="currentColor">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M6 4h4v2h4V4h4v4h2v8h-2v2h-4v-2h-4v2H6v-2H4V8h2V4zm3 6H7v2h2v-2zm6 0h-2v2h2v-2z" />
+                        </svg>
+                    </div>
+                    <span class="font-['Press_Start_2P'] text-[10px] text-white uppercase tracking-widest group-hover:text-yellow-400 transition-colors duration-75 leading-relaxed contact-text-spring">COPY DISCORD ID</span>
+                </button>
             </div>
 
             <div id="general-send-form" class="canvas-panel-8bit flex-col gap-4 w-full p-4 md:p-6 hidden fade-in relative mt-8">
@@ -1713,7 +1726,7 @@
 <div id="assessment-modal" class="fixed inset-0 z-50 hidden bg-black/90 flex items-center justify-center p-4 md:p-8">
         <div class="w-full flex items-center justify-center h-full">
 
-            <div class="w-full max-w-2xl mx-auto relative bg-zinc-900 border border-white/10 p-6 md:p-10 rounded-none shadow-2xl my-auto transform-gpu max-h-[90vh] overflow-y-auto [&::-webkit-scrollbar]:hidden">
+            <div class="w-full max-w-2xl mx-auto relative bg-zinc-900 border-4 border-black p-6 md:p-10 rounded-none my-auto transform-gpu max-h-[90vh] overflow-y-auto [&::-webkit-scrollbar]:hidden">
                 
                 <button onclick="closeModals()" class="absolute top-4 right-4 md:top-6 md:right-6 text-zinc-500 hover:text-yellow-400 active:scale-95 transition-all p-2 z-50">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1877,15 +1890,15 @@
         </div>
     </div>
 
-<div id="main-contact-gateway-modal" class="fixed inset-0 z-[60] hidden bg-black/90 overflow-y-auto">
+<div id="main-contact-gateway-modal" class="fixed inset-0 z-[60] hidden bg-black/50 overflow-y-auto">
         <div class="min-h-screen flex items-center justify-center px-4 py-12 w-full">
-            <div class="w-full max-w-2xl mx-auto relative bg-[#1B2933] border border-white/10 p-6 md:p-12 rounded-none shadow-2xl my-auto transform-gpu">
+            <div class="w-full max-w-2xl mx-auto relative bg-[#1B2933] border-4 border-black p-6 md:p-12 rounded-none my-auto transform-gpu">
                 <button onclick="closeModals()" class="absolute top-4 right-4 md:top-6 md:right-6 text-zinc-500 hover:text-white hover:scale-110 active:scale-95 transition-all p-2 z-50">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
 
                 <div class="text-center mb-12">
-                    <h2 class="text-2xl md:text-3xl font-['Press_Start_2P'] text-yellow-400 mb-3 tracking-tight [text-shadow:4px_4px_0px_#000000]">CONTACT ME</h2>
+                    <h2 class="text-2xl md:text-3xl font-['Press_Start_2P'] text-yellow-400 mb-3 tracking-tight">CONTACT ME</h2>
                     <p class="text-white">Email me or send me a message on Discord!</p>
                 </div>
 
@@ -1912,11 +1925,11 @@
         </div>
     </div>
 
-    <div id="contact-modal" class="fixed inset-0 z-[60] hidden bg-black/90 overflow-y-auto">
+    <div id="contact-modal" class="fixed inset-0 z-[60] hidden bg-black/50 overflow-y-auto">
 
         <div class="min-h-screen flex items-center justify-center px-4 py-12 md:py-20 w-full">
 
-            <div class="w-full max-w-2xl mx-auto relative bg-[#1B2933] border-4 border-black p-6 md:p-12 rounded-none shadow-[12px_12px_0px_rgba(0,0,0,1)] my-auto transform-gpu">
+            <div class="w-full max-w-2xl mx-auto relative bg-[#1B2933] border-4 border-black p-6 md:p-12 rounded-none my-auto transform-gpu">
 
                 <button onclick="closeModals()" class="absolute top-4 right-4 md:top-6 md:right-6 text-[#AFD5DA] hover:text-white hover:scale-110 active:scale-95 transition-all p-2 z-50">
 
@@ -1927,14 +1940,14 @@
 
                 <div class="text-center mb-8">
 
-                    <h2 class="text-2xl md:text-3xl font-['Press_Start_2P'] uppercase text-yellow-400 mb-3 tracking-tight [text-shadow:4px_4px_0px_#000000]">EMAIL ME</h2>
+                    <h2 class="text-2xl md:text-3xl font-['Press_Start_2P'] uppercase text-yellow-400 mb-3 tracking-tight">EMAIL ME</h2>
 
                     <p class="text-white">I read all emails sent to me and I try to get back to you as soon as possible!</p>
 
                 </div>
 
 
-                <div class="canvas-panel-8bit !bg-[#1B2933] flex flex-col gap-4 w-full p-5 md:p-6">
+                <div class="border-4 border-black bg-[#1B2933] flex flex-col gap-4 w-full p-5 md:p-6">
 
                     <div class="flex flex-col sm:flex-row gap-4 w-full">
 
@@ -3372,7 +3385,7 @@ function openMainContactGateway() {
         const masterEmitter = document.getElementById('quest-master-emitter-container');
         const flashOverlay = document.getElementById('quest-flash-overlay');
         const xpBarContainer = document.getElementById('quest-xp-bar-container');
-        const particleColors = ['#ffffff', '#ffdf00', '#a4ff45', '#76cd2d'];
+        const particleColors = ['#ffffff', '#fff1a1', '#facc15', '#e8c857'];
 
         function spawnParticle(type, ratio, customAngle = null) {
             const particle = document.createElement('div');
@@ -3561,9 +3574,9 @@ function openMainContactGateway() {
             // TELEPORTED: Injects data directly into the Quest Engine Terminal!
             const resultData = resultsData[winningCategory];
             const htmlBlob = `
-                <div class="flex flex-col md:flex-row items-center md:items-start justify-center w-full py-8 md:py-12 gap-8 md:gap-12">
-                    <div class="flex-shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="w-24 h-24 md:w-32 md:h-32 text-white render-pixel drop-shadow-[4px_4px_0_rgba(0,0,0,1)] hover:scale-105 transition-transform" fill="currentColor">
+                <a href="${resultData.pdfFile}" target="_blank" rel="noopener noreferrer" class="group flex flex-col md:flex-row items-center md:items-start justify-center w-full px-6 py-8 md:p-10 gap-6 md:gap-10 text-decoration-none bg-[#1B2933] hover:bg-[#253745] transition-colors duration-150 relative block cursor-pointer">
+                    <div class="flex-shrink-0 transition-transform duration-200 group-hover:-translate-y-2 group-active:translate-y-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="w-20 h-20 md:w-28 md:h-28 text-white render-pixel drop-shadow-[4px_4px_0_rgba(0,0,0,1)]" fill="currentColor">
                             <path d="M30.472 6.1H25.9V1.525h1.53V0H6.092v12.2h-1.52v1.52h1.52v3.05h-1.52v-3.05h-1.52v12.19h1.52v1.52h1.52V32H32V4.575h-1.53ZM7.622 18.285h4.57v4.57h-3.05v3.05h-1.52Zm22.85 12.19H7.622v-3.05H25.9v-1.52h1.53v-7.62H25.9v-1.52H7.622V1.525h16.76v6.09h6.09Zm-12.19 -10.67v4.58h-1.52v1.52h-3.05v-7.62h3.05v1.52Zm6.1 1.53v1.52h-3.05v3.05h-1.52v-7.62h4.57v1.52h-3.05v1.53Z"></path>
                             <path d="M28.952 3.045h1.52v1.53h-1.52Z"></path>
                             <path d="M27.432 1.525h1.52v1.52h-1.52Z"></path>
@@ -3571,11 +3584,16 @@ function openMainContactGateway() {
                             <path d="M9.142 19.805h1.53v1.53h-1.53Z"></path>
                         </svg>
                     </div>
-                    <div class="flex flex-col items-center md:items-start text-center md:text-left">
-                        <h3 class="text-base md:text-lg font-black uppercase tracking-widest text-yellow-400 w-full mb-4">${resultData.title}</h3>
-                        <p class="text-zinc-300 text-sm md:text-base leading-relaxed">${resultData.desc}</p>
+                    <div class="flex flex-col items-center md:items-start text-center md:text-left flex-1">
+                        <h3 class="font-['Press_Start_2P'] text-[11px] md:text-xs uppercase tracking-widest text-[#E8C857] w-full mb-3">${resultData.title}</h3>
+                        <p class="text-[#AFD5DA] text-sm md:text-base leading-relaxed group-hover:text-white transition-colors m-0">${resultData.desc}</p>
                     </div>
-                </div>
+                    <div class="absolute bottom-4 right-4 md:bottom-6 md:right-6">
+                        <svg viewBox="0 0 24 24" class="w-6 h-6 md:w-8 md:h-8 text-[#facc15] drop-shadow-[2px_2px_0_rgba(0,0,0,1)] render-pixel transition-transform duration-200 group-hover:-translate-y-1 group-active:translate-y-1" fill="currentColor">
+                            <path d="M11 7H5v12h12v-6h2v8H3V5h8v2Zm0 6v2H9v-2h2Zm2 0h-2v-2h2v2Zm2-2h-2V9h2v2Zm6 0h-2V7h-2V5h-4V3h8v8Zm-4-2h-2V7h2v2Z"/>
+                        </svg>
+                    </div>
+                </a>
             `;
             
             // Cleaned up the old nested button and passing the URL directly!
@@ -3964,7 +3982,17 @@ function openMainContactGateway() {
         function closeLightbox() { lightboxModal.classList.add('hidden'); document.body.style.overflow = 'auto'; }
 
 
-        // Keyboard & Swipe Bindings
+        // Keyboard, Swipe, & Backdrop Bindings
+
+        // Close modals when clicking the void (background overlay)
+        document.addEventListener('mousedown', (e) => {
+            // Checks if the mouse press hit the outer fixed overlay OR the scrolling flex wrapper
+            // By using mousedown instead of click, we prevent accidental closes from click-dragging
+            if (e.target.classList.contains('min-h-screen') || 
+               (e.target.classList.contains('fixed') && e.target.classList.contains('inset-0'))) {
+                closeModals();
+            }
+        });
 
         document.addEventListener('keydown', (e) => {
 
