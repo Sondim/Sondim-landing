@@ -1402,7 +1402,7 @@
 
                 <button onclick="openContactModal()" class="group flex flex-col items-center no-underline relative bg-transparent border-none appearance-none outline-none cursor-pointer">
                     
-                    <div class="flex items-center justify-center w-32 h-32 mb-6 bg-zinc-800 border-4 border-black shadow-[6px_6px_0px_black] group-hover:bg-[#facc15] group-active:translate-x-[4px] group-active:translate-y-[4px] group-active:shadow-[2px_2px_0px_black] transition-all duration-75">
+                    <div class="flex items-center justify-center w-32 h-32 mb-6 bg-[#1B2933] border-4 border-black shadow-[6px_6px_0px_black] group-hover:bg-[#facc15] group-active:translate-x-[4px] group-active:translate-y-[4px] group-active:shadow-[2px_2px_0px_black] transition-all duration-75">
                         <svg class="w-16 h-16 text-white group-hover:text-black transition-colors duration-75 render-pixel contact-icon-jump" viewBox="0 0 24 24" fill="currentColor">
                             <path fill-rule="evenodd" clip-rule="evenodd" d="
                                 M2 5 h20 v14 H2 V5 z
@@ -1423,7 +1423,7 @@
 
                 <button onclick="copyDiscordId(this, 'block')" class="group flex flex-col items-center no-underline relative bg-transparent border-none outline-none cursor-pointer appearance-none">
                     
-                    <div class="flex items-center justify-center w-32 h-32 mb-6 bg-zinc-800 border-4 border-black shadow-[6px_6px_0px_black] group-hover:bg-[#5865F2] group-active:translate-x-[4px] group-active:translate-y-[4px] group-active:shadow-[2px_2px_0px_black] transition-all duration-75">
+                    <div class="flex items-center justify-center w-32 h-32 mb-6 bg-[#1B2933] border-4 border-black shadow-[6px_6px_0px_black] group-hover:bg-[#5865F2] group-active:translate-x-[4px] group-active:translate-y-[4px] group-active:shadow-[2px_2px_0px_black] transition-all duration-75">
                         <svg class="w-16 h-16 text-white transition-colors duration-75 render-pixel contact-icon-jump" viewBox="0 0 24 24" fill="currentColor">
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M6 4h4v2h4V4h4v4h2v8h-2v2h-4v-2h-4v2H6v-2H4V8h2V4zm3 6H7v2h2v-2zm6 0h-2v2h2v-2z" />
                         </svg>
@@ -1629,7 +1629,8 @@
 
         <div id="state-complete" class="hidden fade-in max-w-3xl mx-auto w-full">
             <div class="text-center">
-                <h2 id="quest-complete-header" class="text-2xl md:text-3xl text-yellow-400 mb-6 md:mb-8 font-['Press_Start_2P']">Test complete!</h2>
+                <h2 id="quest-complete-header" class="text-2xl md:text-3xl text-yellow-400 mb-3 font-['Press_Start_2P']">TEST COMPLETE!</h2>
+                <p class="text-white font-mono text-sm md:text-base mb-6 md:mb-8">Your recommended topic to work on is:</p>
             </div>
             
             <div id="quest-dynamic-content" class="hidden mb-4 text-left leading-relaxed bg-[#1B2933] border-4 border-black shadow-[4px_4px_0px_#000000] p-0 w-full relative"></div>
@@ -3585,7 +3586,7 @@ function openMainContactGateway() {
                         </svg>
                     </div>
                     <div class="flex flex-col items-center md:items-start text-center md:text-left flex-1">
-                        <h3 class="font-['Press_Start_2P'] text-[11px] md:text-xs uppercase tracking-widest text-[#E8C857] w-full mb-3">${resultData.title}</h3>
+                        <h3 class="font-['Press_Start_2P'] text-[11px] md:text-xs uppercase tracking-widest text-yellow-400 w-full mb-3">${resultData.title}</h3>
                         <p class="text-[#AFD5DA] text-sm md:text-base leading-relaxed group-hover:text-white transition-colors m-0">${resultData.desc}</p>
                     </div>
                     <div class="absolute bottom-4 right-4 md:bottom-6 md:right-6">
@@ -3597,7 +3598,7 @@ function openMainContactGateway() {
             `;
             
             // Cleaned up the old nested button and passing the URL directly!
-            triggerQuestComplete('Test complete!', htmlBlob, resultData.pdfFile);
+            triggerQuestComplete('TEST COMPLETE!', htmlBlob, resultData.pdfFile);
         }
 
 
