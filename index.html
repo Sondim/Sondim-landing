@@ -486,8 +486,8 @@
             position: absolute;
             inset: 0;
             background-image: url('./hero_img_sky.png');
-            background-size: auto 95%; 
-            background-position: 70% top; /* Splitting the diff for perfect framing */
+            background-size: cover; 
+            background-position: top center; 
             background-repeat: no-repeat;
         }
 
@@ -496,7 +496,7 @@
             position: absolute;
             inset: 0;
             background-image: url('./hero_img_clouds.png');
-            background-size: auto 95%; /* Locked to match mobile mass scale */
+            background-size: cover; 
             background-repeat: repeat-x;
             background-position: 0px top;
             animation: cloudDrift 215s linear infinite; 
@@ -514,8 +514,8 @@
             position: absolute;
             inset: 0; 
             background-image: url('./hero_img_no_flags.png'); 
-            background-size: auto 95%;
-            background-position: 70% top; /* Splitting the diff for perfect framing */
+            background-size: cover; 
+            background-position: top center; 
             background-repeat: no-repeat;
         }
 
@@ -523,11 +523,26 @@
         .hero-layer-flags {
             position: absolute;
             inset: 0;
-            background-size: auto 95%;
-            background-position: 70% top; /* Splitting the diff for perfect framing */
+            background-size: cover; 
+            background-position: top center; 
             background-repeat: no-repeat;
             /* 0.8s total (25% slower) = ~0.266s snap per frame. Heavier wind tension. */
             animation: flagFlutter 0.8s step-end infinite; 
+        }
+
+        /* --- MOBILE CAMERA OVERRIDES --- */
+        /* Activates only on screens narrower than a standard tablet */
+        @media (max-width: 768px) {
+            .hero-layer-sky,
+            .hero-layer-base,
+            .hero-layer-flags {
+                background-size: auto 85%; /* Pulls camera back */
+                background-position: 70% top; /* Dolly right */
+            }
+            
+            .hero-layer-clouds {
+                background-size: auto 85%; /* Locks clouds to matched mass */
+            }
         }
 
         @keyframes flagFlutter {
