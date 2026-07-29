@@ -486,8 +486,8 @@
             position: absolute;
             inset: 0;
             background-image: url('./hero_img_sky.png');
-            background-size: cover;
-            background-position: top center;
+            background-size: auto 95%; 
+            background-position: 70% top; /* Splitting the diff for perfect framing */
             background-repeat: no-repeat;
         }
 
@@ -496,7 +496,7 @@
             position: absolute;
             inset: 0;
             background-image: url('./hero_img_clouds.png');
-            background-size: auto 100%; /* Re-anchors height perfectly */
+            background-size: auto 95%; /* Locked to match mobile mass scale */
             background-repeat: repeat-x;
             background-position: 0px top;
             animation: cloudDrift 215s linear infinite; 
@@ -514,8 +514,8 @@
             position: absolute;
             inset: 0; 
             background-image: url('./hero_img_no_flags.png'); 
-            background-size: cover;
-            background-position: top center; 
+            background-size: auto 95%;
+            background-position: 70% top; /* Splitting the diff for perfect framing */
             background-repeat: no-repeat;
         }
 
@@ -523,8 +523,8 @@
         .hero-layer-flags {
             position: absolute;
             inset: 0;
-            background-size: cover;
-            background-position: top center;
+            background-size: auto 95%;
+            background-position: 70% top; /* Splitting the diff for perfect framing */
             background-repeat: no-repeat;
             /* 0.8s total (25% slower) = ~0.266s snap per frame. Heavier wind tension. */
             animation: flagFlutter 0.8s step-end infinite; 
@@ -1104,15 +1104,15 @@
             <div class="hero-layer-flags absolute inset-0"></div>
         </div>
 
-        <div class="relative z-10 w-full h-full max-w-7xl mx-auto px-6 flex flex-col items-start pt-[50vh] md:pt-[50vh]">
+        <div class="relative z-10 w-full h-full max-w-7xl mx-auto px-6 flex flex-col items-start pt-[50vh] md:pt-[30%]">
             
-            <h1 class="pixel-title flex flex-col items-start text-left text-[22px] md:text-[38px] xl:text-[48px]">
+            <h1 class="pixel-title flex flex-col items-start text-left text-[24px] md:text-[38px] xl:text-[48px]">
                 <span class="leading-none">MAKE GAMES</span>
                 <span class="leading-none mt-3 md:mt-5">THE HEALTHY WAY</span>
             </h1>
             
-            <p class="text-white text-[18px] md:text-[22px] font-normal text-left leading-[1.4] mt-6 mb-10 max-w-[650px]" style="font-family: 'Open Sans', sans-serif;">
-                Coaching for solodevs and teams who love making games<br>but are tired of crunch, conflict and burnout.
+            <p class="text-white text-[16px] md:text-[22px] font-normal text-left leading-[1.4] mt-6 mb-10 max-w-[650px]" style="font-family: 'Open Sans', sans-serif;">
+                Coaching for solodevs and teams who love making games<br class="hidden md:block"> but are tired of crunch, conflict and burnout.
             </p>
 
             <button onclick="bootQuestEngine()" class="btn-8bit no-shimmer text-[8px] md:text-[12px] px-6 py-4 md:px-8 md:py-5 tracking-widest">
