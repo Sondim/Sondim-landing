@@ -2236,7 +2236,7 @@
                     <div class="about-hud-cluster flex flex-col gap-0 items-start w-full md:contents">
                         <!-- Portrait column + mobile MAGNUS nameplate (SCALED +25% on desktop) -->
                         <div class="group relative w-full md:w-80 flex-shrink-0 flex flex-col z-[1]">
-                            <div class="about-portrait-panel canvas-panel-8bit w-full aspect-square md:w-80 md:h-80 md:aspect-auto overflow-hidden">
+                            <div id="about-portrait-panel" class="about-portrait-panel canvas-panel-8bit w-full aspect-square md:w-80 md:h-80 md:aspect-auto overflow-hidden">
                                 <img id="about-portrait-img" src="./picture_profile_white.jpg" alt="Magnus Chirgwin" class="w-full h-full object-cover" width="320" height="320">
                             </div>
                         </div>
@@ -3271,6 +3271,34 @@
             zone.scrollTop = 0;
         }
 
+        // Mobile: gentle pan so topic buttons stay in view without losing the portrait.
+        function panAboutHudForButtons() {
+            if (isAboutDesktop()) return;
+
+            const portrait = document.getElementById('about-portrait-panel');
+            const choices = document.getElementById('about-choices-container');
+            const nav = document.getElementById('main-nav');
+            if (!portrait || !choices) return;
+
+            const bottomMargin = 16;
+            const topBuffer = 8;
+            const navHeight = nav ? nav.getBoundingClientRect().height : 72;
+            const vh = window.innerHeight;
+
+            const portraitRect = portrait.getBoundingClientRect();
+            const choicesRect = choices.getBoundingClientRect();
+
+            if (choicesRect.bottom <= vh - bottomMargin) return;
+
+            const neededScroll = choicesRect.bottom - (vh - bottomMargin);
+            const portraitHeadroom = portraitRect.top - navHeight - topBuffer;
+            const delta = Math.min(neededScroll, Math.max(0, portraitHeadroom));
+
+            if (delta > 4) {
+                window.scrollBy({ top: delta, behavior: 'smooth' });
+            }
+        }
+
         function freezeAboutPortraitMobile(portraitImg) {
             clearInterval(aboutPortraitTimer);
             aboutPortraitTimer = null;
@@ -3281,7 +3309,8 @@
             };
         }
 
-        function renderAboutDialogue() {
+        function renderAboutDialogue(options = {}) {
+            const { panToButtons = false } = options;
             const textEl = document.getElementById('about-dialogue-text');
             const choicesEl = document.getElementById('about-choices-container');
             const dialogueZone = document.getElementById('about-dialogue-zone');
@@ -3386,6 +3415,10 @@
 
             requestAnimationFrame(() => {
                 syncAboutDialogueHeight();
+                if (panToButtons) {
+                    // Match dialogue frame height transition before measuring layout
+                    setTimeout(panAboutHudForButtons, 320);
+                }
             });
         }
 
@@ -3410,7 +3443,7 @@
             setTimeout(() => {
                 textEl.style.animation = '';
                 currentAboutTopic = optionId;
-                renderAboutDialogue();
+                renderAboutDialogue({ panToButtons: true });
             }, 120);
         }
 
