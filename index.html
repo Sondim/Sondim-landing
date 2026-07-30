@@ -387,6 +387,28 @@
             z-index: 1;
         }
 
+        /* Mobile About: unified dialogue HUD (desktop via md: unchanged) */
+        @media (max-width: 767px) {
+            #view-about #about-dialogue-frame {
+                transition: height 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+                margin-top: -4px; /* share border with portrait — one flush seam */
+                box-shadow: none !important;
+            }
+
+            #view-about .about-portrait-panel.canvas-panel-8bit {
+                box-shadow: none;
+            }
+
+            #view-about .about-choice-btn {
+                box-shadow: none !important;
+            }
+
+            #view-about .about-choice-btn:active,
+            #view-about .about-choice-btn.is-active {
+                box-shadow: none !important;
+            }
+        }
+
         /* Light-mode white canvas views (scoped, no bleed into dark UI) */
         .white-canvas-root {
             background-color: #FAF9F6;
@@ -2196,52 +2218,55 @@
         <div class="min-h-screen w-full relative overflow-hidden">
             <div class="about-hero-bg" aria-hidden="true"></div>
             <div class="about-page-inner max-w-5xl mx-auto px-6 min-h-screen flex flex-col justify-center py-24">
-                <header class="mb-10 md:mb-14 text-left flex flex-col items-start w-full">
+                <header class="mb-4 md:mb-14 text-left flex flex-col items-start w-full">
                     <h1 class="font-['Press_Start_2P'] text-[24px] md:text-[38px] xl:text-[48px] leading-tight tracking-tight uppercase mb-4 text-white">
                         Meet Magnus Chirgwin
                     </h1>
-                    <p class="font-mono text-sm md:text-base text-white max-w-2xl leading-relaxed mt-2">
+                    <p class="hidden md:block font-mono text-sm md:text-base text-white max-w-2xl leading-relaxed mt-2">
                         ICF accredited Coach | BSc Medical Science (PT) | Gamedev & gamer
                     </p>
                 </header>
 
-                <div class="flex flex-col md:flex-row items-start justify-between gap-8 md:gap-12 w-full">
-                    <!-- Portrait column: image only — no topic buttons here (SCALED +25%) -->
-                    <div class="group relative w-60 h-60 md:w-80 md:h-80 flex-shrink-0">
-                        <div class="canvas-panel-8bit w-full h-full overflow-hidden">
-                            <img id="about-portrait-img" src="./picture_profile_white.jpg" alt="Magnus Chirgwin" class="w-full h-full object-cover" width="320" height="320">
-                        </div>
-                    </div>
-
-                   <!-- Dialogue column: text + choice buttons under text -->
-                    <div id="about-dialogue-wrapper" class="relative w-full flex-1 flex flex-col gap-4">
-                        
-                        <!-- Wrapper added to constrain height and trigger the scrollbar (SCALED +25%) -->
-                        <div class="relative w-full h-60 md:h-80 overflow-hidden !rounded-none border-4 border-black shadow-[4px_4px_0px_#000000]">
-                            <div id="about-dialogue-zone" class="dialogue-text-area !border-none !rounded-none !bg-[#1B2933]/80 w-full h-full overflow-y-auto custom-scrollbar transition-all duration-300 z-10 cursor-default flex flex-col" style="padding-bottom: 2.5rem;">
-                                <p id="about-dialogue-text" class="font-mono text-sm md:text-base text-white leading-relaxed text-left m-0"></p>
-                                
-                                <!-- Completionist Easter Egg CTA (Hidden by default) -->
-                                <div id="about-easter-egg-cta" class="hidden mt-8 flex-row gap-4 items-center justify-start opacity-0 transition-opacity duration-500">
-                                    
-                                    <!-- Wired to the SPA router and the native .btn-8bit engine -->
-                                    <button onclick="navigateToHomeAndScroll('book')" class="btn-8bit text-[10px] md:text-[10px] px-6 py-3 md:py-4 tracking-widest cursor-pointer shadow-[4px_4px_0px_black] active:shadow-[2px_2px_0px_black]">
-                                        BOOK SESSION
-                                    </button>
-                                    
-                                    <button onclick="openMainContactGateway()" class="btn-8bit text-[10px] md:text-[10px] px-6 py-3 md:py-4 tracking-widest cursor-pointer shadow-[4px_4px_0px_black] active:shadow-[2px_2px_0px_black]">
-                                        CONTACT ME
-                                    </button>
-
-                                </div>
+                <div class="flex flex-col md:flex-row items-start justify-between gap-4 md:gap-12 w-full">
+                    <!-- Mobile: portrait + nameplate + dialogue form one flush HUD; md:contents restores desktop split -->
+                    <div class="about-hud-cluster flex flex-col gap-0 items-start w-full md:contents">
+                        <!-- Portrait column + mobile MAGNUS nameplate (SCALED +25% on desktop) -->
+                        <div class="group relative w-full md:w-80 flex-shrink-0 flex flex-col z-[1]">
+                            <div class="about-portrait-panel canvas-panel-8bit w-full aspect-square md:w-80 md:h-80 md:aspect-auto overflow-hidden">
+                                <img id="about-portrait-img" src="./picture_profile_white.jpg" alt="Magnus Chirgwin" class="w-full h-full object-cover" width="320" height="320">
                             </div>
                         </div>
 
-                        <div id="about-choices-container" class="grid grid-cols-1 md:grid-cols-3 gap-3 w-full opacity-0 pointer-events-none transition-opacity duration-300 z-0 h-auto flex-shrink-0">
-                            <button onclick="selectAboutOption('a', this)" class="about-choice-btn py-3 px-1 md:py-4 md:px-2 font-['Press_Start_2P'] text-[9px] md:text-[10px] whitespace-nowrap uppercase tracking-wide leading-normal text-center bg-[#1B2933] text-[#AFD5DA] border-4 border-black shadow-[4px_4px_0px_#000000] hover:bg-[#AFD5DA] hover:text-[#1B2933] active:translate-x-[4px] active:translate-y-[4px] active:shadow-[0px_0px_0px_#000000] [&.is-active]:translate-x-[4px] [&.is-active]:translate-y-[4px] [&.is-active]:shadow-[0px_0px_0px_#000000] [&.is-active]:bg-[#facc15] [&.is-active]:text-black transition-all duration-75 step-end cursor-pointer">About the work</button>
-                            <button onclick="selectAboutOption('b', this)" class="about-choice-btn py-3 px-1 md:py-4 md:px-2 font-['Press_Start_2P'] text-[9px] md:text-[10px] whitespace-nowrap uppercase tracking-wide leading-normal text-center bg-[#1B2933] text-[#AFD5DA] border-4 border-black shadow-[4px_4px_0px_#000000] hover:bg-[#AFD5DA] hover:text-[#1B2933] active:translate-x-[4px] active:translate-y-[4px] active:shadow-[0px_0px_0px_#000000] [&.is-active]:translate-x-[4px] [&.is-active]:translate-y-[4px] [&.is-active]:shadow-[0px_0px_0px_#000000] [&.is-active]:bg-[#facc15] [&.is-active]:text-black transition-all duration-75 step-end cursor-pointer">My background</button>
-                            <button onclick="selectAboutOption('d', this)" class="about-choice-btn py-3 px-1 md:py-4 md:px-2 font-['Press_Start_2P'] text-[9px] md:text-[10px] whitespace-nowrap uppercase tracking-wide leading-normal text-center bg-[#1B2933] text-[#AFD5DA] border-4 border-black shadow-[4px_4px_0px_#000000] hover:bg-[#AFD5DA] hover:text-[#1B2933] active:translate-x-[4px] active:translate-y-[4px] active:shadow-[0px_0px_0px_#000000] [&.is-active]:translate-x-[4px] [&.is-active]:translate-y-[4px] [&.is-active]:shadow-[0px_0px_0px_#000000] [&.is-active]:bg-[#facc15] [&.is-active]:text-black transition-all duration-75 step-end cursor-pointer">What clients say</button>
-                        </div>
+                       <!-- Dialogue column: text + choice buttons under text -->
+                        <div id="about-dialogue-wrapper" class="relative w-full flex-1 flex flex-col gap-4">
+                            
+                            <!-- Mobile: grows to max-h then scrolls; desktop: fixed md:h-80 -->
+                            <div id="about-dialogue-frame" class="relative w-full min-h-[120px] max-h-[50vh] md:min-h-0 md:max-h-none md:h-80 overflow-hidden !rounded-none border-4 border-black md:shadow-[4px_4px_0px_#000000]">
+                                <div id="about-dialogue-zone" class="dialogue-text-area !border-none !rounded-none !bg-[#1B2933]/80 w-full h-full overflow-y-auto custom-scrollbar transition-all duration-300 z-10 cursor-default flex flex-col" style="padding-bottom: 2.5rem;">
+                                    <p id="about-dialogue-text" class="font-mono text-sm md:text-base text-white leading-relaxed text-left m-0"></p>
+                                    
+                                    <!-- Completionist Easter Egg CTA (Hidden by default) -->
+                                    <div id="about-easter-egg-cta" class="hidden mt-8 flex-row gap-4 items-center justify-start opacity-0 transition-opacity duration-500">
+                                        
+                                        <!-- Wired to the SPA router and the native .btn-8bit engine -->
+                                        <button onclick="navigateToHomeAndScroll('book')" class="btn-8bit text-[10px] md:text-[10px] px-6 py-3 md:py-4 tracking-widest cursor-pointer shadow-[4px_4px_0px_black] active:shadow-[2px_2px_0px_black]">
+                                            BOOK SESSION
+                                        </button>
+                                        
+                                        <button onclick="openMainContactGateway()" class="btn-8bit text-[10px] md:text-[10px] px-6 py-3 md:py-4 tracking-widest cursor-pointer shadow-[4px_4px_0px_black] active:shadow-[2px_2px_0px_black]">
+                                            CONTACT ME
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Mobile order matches mockup; md:order restores desktop column order -->
+                            <div id="about-choices-container" class="grid grid-cols-1 md:grid-cols-3 gap-3 w-full opacity-0 pointer-events-none transition-opacity duration-300 z-0 h-auto flex-shrink-0">
+                                <button onclick="selectAboutOption('a', this)" class="about-choice-btn order-1 py-3 px-1 md:py-4 md:px-2 font-['Press_Start_2P'] text-[9px] md:text-[10px] whitespace-nowrap uppercase tracking-wide leading-normal text-center bg-[#1B2933] text-[#AFD5DA] border-4 border-black md:shadow-[4px_4px_0px_#000000] hover:bg-[#AFD5DA] hover:text-[#1B2933] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none md:active:shadow-[0px_0px_0px_#000000] [&.is-active]:translate-x-[4px] [&.is-active]:translate-y-[4px] [&.is-active]:shadow-none md:[&.is-active]:shadow-[0px_0px_0px_#000000] [&.is-active]:bg-[#facc15] [&.is-active]:text-black transition-all duration-75 step-end cursor-pointer">About the work</button>
+                                <button onclick="selectAboutOption('d', this)" class="about-choice-btn order-2 md:order-3 py-3 px-1 md:py-4 md:px-2 font-['Press_Start_2P'] text-[9px] md:text-[10px] whitespace-nowrap uppercase tracking-wide leading-normal text-center bg-[#1B2933] text-[#AFD5DA] border-4 border-black md:shadow-[4px_4px_0px_#000000] hover:bg-[#AFD5DA] hover:text-[#1B2933] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none md:active:shadow-[0px_0px_0px_#000000] [&.is-active]:translate-x-[4px] [&.is-active]:translate-y-[4px] [&.is-active]:shadow-none md:[&.is-active]:shadow-[0px_0px_0px_#000000] [&.is-active]:bg-[#facc15] [&.is-active]:text-black transition-all duration-75 step-end cursor-pointer">What clients say</button>
+                                <button onclick="selectAboutOption('b', this)" class="about-choice-btn order-3 md:order-2 py-3 px-1 md:py-4 md:px-2 font-['Press_Start_2P'] text-[9px] md:text-[10px] whitespace-nowrap uppercase tracking-wide leading-normal text-center bg-[#1B2933] text-[#AFD5DA] border-4 border-black md:shadow-[4px_4px_0px_#000000] hover:bg-[#AFD5DA] hover:text-[#1B2933] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none md:active:shadow-[0px_0px_0px_#000000] [&.is-active]:translate-x-[4px] [&.is-active]:translate-y-[4px] [&.is-active]:shadow-none md:[&.is-active]:shadow-[0px_0px_0px_#000000] [&.is-active]:bg-[#facc15] [&.is-active]:text-black transition-all duration-75 step-end cursor-pointer">My background</button>
+                            </div>
 
                         <!-- Hidden CTA Container (Unlocked via Scroll Physics) -->
                         <div id="about-cta-container" class="opacity-0 pointer-events-none transition-opacity duration-500 mt-2 flex justify-center w-full">
@@ -2254,6 +2279,7 @@
                                 <span class="btn-text-front font-['Press_Start_2P'] text-[10px] tracking-widest text-black">Book Session</span>
                             </button>
                         </div>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -3170,7 +3196,7 @@
         // --- ABOUT ME RPG DIALOGUE LOGIC ---
         const aboutDialogueData = {
             intro: [
-                "Hi, it's so nice to have you here!<br><br>What would you like to know more about?",
+                "Hi, I'm Magnus. I'm so glad you're here!<br><br>I'm an ICF accredited coach, Physiotherapist and a gamedev<br><br>What would you like to know?",
             ],
             a: [
                 "I coach solodevs and teams who are stuck in chronic stress, procrastination, shiny object syndrome, imposter syndrome or burnout etc. (I have a bunch of free resources on these, go check them out!)<br><br>The goal with this work is to create an upward spiral where we investigate and experiment together to get you unstuck and moving forward in a way that fits you or your team.<br><br>The way I coach is about creating alignment which is essentially getting all of you (thoughts, feelings and actions) pointing in the same direction toward the thing you want.<br><br>The work isn't always easy, I focus on creating enjoyment in the process but it will take you out of your comfort zone. But I'm there to help, you're not alone and if you show up wholeheartedly it can be super transformative and effective.<br><br>What would you like to know next?"
@@ -3195,6 +3221,50 @@
         let aboutPortraitTimer = null;
         let portraitRotationIndex = 0;
 
+        function isAboutDesktop() {
+            return window.matchMedia('(min-width: 768px)').matches;
+        }
+
+        // Mobile-only: grow dialogue to content, cap at 50vh, then scroll; push buttons down.
+        // Desktop keeps fixed md:h-80.
+        function syncAboutDialogueHeight() {
+            const frame = document.getElementById('about-dialogue-frame');
+            const zone = document.getElementById('about-dialogue-zone');
+            if (!frame || !zone) return;
+
+            if (isAboutDesktop()) {
+                frame.style.height = '';
+                frame.style.maxHeight = '';
+                zone.style.height = '';
+                return;
+            }
+
+            const maxH = Math.round(window.innerHeight * 0.5);
+            const minH = 120;
+
+            frame.style.maxHeight = 'none';
+            frame.style.height = 'auto';
+            zone.style.height = 'auto';
+
+            const contentH = zone.scrollHeight;
+
+            frame.style.maxHeight = '';
+            zone.style.height = '';
+
+            frame.style.height = Math.min(Math.max(contentH, minH), maxH) + 'px';
+            zone.scrollTop = 0;
+        }
+
+        function freezeAboutPortraitMobile(portraitImg) {
+            clearInterval(aboutPortraitTimer);
+            aboutPortraitTimer = null;
+            portraitImg.src = './picture_profile_white.jpg';
+            portraitImg.onerror = function() {
+                this.onerror = null;
+                this.src = './picture_profile_white.png';
+            };
+        }
+
         function renderAboutDialogue() {
             const textEl = document.getElementById('about-dialogue-text');
             const choicesEl = document.getElementById('about-choices-container');
@@ -3203,12 +3273,14 @@
             const portraitImg = document.getElementById('about-portrait-img');
             if (!textEl || !choicesEl) return;
 
-            // DYNAMIC PORTRAIT SWAP ENGINE (BULLETPROOF 3-IMAGE ROTATION)
+            // DYNAMIC PORTRAIT SWAP ENGINE (desktop only — mobile stays on profile + MAGNUS plate)
             if (portraitImg) {
-                // 1. Kill any existing timer to prevent hyper-speed strobing
-                clearInterval(aboutPortraitTimer); 
+                clearInterval(aboutPortraitTimer);
+                aboutPortraitTimer = null;
 
-                if (currentAboutTopic === 'a') {
+                if (!isAboutDesktop()) {
+                    freezeAboutPortraitMobile(portraitImg);
+                } else if (currentAboutTopic === 'a') {
                     // 2. Set initial image
                     portraitImg.src = 'picture_lecture.jpg';
                     portraitImg.onerror = function() {
@@ -3295,6 +3367,10 @@
 
             choicesEl.classList.remove('opacity-0', 'pointer-events-none');
             choicesEl.classList.add('opacity-100', 'pointer-events-auto');
+
+            requestAnimationFrame(() => {
+                syncAboutDialogueHeight();
+            });
         }
 
         function selectAboutOption(optionId, btnElement) {
@@ -3336,6 +3412,17 @@
 
             renderAboutDialogue();
         }
+
+        window.addEventListener('resize', () => {
+            const aboutView = document.getElementById('view-about');
+            if (!aboutView || aboutView.classList.contains('spa-view-hidden')) return;
+
+            if (!isAboutDesktop()) {
+                const portraitImg = document.getElementById('about-portrait-img');
+                if (portraitImg) freezeAboutPortraitMobile(portraitImg);
+            }
+            syncAboutDialogueHeight();
+        });
 
 function openMainContactGateway() {
             document.body.style.overflow = 'hidden';
