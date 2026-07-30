@@ -389,6 +389,16 @@
 
         /* Mobile About: unified dialogue HUD (desktop via md: unchanged) */
         @media (max-width: 767px) {
+            #view-about > .min-h-screen {
+                overflow-x: hidden;
+            }
+
+            #view-about .about-page-inner {
+                justify-content: flex-start;
+                padding-top: 5.5rem;
+                padding-bottom: 2.5rem;
+            }
+
             #view-about #about-dialogue-frame {
                 transition: height 0.3s cubic-bezier(0.25, 1, 0.5, 1);
                 margin-top: -4px; /* share border with portrait — one flush seam */
@@ -410,6 +420,46 @@
             #view-about .about-choice-btn:active,
             #view-about .about-choice-btn.is-active {
                 box-shadow: none !important;
+            }
+
+            /* Quest modal: close above title, results pan to top */
+            #state-test {
+                padding-top: 0.25rem;
+            }
+
+            #state-test #quest-question-counter {
+                margin-top: 0.5rem;
+            }
+
+            #state-test #quest-answers-container {
+                padding-bottom: 0.75rem;
+            }
+
+            #quest-complete-header {
+                scroll-margin-top: 5.5rem;
+            }
+
+            #general-action-choices .quest-contact-icon-box {
+                width: 4.5rem;
+                height: 4.5rem;
+                margin-bottom: 0.75rem;
+                box-shadow: 4px 4px 0px black;
+            }
+
+            #general-action-choices .quest-contact-icon-box svg {
+                width: 2rem;
+                height: 2rem;
+            }
+
+            #general-action-choices .quest-contact-label {
+                font-size: 7px;
+                line-height: 1.35;
+            }
+        }
+
+        @media (min-width: 768px) {
+            #view-about .about-page-inner {
+                justify-content: center;
             }
         }
 
@@ -1487,7 +1537,13 @@
         <div class="min-h-screen flex items-center justify-center px-4 py-12 w-full">
             <div id="quest-engine-prototype" class="w-full max-w-4xl mx-auto relative bg-[#1B2933] border-4 border-black p-6 md:p-12 my-auto transform-gpu">
                 
-                <button onclick="closeModals()" class="absolute top-4 right-4 md:top-6 md:right-6 text-[#AFD5DA] hover:text-white hover:scale-110 active:scale-95 transition-all p-2 z-50">
+                <div class="quest-modal-close-mobile flex md:hidden justify-end w-full mb-3">
+                    <button onclick="closeModals()" class="text-[#AFD5DA] hover:text-white hover:scale-110 active:scale-95 transition-all p-2 z-50">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+
+                <button onclick="closeModals()" class="quest-modal-close-desktop hidden md:block absolute top-4 right-4 md:top-6 md:right-6 text-[#AFD5DA] hover:text-white hover:scale-110 active:scale-95 transition-all p-2 z-50">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
         
@@ -1672,23 +1728,23 @@
             </div>
             </div>
             
-            <div id="general-action-choices" class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center justify-items-center w-full mb-4 mt-2">
+            <div id="general-action-choices" class="grid grid-cols-2 gap-4 md:gap-8 items-start justify-items-center w-full mb-4 mt-2">
                 <button onclick="closeModals(); setTimeout(openContactModal, 300);" class="group flex flex-col items-center no-underline relative bg-transparent border-none appearance-none outline-none cursor-pointer">
-                    <div class="flex items-center justify-center w-28 h-28 mb-4 bg-[#1B2933] border-4 border-black shadow-[6px_6px_0px_black] group-hover:bg-[#facc15] group-active:translate-x-[4px] group-active:translate-y-[4px] group-active:shadow-[2px_2px_0px_black] transition-all duration-75">
+                    <div class="quest-contact-icon-box flex items-center justify-center w-28 h-28 mb-4 bg-[#1B2933] border-4 border-black shadow-[6px_6px_0px_black] group-hover:bg-[#facc15] group-active:translate-x-[4px] group-active:translate-y-[4px] group-active:shadow-[2px_2px_0px_black] transition-all duration-75">
                         <svg class="w-14 h-14 text-white group-hover:text-black transition-colors duration-75 render-pixel contact-icon-jump" viewBox="0 0 24 24" fill="currentColor">
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M2 5 h20 v14 H2 V5 z M4 7 h2 v2 H4 V7 z M18 7 h2 v2 h-2 V7 z M6 9 h2 v2 H6 V9 z M16 9 h2 v2 h-2 V9 z M8 11 h2 v2 H8 V11 z M14 11 h2 v2 h-2 V11 z M10 13 h4 v2 h-4 V13 z" />
                         </svg>
                     </div>
-                    <span class="font-['Press_Start_2P'] text-[10px] text-white uppercase tracking-widest group-hover:text-yellow-400 transition-colors duration-75 leading-relaxed contact-text-spring">Email Me</span>
+                    <span class="quest-contact-label font-['Press_Start_2P'] text-[10px] text-white uppercase tracking-widest group-hover:text-yellow-400 transition-colors duration-75 leading-relaxed contact-text-spring">Email Me</span>
                 </button>
 
                 <button onclick="copyDiscordId(this, 'block')" class="group flex flex-col items-center no-underline relative bg-transparent border-none outline-none cursor-pointer appearance-none">
-                    <div class="flex items-center justify-center w-28 h-28 mb-4 bg-[#1B2933] border-4 border-black shadow-[6px_6px_0px_black] group-hover:bg-[#5865F2] group-active:translate-x-[4px] group-active:translate-y-[4px] group-active:shadow-[2px_2px_0px_black] transition-all duration-75">
+                    <div class="quest-contact-icon-box flex items-center justify-center w-28 h-28 mb-4 bg-[#1B2933] border-4 border-black shadow-[6px_6px_0px_black] group-hover:bg-[#5865F2] group-active:translate-x-[4px] group-active:translate-y-[4px] group-active:shadow-[2px_2px_0px_black] transition-all duration-75">
                         <svg class="w-14 h-14 text-white transition-colors duration-75 render-pixel contact-icon-jump" viewBox="0 0 24 24" fill="currentColor">
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M6 4h4v2h4V4h4v4h2v8h-2v2h-4v-2h-4v2H6v-2H4V8h2V4zm3 6H7v2h2v-2zm6 0h-2v2h2v-2z" />
                         </svg>
                     </div>
-                    <span class="font-['Press_Start_2P'] text-[10px] text-white uppercase tracking-widest group-hover:text-yellow-400 transition-colors duration-75 leading-relaxed contact-text-spring">COPY DISCORD ID</span>
+                    <span class="quest-contact-label font-['Press_Start_2P'] text-[10px] text-white uppercase tracking-widest group-hover:text-yellow-400 transition-colors duration-75 leading-relaxed contact-text-spring">COPY DISCORD ID</span>
                 </button>
             </div>
 
@@ -2221,7 +2277,7 @@
     <main id="view-about" class="spa-view spa-view-hidden" data-view="about">
         <div class="min-h-screen w-full relative overflow-hidden">
             <div class="about-hero-bg" aria-hidden="true"></div>
-            <div class="about-page-inner max-w-5xl mx-auto px-6 min-h-screen flex flex-col justify-center py-24">
+            <div class="about-page-inner max-w-5xl mx-auto px-6 min-h-screen flex flex-col justify-start md:justify-center py-24">
                 <header class="mb-4 md:mb-14 text-left flex flex-col items-start w-full">
                     <h1 class="font-['Press_Start_2P'] text-[24px] md:text-[38px] xl:text-[48px] leading-tight tracking-tight uppercase mb-4 text-white">
                         Meet Magnus Chirgwin
@@ -2938,13 +2994,14 @@
                 });
             }
 
-            // Frame the camera tightly around the specific active state inside the modal
+            // Frame the camera around the active state inside the modal
             const targetElement = document.getElementById(targetId);
             const questModal = document.getElementById('quest-modal');
             if (targetElement && questModal && !questModal.classList.contains('hidden')) {
-                // Native API to center the camera perfectly on the gray box, ignoring scale math
                 const grayBox = document.getElementById('quest-engine-prototype');
-                if (grayBox) {
+                if (targetId === 'state-complete' && window.matchMedia('(max-width: 767px)').matches) {
+                    setTimeout(panQuestModalToTop, 80);
+                } else if (grayBox) {
                     grayBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
             }
@@ -3271,7 +3328,7 @@
             zone.scrollTop = 0;
         }
 
-        // Mobile: gentle pan so topic buttons stay in view without losing the portrait.
+        // Mobile: gentle pan so topic buttons stay in view while preserving portrait presence.
         function panAboutHudForButtons() {
             if (isAboutDesktop()) return;
 
@@ -3280,9 +3337,10 @@
             const nav = document.getElementById('main-nav');
             if (!portrait || !choices) return;
 
-            const bottomMargin = 16;
-            const topBuffer = 8;
+            const bottomMargin = 12;
             const navHeight = nav ? nav.getBoundingClientRect().height : 72;
+            // Keep at least part of the portrait visible instead of pinning its top.
+            const minPortraitVisiblePx = 120;
             const vh = window.innerHeight;
 
             const portraitRect = portrait.getBoundingClientRect();
@@ -3291,12 +3349,22 @@
             if (choicesRect.bottom <= vh - bottomMargin) return;
 
             const neededScroll = choicesRect.bottom - (vh - bottomMargin);
-            const portraitHeadroom = portraitRect.top - navHeight - topBuffer;
-            const delta = Math.min(neededScroll, Math.max(0, portraitHeadroom));
+            const maxScroll = Math.max(0, portraitRect.bottom - navHeight - minPortraitVisiblePx);
+            const delta = Math.min(neededScroll, maxScroll);
 
             if (delta > 4) {
                 window.scrollBy({ top: delta, behavior: 'smooth' });
             }
+        }
+
+        function panQuestModalToTop() {
+            if (window.matchMedia('(min-width: 768px)').matches) return;
+
+            const questModal = document.getElementById('quest-modal');
+            const anchor = document.getElementById('quest-complete-header') || document.getElementById('quest-engine-prototype');
+            if (!questModal || questModal.classList.contains('hidden') || !anchor) return;
+
+            anchor.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
         }
 
         function freezeAboutPortraitMobile(portraitImg) {
@@ -3416,8 +3484,11 @@
             requestAnimationFrame(() => {
                 syncAboutDialogueHeight();
                 if (panToButtons) {
-                    // Match dialogue frame height transition before measuring layout
-                    setTimeout(panAboutHudForButtons, 320);
+                    // Match dialogue frame height transition, then measure layout twice for stability
+                    setTimeout(() => {
+                        panAboutHudForButtons();
+                        setTimeout(panAboutHudForButtons, 120);
+                    }, 320);
                 }
             });
         }
