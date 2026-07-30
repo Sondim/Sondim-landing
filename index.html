@@ -395,6 +395,10 @@
                 box-shadow: none !important;
             }
 
+            #view-about #about-dialogue-zone {
+                padding-bottom: 1.25rem !important; /* no arrow spacer — avoid phantom scroll on short intros */
+            }
+
             #view-about .about-portrait-panel.canvas-panel-8bit {
                 box-shadow: none;
             }
@@ -2241,8 +2245,8 @@
                         <div id="about-dialogue-wrapper" class="relative w-full flex-1 flex flex-col gap-4">
                             
                             <!-- Mobile: grows to max-h then scrolls; desktop: fixed md:h-80 -->
-                            <div id="about-dialogue-frame" class="relative w-full min-h-[120px] max-h-[50vh] md:min-h-0 md:max-h-none md:h-80 overflow-hidden !rounded-none border-4 border-black md:shadow-[4px_4px_0px_#000000]">
-                                <div id="about-dialogue-zone" class="dialogue-text-area !border-none !rounded-none !bg-[#1B2933]/80 w-full h-full overflow-y-auto custom-scrollbar transition-all duration-300 z-10 cursor-default flex flex-col" style="padding-bottom: 2.5rem;">
+                            <div id="about-dialogue-frame" class="relative w-full max-h-[50vh] md:min-h-0 md:max-h-none md:h-80 overflow-hidden !rounded-none border-4 border-black md:shadow-[4px_4px_0px_#000000]">
+                                <div id="about-dialogue-zone" class="dialogue-text-area !border-none !rounded-none !bg-[#1B2933]/80 w-full h-full overflow-y-auto custom-scrollbar transition-all duration-300 z-10 cursor-default flex flex-col">
                                     <p id="about-dialogue-text" class="font-mono text-sm md:text-base text-white leading-relaxed text-left m-0"></p>
                                     
                                     <!-- Completionist Easter Egg CTA (Hidden by default) -->
@@ -2262,10 +2266,10 @@
                             </div>
 
                             <!-- Mobile order matches mockup; md:order restores desktop column order -->
-                            <div id="about-choices-container" class="grid grid-cols-1 md:grid-cols-3 gap-3 w-full opacity-0 pointer-events-none transition-opacity duration-300 z-0 h-auto flex-shrink-0">
-                                <button onclick="selectAboutOption('a', this)" class="about-choice-btn order-1 py-3 px-1 md:py-4 md:px-2 font-['Press_Start_2P'] text-[9px] md:text-[10px] whitespace-nowrap uppercase tracking-wide leading-normal text-center bg-[#1B2933] text-[#AFD5DA] border-4 border-black md:shadow-[4px_4px_0px_#000000] hover:bg-[#AFD5DA] hover:text-[#1B2933] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none md:active:shadow-[0px_0px_0px_#000000] [&.is-active]:translate-x-[4px] [&.is-active]:translate-y-[4px] [&.is-active]:shadow-none md:[&.is-active]:shadow-[0px_0px_0px_#000000] [&.is-active]:bg-[#facc15] [&.is-active]:text-black transition-all duration-75 step-end cursor-pointer">About the work</button>
-                                <button onclick="selectAboutOption('d', this)" class="about-choice-btn order-2 md:order-3 py-3 px-1 md:py-4 md:px-2 font-['Press_Start_2P'] text-[9px] md:text-[10px] whitespace-nowrap uppercase tracking-wide leading-normal text-center bg-[#1B2933] text-[#AFD5DA] border-4 border-black md:shadow-[4px_4px_0px_#000000] hover:bg-[#AFD5DA] hover:text-[#1B2933] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none md:active:shadow-[0px_0px_0px_#000000] [&.is-active]:translate-x-[4px] [&.is-active]:translate-y-[4px] [&.is-active]:shadow-none md:[&.is-active]:shadow-[0px_0px_0px_#000000] [&.is-active]:bg-[#facc15] [&.is-active]:text-black transition-all duration-75 step-end cursor-pointer">What clients say</button>
-                                <button onclick="selectAboutOption('b', this)" class="about-choice-btn order-3 md:order-2 py-3 px-1 md:py-4 md:px-2 font-['Press_Start_2P'] text-[9px] md:text-[10px] whitespace-nowrap uppercase tracking-wide leading-normal text-center bg-[#1B2933] text-[#AFD5DA] border-4 border-black md:shadow-[4px_4px_0px_#000000] hover:bg-[#AFD5DA] hover:text-[#1B2933] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none md:active:shadow-[0px_0px_0px_#000000] [&.is-active]:translate-x-[4px] [&.is-active]:translate-y-[4px] [&.is-active]:shadow-none md:[&.is-active]:shadow-[0px_0px_0px_#000000] [&.is-active]:bg-[#facc15] [&.is-active]:text-black transition-all duration-75 step-end cursor-pointer">My background</button>
+                            <div id="about-choices-container" class="grid grid-cols-3 gap-2 md:gap-3 w-full opacity-0 pointer-events-none transition-opacity duration-300 z-0 h-auto flex-shrink-0">
+                                <button onclick="selectAboutOption('a', this)" class="about-choice-btn order-1 py-3 px-1 md:py-4 md:px-2 font-['Press_Start_2P'] text-[8px] md:text-[10px] whitespace-normal md:whitespace-nowrap uppercase tracking-wide leading-snug text-center bg-[#1B2933] text-[#AFD5DA] border-4 border-black md:shadow-[4px_4px_0px_#000000] hover:bg-[#AFD5DA] hover:text-[#1B2933] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none md:active:shadow-[0px_0px_0px_#000000] [&.is-active]:translate-x-[4px] [&.is-active]:translate-y-[4px] [&.is-active]:shadow-none md:[&.is-active]:shadow-[0px_0px_0px_#000000] [&.is-active]:bg-[#facc15] [&.is-active]:text-black transition-all duration-75 step-end cursor-pointer">About the work</button>
+                                <button onclick="selectAboutOption('d', this)" class="about-choice-btn order-2 md:order-3 py-3 px-1 md:py-4 md:px-2 font-['Press_Start_2P'] text-[8px] md:text-[10px] whitespace-normal md:whitespace-nowrap uppercase tracking-wide leading-snug text-center bg-[#1B2933] text-[#AFD5DA] border-4 border-black md:shadow-[4px_4px_0px_#000000] hover:bg-[#AFD5DA] hover:text-[#1B2933] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none md:active:shadow-[0px_0px_0px_#000000] [&.is-active]:translate-x-[4px] [&.is-active]:translate-y-[4px] [&.is-active]:shadow-none md:[&.is-active]:shadow-[0px_0px_0px_#000000] [&.is-active]:bg-[#facc15] [&.is-active]:text-black transition-all duration-75 step-end cursor-pointer">What clients say</button>
+                                <button onclick="selectAboutOption('b', this)" class="about-choice-btn order-3 md:order-2 py-3 px-1 md:py-4 md:px-2 font-['Press_Start_2P'] text-[8px] md:text-[10px] whitespace-normal md:whitespace-nowrap uppercase tracking-wide leading-snug text-center bg-[#1B2933] text-[#AFD5DA] border-4 border-black md:shadow-[4px_4px_0px_#000000] hover:bg-[#AFD5DA] hover:text-[#1B2933] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none md:active:shadow-[0px_0px_0px_#000000] [&.is-active]:translate-x-[4px] [&.is-active]:translate-y-[4px] [&.is-active]:shadow-none md:[&.is-active]:shadow-[0px_0px_0px_#000000] [&.is-active]:bg-[#facc15] [&.is-active]:text-black transition-all duration-75 step-end cursor-pointer">My background</button>
                             </div>
 
                         <!-- Hidden CTA Container (Unlocked via Scroll Physics) -->
@@ -3196,7 +3200,7 @@
         // --- ABOUT ME RPG DIALOGUE LOGIC ---
         const aboutDialogueData = {
             intro: [
-                "Hi, I'm Magnus. I'm so glad you're here!<br><br>I'm an ICF accredited coach, Physiotherapist and a gamedev<br><br>What would you like to know?",
+                "Hi, I'm Magnus. I'm so glad you're here!<br><br>I'm an ICF accredited coach, physiotherapist and a gamedev<br><br>What would you like to know?",
             ],
             a: [
                 "I coach solodevs and teams who are stuck in chronic stress, procrastination, shiny object syndrome, imposter syndrome or burnout etc. (I have a bunch of free resources on these, go check them out!)<br><br>The goal with this work is to create an upward spiral where we investigate and experiment together to get you unstuck and moving forward in a way that fits you or your team.<br><br>The way I coach is about creating alignment which is essentially getting all of you (thoughts, feelings and actions) pointing in the same direction toward the thing you want.<br><br>The work isn't always easy, I focus on creating enjoyment in the process but it will take you out of your comfort zone. But I'm there to help, you're not alone and if you show up wholeheartedly it can be super transformative and effective.<br><br>What would you like to know next?"
@@ -3236,22 +3240,34 @@
                 frame.style.height = '';
                 frame.style.maxHeight = '';
                 zone.style.height = '';
+                zone.style.overflowY = '';
                 return;
             }
 
             const maxH = Math.round(window.innerHeight * 0.5);
-            const minH = 120;
 
+            // Measure intrinsic content (no scrollbar width, no height clamp)
             frame.style.maxHeight = 'none';
             frame.style.height = 'auto';
             zone.style.height = 'auto';
+            zone.style.overflowY = 'hidden';
 
             const contentH = zone.scrollHeight;
+            const cs = getComputedStyle(frame);
+            const borderY = (parseFloat(cs.borderTopWidth) || 0) + (parseFloat(cs.borderBottomWidth) || 0);
+            // border-box: outer height must include borders or zone overflows by ~8px and shows a scrollbar
+            const fitted = contentH + borderY;
+
+            if (fitted <= maxH) {
+                frame.style.height = fitted + 'px';
+                zone.style.overflowY = 'hidden';
+            } else {
+                frame.style.height = maxH + 'px';
+                zone.style.overflowY = 'auto';
+            }
 
             frame.style.maxHeight = '';
             zone.style.height = '';
-
-            frame.style.height = Math.min(Math.max(contentH, minH), maxH) + 'px';
             zone.scrollTop = 0;
         }
 
