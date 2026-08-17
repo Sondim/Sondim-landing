@@ -1,0 +1,4 @@
+the bot is coded by ai, hooked in via discord and hosted on discloud.
+
+https://discord.com/developers/home
+https://discloud.com/dashboard
