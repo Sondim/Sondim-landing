@@ -23,6 +23,10 @@ Without a key, submit still works: the PNG downloads and their email app opens t
 npx --yes serve .
 ```
 
+## Discord course bot
+
+The free 3-day course lives in Discord. Setup (no coding): [discord-bot/README.md](discord-bot/README.md)
+
 ## Edit content
 
 - `index.html` — page copy

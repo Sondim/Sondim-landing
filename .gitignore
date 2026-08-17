@@ -1,0 +1,6 @@
+.env
+.env.*
+!.env.example
+node_modules/
+discord-bot/node_modules/
+discord-bot/.env
