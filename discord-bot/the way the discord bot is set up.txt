@@ -2,3 +2,15 @@ the bot is coded by ai, hooked in via discord and hosted on discloud.
 
 https://discord.com/developers/home
 https://discloud.com/dashboard
+
+Grad reward (Alumni role):
+CATEGORY_GRAD=1539237731144568862
+CHANNEL_GRAD_CHAT=1539234069789810748
+CHANNEL_GRAD_VOICE=1539238258167390350
+CHANNEL_SELF_PROMOTION=1539169770136412220
+
+Phibi The Scholar (Discord default stickers):
+On My Way=783794979704537108          (Start Day 1 → DM only)
+Studying=783787495493599272           (Done Day 1/2 → DM only)
+Congratulations=783788733987815434    (Finished Day 3 → DM only)
+Discord cannot put default stickers on the private "Only you can see this" button reply.

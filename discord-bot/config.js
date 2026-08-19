@@ -3,7 +3,7 @@ require('dotenv').config();
 function required(name) {
     const value = process.env[name];
     if (!value) {
-        throw new Error(`Missing ${name}. Add it in Railway Variables (or discord-bot/.env locally).`);
+        throw new Error(`Missing ${name}. Add it in discord-bot/.env (the file you upload to Discloud).`);
     }
     return value;
 }
@@ -35,6 +35,11 @@ const config = {
             3: required('CHANNEL_RESOURCES_DAY3'),
         },
         log: optional('CHANNEL_LOG'),
+        courseDiscussion: optional('CHANNEL_COURSE_DISCUSSION') || '1526212880729641202',
+        gradCategory: optional('CATEGORY_GRAD'),
+        gradChat: required('CHANNEL_GRAD_CHAT'),
+        gradVoice: optional('CHANNEL_GRAD_VOICE'),
+        selfPromotion: optional('CHANNEL_SELF_PROMOTION'),
     },
 };
 

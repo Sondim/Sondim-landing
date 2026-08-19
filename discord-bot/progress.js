@@ -1,29 +1,34 @@
-const {
-    ChannelType,
-    ThreadAutoArchiveDuration,
-} = require('discord.js');
 const { config } = require('./config');
 
 function hasRole(member, roleId) {
     return member.roles.cache.has(roleId);
 }
 
-async function respond(interaction, content) {
+async function respond(interaction, payload) {
+    const data = typeof payload === 'string' ? { content: payload } : payload;
     if (interaction.deferred || interaction.replied) {
-        return interaction.editReply({ content });
+        return interaction.editReply(data);
     }
-    return interaction.reply({ content, ephemeral: true });
+    return interaction.reply({ ...data, ephemeral: true });
 }
 
 function permissionHint(error) {
     const text = String(error);
     if (text.includes('Missing Permissions') || text.includes('50013')) {
-        return ' The bot role must sit **above** Day 1 / Day 2 / Day 3 / Alumni, and it needs Manage Roles + Create Private Threads.';
+        return ' The bot role must sit **above** Day 1 / Day 2 / Day 3 / Alumni, and it needs Manage Roles.';
     }
     if (text.includes('Missing Access') || text.includes('50001')) {
-        return ' The bot cannot see that channel. Give it View Channel + Send Messages + Create Private Threads there.';
+        return ' The bot cannot see that channel. Give it View Channel + Send Messages there.';
     }
     return '';
+}
+
+function stepError(step, context, error) {
+    const label = context?.name ? `#${context.name} (${context.id || '?'})` : String(context);
+    const wrapped = new Error(`${step} on ${label}: ${error.message || error}`);
+    wrapped.cause = error;
+    wrapped.step = step;
+    return wrapped;
 }
 
 async function logEvent(client, message) {
@@ -34,49 +39,53 @@ async function logEvent(client, message) {
     await channel.send({ content: message.slice(0, 1900) }).catch(() => {});
 }
 
-async function pingInPrivateThread(channel, member, dayNumber, body) {
-    const thread = await channel.threads.create({
-        name: `Day ${dayNumber} — ${member.displayName}`.slice(0, 100),
-        autoArchiveDuration: ThreadAutoArchiveDuration.OneDay,
-        type: ChannelType.PrivateThread,
-        invitable: false,
-        reason: `Course ping for Day ${dayNumber}`,
-    });
+const PHIBI_CONGRATS = '783788733987815434';
 
-    await thread.members.add(member.id);
-    await thread.send({
-        content: `${member} ${body}`,
+async function welcomeToGradChat(client, member) {
+    const channel = await client.channels.fetch(config.channels.gradChat).catch(() => null);
+    if (!channel?.isTextBased()) {
+        await logEvent(client, `Grad welcome skipped: #grad-chat missing`);
+        return;
+    }
+
+    const payload = {
+        content: `${member} just finished the free course. Come say hi!`,
         allowedMentions: { users: [member.id] },
-    });
+        stickers: [PHIBI_CONGRATS],
+    };
 
-    return thread;
+    try {
+        await channel.send(payload);
+    } catch (error) {
+        await logEvent(client, `Grad welcome sticker failed, sending text only: ${error}`);
+        await channel.send({
+            content: payload.content,
+            allowedMentions: payload.allowedMentions,
+        }).catch(() => {});
+    }
 }
 
 async function unlockDay(interaction, dayNumber) {
     const member = interaction.member;
     const roleId = config.roles[`day${dayNumber}`];
-    const introChannel = await interaction.client.channels.fetch(config.channels.intro[dayNumber]);
-
-    if (!introChannel?.isTextBased()) {
-        throw new Error(`Day ${dayNumber} intro channel is missing or not a text channel.`);
-    }
 
     if (!hasRole(member, roleId)) {
-        await member.roles.add(roleId, `Unlocked Day ${dayNumber}`);
+        try {
+            await member.roles.add(roleId, `Unlocked Day ${dayNumber}`);
+        } catch (error) {
+            throw stepError(`add Day ${dayNumber} role`, { name: 'roles', id: roleId }, error);
+        }
     }
-
-    const resourcesId = config.channels.resources[dayNumber];
-    await pingInPrivateThread(
-        introChannel,
-        member,
-        dayNumber,
-        `Day ${dayNumber} is open.\n\n1. Read the pinned intro in this channel.\n2. Then open <#${resourcesId}> and do the work.\n3. When you are finished, press **I'm done with Day ${dayNumber}**.`
-    );
 
     await logEvent(
         interaction.client,
         `Unlocked Day ${dayNumber} for ${member.user.tag} (${member.id})`
     );
+}
+
+function unlockReply(dayNumber) {
+    const introMention = `<#${config.channels.intro[dayNumber]}>`;
+    return [`Day ${dayNumber} is unlocked.`, `Open ${introMention} and read the pinned intro.`].join('\n');
 }
 
 async function startDay1(interaction) {
@@ -86,7 +95,7 @@ async function startDay1(interaction) {
     }
 
     await unlockDay(interaction, 1);
-    await respond(interaction, `Day 1 is unlocked. Check the mention in <#${config.channels.intro[1]}>.`);
+    await respond(interaction, unlockReply(1));
 }
 
 async function completeDay(interaction, finishedDay) {
@@ -100,20 +109,34 @@ async function completeDay(interaction, finishedDay) {
 
     if (finishedDay === 3) {
         if (hasRole(member, config.roles.alumni)) {
-            await respond(interaction, 'You already finished the 3-day course. You can still reread any day.');
+            await respond(
+                interaction,
+                `You already finished the 3-day course. Hang out in <#${config.channels.gradChat}>.`
+            );
             return;
         }
 
-        await member.roles.add(config.roles.alumni, 'Finished 3-day course');
-        const day3 = await interaction.client.channels.fetch(config.channels.intro[3]);
-        await pingInPrivateThread(
-            day3,
-            member,
-            3,
-            'You finished the 3-day course. You keep access to every day — come back whenever you want.\n\nIf you want more of this later, tell Magnus in #general.'
-        );
+        try {
+            await member.roles.add(config.roles.alumni, 'Finished 3-day course');
+        } catch (error) {
+            throw stepError('add Alumni role', { name: 'alumni', id: config.roles.alumni }, error);
+        }
+
         await logEvent(interaction.client, `Alumni: ${member.user.tag} (${member.id})`);
-        await respond(interaction, 'You finished the course. Check the mention in the Day 3 channel.');
+        await welcomeToGradChat(interaction.client, member);
+
+        const promoBit = config.channels.selfPromotion
+            ? `If you want to share your game or work, post in <#${config.channels.selfPromotion}>.`
+            : '';
+        await respond(
+            interaction,
+            [
+                '# 🥳 You\'ve completed the course! 🥳',
+                '',
+                `You finished the course! I hope it's been helpful for you. Please say hello in <#${config.channels.gradChat}> for other people who've done the course!`,
+                promoBit.trim(),
+            ].filter(Boolean).join('\n')
+        );
         return;
     }
 
@@ -126,7 +149,7 @@ async function completeDay(interaction, finishedDay) {
     }
 
     await unlockDay(interaction, nextDay);
-    await respond(interaction, `Day ${nextDay} is unlocked. Check the mention in <#${config.channels.intro[nextDay]}>.`);
+    await respond(interaction, unlockReply(nextDay));
 }
 
 module.exports = {

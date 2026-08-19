@@ -1,6 +1,6 @@
 # Course bot — setup for Magnus (no coding)
 
-This bot is **Magnus Chirgwin** in Discord (your name + avatar, with a small APP/BOT badge). It unlocks Day 1 → 2 → 3 when someone presses a button, and pings **only that person** in a private thread.
+This bot is **Magnus Chirgwin** in Discord (your name + avatar, with a small APP/BOT badge). It unlocks Day 1 → 2 → 3 when someone presses a button, and pings **only that person** in a private thread under **`#your-briefing`** at the top of that day’s category (so the ping sits above `#day-1` / `#day-2` / `#day-3`).
 
 Students never see a public “Ben started Day 1” message.
 
@@ -36,11 +36,14 @@ Bot permissions:
 - Embed Links
 - Add Reactions
 - Manage Roles
+- Manage Channels (needed so `/setup` can create `#your-briefing` at the top of each Day category)
 - Create Public Threads
 - Create Private Threads
 - Send Messages in Threads
 - Manage Threads
 - Read Message History
+
+If the bot is **already in the server**, add **Manage Channels** on the bot role in Server Settings → Roles (or re-run the invite URL with that permission).
 
 Open the generated URL, pick the course server, authorize.
 
@@ -74,6 +77,19 @@ For each **Day 1 / Day 2 / Day 3** category:
 | Bot | **On** for all three |
 | You / Staff | **On** for all three |
 
+**Grad category** (`grad-chat` + graduate voice): `@everyone` **Off**. **Alumni** **On**. Bot **On**. That is how finishing Day 3 unlocks the reward room.
+
+**Also grant the APP on `#day-1` itself**, not only the Day 1 category. If that channel is unsynced, category allows do not apply. Open `#day-1` → Edit Channel → Permissions → add **Magnus Chirgwin** (the APP) → turn **ON**:
+
+- View Channel
+- Send Messages
+- Read Message History
+- Create Private Threads
+- Send Messages in Threads
+- Manage Threads
+
+Do the same on `#day-2` and `#day-3` if they are unsynced. Then confirm **CHANNEL_DAY1** in `.env` is the ID from right-click `#day-1` → Copy Channel ID (not resources, not an old deleted channel). `/setup` will echo the intro channel **name + ID** so you can check this.
+
 Always visible to everyone (or Joiner):
 
 - `#start-here`
@@ -81,6 +97,8 @@ Always visible to everyone (or Joiner):
 - Q&A voice
 
 Optional: create `#bot-log` that only you and the bot can see.
+
+`/setup` creates **`#your-briefing`** as the first channel in each Day category. Students with that day’s role can see it; they talk in their private thread, not in the parent channel.
 
 ---
 
@@ -100,13 +118,17 @@ ROLE_DAY2=
 ROLE_DAY3=
 ROLE_ALUMNI=
 CHANNEL_START_HERE=
-CHANNEL_DAY1=          (the intro text channel, not resources)
+CHANNEL_DAY1=          (right-click the live #day-1 intro channel — not resources)
 CHANNEL_DAY2=
 CHANNEL_DAY3=
 CHANNEL_RESOURCES_DAY1=
 CHANNEL_RESOURCES_DAY2=
 CHANNEL_RESOURCES_DAY3=
 CHANNEL_LOG=           (optional)
+CATEGORY_GRAD=         (grad category)
+CHANNEL_GRAD_CHAT=     (#grad-chat)
+CHANNEL_GRAD_VOICE=    (optional)
+CHANNEL_SELF_PROMOTION= (optional)
 ```
 
 `DISCORD_TOKEN` is the bot token from step 1. Put it only in the `.env` file you upload to Discloud — never GitHub or chat.
@@ -133,12 +155,16 @@ ROLE_DAY3=1526283527077888041
 ROLE_ALUMNI=1526283565489459365
 CHANNEL_START_HERE=1538872437939249193
 CHANNEL_DAY1=1526284554359406642
-CHANNEL_DAY2=1526284609145540708
-CHANNEL_DAY3=1529468705300283503
+CHANNEL_DAY2=1539183494855397396
+CHANNEL_DAY3=1539183541072437248
 CHANNEL_RESOURCES_DAY1=1526212818335174777
 CHANNEL_RESOURCES_DAY2=1526284197084270682
 CHANNEL_RESOURCES_DAY3=1538868434706628678
 CHANNEL_LOG=1538818523973951558
+CATEGORY_GRAD=1539237731144568862
+CHANNEL_GRAD_CHAT=1539234069789810748
+CHANNEL_GRAD_VOICE=1539238258167390350
+CHANNEL_SELF_PROMOTION=1539169770136412220
 ```
 
 `.env` is gitignored. Do not commit it.
@@ -154,28 +180,42 @@ CHANNEL_LOG=1538818523973951558
 
 If it crashes, the log usually means a missing `.env` line or the token is wrong. Paste the log here (never the token).
 
+### 5c. After a code update (this fix)
+
+The bot already on Discloud does **not** pick up GitHub commits. Zip the same six files again and upload over the existing app.
+
+1. Grant the APP **Manage Channels**, plus the `#day-1` channel permissions in section 3.
+2. Upload the new zip. Wait until logs say `Logged in as Magnus Chirgwin`.
+3. In Discord run `/setup`. You should see `#your-briefing` at the top of each Day category, and each intro name listed.
+4. Test **Start Day 1** with an account that does not already have Day 1.
+
 ---
 
 ## 6. In Discord
 
 1. Type `/setup` (only people who can manage the server).
 2. Confirm buttons appear in `#start-here` and each `#resources-day-*`.
-3. Pin **your** intro and resource text in those channels (the messages from your screenshots). The bot only owns the button messages.
+3. Confirm `#your-briefing` is the **first** channel in Day 1, Day 2, and Day 3. `/setup` also lists each intro channel name — it must match `#day-1` / `#day-2` / `#day-3`.
+4. Pin **your** intro and resource text in those channels (the messages from your screenshots). The bot only owns the button messages.
 
-Running `/setup` again updates the same button messages. It does not spam new ones.
+Running `/setup` again updates the same button messages and repositions `#your-briefing`. It does not spam extra buttons.
+
+If `/setup` errors about Missing Permissions, the bot still needs **Manage Channels**. Add it, then run `/setup` again.
 
 ---
 
 ## 7. Test with a second Discord account
 
-Use an account that is **not** admin (admin can see hidden channels and the test lies).
+Use an account that is **not** admin (admin can see hidden channels and the test lies) and does **not** already have the Day 1 role (Start is skipped if they already have it).
 
 1. Join → you should **not** see Day 2 / Day 3.
-2. Press **Start Day 1** → Day 1 appears, you get a mention in a private thread.
+2. Press **Start Day 1** → Day 1 appears. You get a mention in a private thread under **`#your-briefing`**, above `#day-1`.
 3. Your main account should **not** get a ping.
-4. Press **I'm done with Day 1** → Day 2 appears + a new mention.
+4. Press **I'm done with Day 1** → Day 2 appears + a new mention under that day’s `#your-briefing`.
 5. Repeat through Day 3.
 6. Come back later: Days 1–3 still visible (own it forever).
+
+Old private threads that already sit under `#day-3` cannot be moved. Only new unlocks go under `#your-briefing`.
 
 If something fails, the button reply will include a hint. Paste that text here (never the token).
 
