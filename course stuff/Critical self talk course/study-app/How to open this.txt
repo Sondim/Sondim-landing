@@ -1,0 +1,24 @@
+CRITIC QUEST — how to open
+
+1. In File Explorer go to:
+   course stuff\Critical self talk course\study-app
+
+2. Double-click index.html
+   It opens in your browser. No install. Progress is saved in this browser (localStorage).
+
+If the quiz is blank, the browser blocked the local scripts. Then:
+   - Right-click the study-app folder → Open in Terminal
+   - Run:  python -m http.server 8765
+   - Open: http://localhost:8765
+
+What it is
+- A study game over the PDFs, studies, and Joe Hudson transcripts in this course folder.
+- Every question is tied to a sourced card. After you answer, you see the source and the claim.
+- The books disagree on purpose (Helmstetter replace-the-tape vs Joe relate vs Gallwey quiet Self 1 vs Earley parts vs Kross distance). The quiz tests those distinctions instead of mashing them into one theory.
+
+Days
+- Day 1 What it is / Day 2 Cost & bind / Day 3 What to do
+- Those tags are a first-pass sort of the source material, not a locked Discord syllabus.
+- Unlock the next day by mastering 8 cards on the current day (2 correct, and not sitting in the review pile).
+
+Do not publish this folder as a public page. The cards are study paraphrases of copyrighted books, kept local.

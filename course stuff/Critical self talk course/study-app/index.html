@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Critic Quest — study the sources</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #000;
+            --paper: #faf9f6;
+            --yellow: #facc15;
+            --lime: #a3e635;
+            --red: #ef4444;
+            --hud: #1a2e0b;
+        }
+        * { box-sizing: border-box; }
+        html, body { margin: 0; min-height: 100%; }
+        body {
+            background: #e4e4e7;
+            color: var(--ink);
+            font-family: 'Open Sans', sans-serif;
+        }
+        .font-8bit { font-family: 'Press Start 2P', monospace; text-transform: uppercase; }
+        .wrap {
+            max-width: 820px;
+            margin: 0 auto;
+            padding: 24px 16px 80px;
+        }
+        .panel {
+            background: var(--paper);
+            border: 4px solid #000;
+            box-shadow: 8px 8px 0 #000;
+            padding: 20px;
+        }
+        .btn-8bit {
+            font-family: 'Press Start 2P', monospace;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            background: #fff;
+            color: #000;
+            text-transform: uppercase;
+            font-size: 10px;
+            line-height: 1.5;
+            padding: 14px 16px;
+            border: 4px solid #000;
+            box-shadow: 6px 6px 0 #000;
+            cursor: pointer;
+            text-align: center;
+            transition: transform .08s ease, box-shadow .08s ease, background .15s ease;
+        }
+        .btn-8bit:hover:not(:disabled) { background: #f4f4f5; }
+        .btn-8bit:active:not(:disabled) {
+            transform: translate(4px, 4px);
+            box-shadow: 2px 2px 0 #000;
+        }
+        .btn-8bit:disabled {
+            background: #e4e4e7;
+            color: #a1a1aa;
+            box-shadow: 0 0 0 #000;
+            transform: translate(4px, 4px);
+            cursor: not-allowed;
+        }
+        .btn-yellow { background: var(--yellow) !important; }
+        .btn-yellow:hover:not(:disabled) { background: #fde047 !important; }
+        .btn-lime { background: var(--lime) !important; }
+        .choice {
+            width: 100%;
+            text-align: left;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 15px;
+            text-transform: none;
+            line-height: 1.45;
+            justify-content: flex-start;
+        }
+        .choice.correct { background: var(--lime) !important; }
+        .choice.wrong { background: var(--red) !important; color: #fff; }
+        .hud-bar {
+            height: 22px;
+            background: var(--hud);
+            border: 4px solid #000;
+            position: relative;
+            overflow: hidden;
+        }
+        .hud-fill {
+            height: 100%;
+            width: 0;
+            background: repeating-linear-gradient(90deg, #84cc16 0 10px, #65a30d 10px 12px);
+            transition: width .35s ease;
+        }
+        .hud-label {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            text-shadow: 1px 1px 0 #000;
+        }
+        .hearts { letter-spacing: 2px; color: var(--red); font-size: 18px; }
+        .grid-days { display: grid; grid-template-columns: 1fr; gap: 12px; }
+        @media (min-width: 700px) {
+            .grid-days { grid-template-columns: 1fr 1fr 1fr; }
+        }
+        .day-card { display: flex; flex-direction: column; gap: 10px; min-height: 180px; }
+        .src-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        @media (min-width: 700px) { .src-grid { grid-template-columns: 1fr 1fr 1fr; } }
+        .hidden { display: none !important; }
+        .fade-in { animation: fadeIn .35s ease; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: none; }
+        }
+        @keyframes shake {
+            0%, 100% { transform: none; }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+        .shake { animation: shake .28s ease; }
+        @keyframes pop {
+            0% { transform: scale(.8); }
+            60% { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
+        .pop { animation: pop .35s ease; }
+        .combo-float {
+            position: fixed;
+            left: 50%;
+            top: 28%;
+            transform: translateX(-50%);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 18px;
+            color: var(--yellow);
+            text-shadow: 3px 3px 0 #000;
+            pointer-events: none;
+            z-index: 50;
+            animation: fadeIn .4s ease;
+        }
+        .note {
+            border: 3px solid #000;
+            padding: 12px;
+            background: #fff;
+            margin-bottom: 10px;
+        }
+        .badge {
+            display: inline-block;
+            background: #000;
+            color: var(--yellow);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            padding: 4px 6px;
+        }
+        h1, h2, h3 { margin: 0; }
+        p { margin: 0 0 10px; }
+        .muted { color: #52525b; }
+        .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+        .space { height: 16px; }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <header class="panel" style="margin-bottom: 16px;">
+            <div class="row" style="justify-content: space-between;">
+                <div>
+                    <h1 class="font-8bit" style="font-size: 14px; line-height: 1.7;">Critic Quest</h1>
+                    <p class="muted" style="margin: 8px 0 0; font-size: 13px;">Study the books. Keep the schools distinct. Local only.</p>
+                </div>
+                <div class="font-8bit" style="font-size: 8px; text-align: right; line-height: 1.8;">
+                    <div>LV <span id="hud-level">1</span></div>
+                    <div>STREAK <span id="hud-streak">0</span></div>
+                </div>
+            </div>
+            <div class="space"></div>
+            <div class="hud-bar">
+                <div class="hud-fill" id="hud-xp-fill"></div>
+                <div class="hud-label" id="hud-xp-label">0 XP</div>
+            </div>
+        </header>
+
+        <main id="view-hub" class="panel fade-in">
+            <p style="font-size: 15px; line-height: 1.55;">
+                Every question is tied to a sourced card. Wrong answers go to the review pile.
+                Day tags are a first-pass sort of the material — not a locked Discord syllabus.
+            </p>
+            <div class="row" style="margin: 12px 0 16px;">
+                <span class="badge">REVIEW <span id="review-count">0</span></span>
+                <span class="badge">BEST COMBO <span id="best-combo">0</span></span>
+            </div>
+            <div class="grid-days" id="day-grid"></div>
+            <div class="space"></div>
+            <div class="row">
+                <button class="btn-8bit btn-yellow" id="btn-review">Clear review pile</button>
+                <button class="btn-8bit" id="btn-notebook">Course notebook</button>
+            </div>
+            <div class="space"></div>
+            <h2 class="font-8bit" style="font-size: 10px; margin-bottom: 10px;">Free study by source</h2>
+            <div class="src-grid" id="src-grid"></div>
+        </main>
+
+        <section id="view-quiz" class="panel fade-in hidden">
+            <div class="row" style="justify-content: space-between; margin-bottom: 12px;">
+                <div class="font-8bit" style="font-size: 8px;" id="quiz-meta">DAY 1</div>
+                <div class="row">
+                    <div class="hearts" id="quiz-hearts"></div>
+                    <div class="font-8bit" style="font-size: 8px;">COMBO <span id="quiz-combo">0</span></div>
+                </div>
+            </div>
+            <div class="hud-bar" style="margin-bottom: 16px;">
+                <div class="hud-fill" id="quiz-progress-fill"></div>
+                <div class="hud-label" id="quiz-progress-label">1 / 10</div>
+            </div>
+            <p class="font-8bit" style="font-size: 9px; line-height: 1.7; margin-bottom: 16px;" id="quiz-prompt"></p>
+            <div id="quiz-choices" style="display: flex; flex-direction: column; gap: 10px;"></div>
+        </section>
+
+        <section id="view-feedback" class="panel fade-in hidden">
+            <div id="fb-banner" class="font-8bit pop" style="font-size: 14px; margin-bottom: 12px;"></div>
+            <div class="note">
+                <div class="badge" id="fb-source"></div>
+                <p style="margin-top: 10px; font-weight: 700;" id="fb-claim"></p>
+                <p class="muted" style="font-size: 14px;" id="fb-why"></p>
+                <p style="font-size: 14px;" id="fb-conflict"></p>
+            </div>
+            <p class="muted" style="font-size: 13px;" id="fb-hint"></p>
+            <div class="space"></div>
+            <button class="btn-8bit btn-yellow" id="btn-next">Next</button>
+        </section>
+
+        <section id="view-summary" class="panel fade-in hidden">
+            <h2 class="font-8bit" style="font-size: 12px; line-height: 1.7; margin-bottom: 12px;" id="sum-title">Run complete</h2>
+            <p id="sum-body"></p>
+            <div id="sum-unlock" class="note hidden" style="background: var(--yellow);"></div>
+            <div class="space"></div>
+            <button class="btn-8bit btn-yellow" id="btn-hub">Back to hub</button>
+        </section>
+
+        <section id="view-notebook" class="panel fade-in hidden">
+            <div class="row" style="justify-content: space-between; margin-bottom: 12px;">
+                <h2 class="font-8bit" style="font-size: 12px;">Notebook</h2>
+                <button class="btn-8bit" id="btn-nb-back">Hub</button>
+            </div>
+            <p class="muted" style="font-size: 14px;">Mastered cards, grouped by the first-pass day tag. Use this later when you write Discord pins.</p>
+            <div id="nb-body"></div>
+        </section>
+    </div>
+    <div id="combo-float" class="combo-float hidden"></div>
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
