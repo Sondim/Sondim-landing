@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inner Critic Types — Sondim</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: #0f171c;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        .fade-in { animation: fadeIn 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .btn-8bit {
+            font-family: 'Press Start 2P', monospace;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #facc15;
+            color: black !important;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            padding: 1.25rem 2rem;
+            border: 4px solid black;
+            box-shadow: 6px 6px 0px black;
+            transition: transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out, background-color 0.15s ease, border-color 0.15s ease;
+            cursor: pointer;
+            text-decoration: none;
+            position: relative;
+        }
+
+        @media (hover: hover) {
+            .btn-8bit:hover:not(:disabled) {
+                background-color: #fde047;
+                border-color: #ffffff;
+            }
+        }
+
+        .btn-8bit:active:not(:disabled) {
+            transform: translate(4px, 4px) !important;
+            box-shadow: 2px 2px 0px black !important;
+        }
+
+        .quest-quiz-btn {
+            text-align: left;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            background-color: #1B2933;
+            color: #AFD5DA;
+            border: 4px solid black;
+            box-shadow: 4px 4px 0px #000000;
+            transition: all 0.075s;
+            cursor: pointer;
+        }
+
+        @media (hover: hover) {
+            .quest-quiz-btn:hover {
+                background-color: #AFD5DA;
+                color: #1B2933;
+            }
+        }
+
+        .quest-quiz-btn:active {
+            transform: translate(4px, 4px);
+            box-shadow: 0px 0px 0px #000000;
+        }
+
+        .pixel-particle {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            image-rendering: pixelated;
+            animation: particleTravel 0.45s steps(4) forwards;
+        }
+
+        @keyframes particleTravel {
+            0% {
+                transform: translate(-50%, -50%) translate(0, 0);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) translate(var(--tw-x, 0px), var(--tw-y, 0px));
+                opacity: 0;
+            }
+        }
+
+        .score-bar-fill {
+            background: linear-gradient(to bottom,
+                #7a5a00 0%, #7a5a00 16.6%,
+                #d4a017 16.6%, #d4a017 33.3%,
+                #facc15 33.3%, #facc15 66.6%,
+                #e8c857 66.6%, #e8c857 83.3%,
+                #a17800 83.3%, #a17800 100%
+            );
+            transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .result-row.is-top {
+            border-color: #facc15;
+            background-color: #243440;
+        }
+
+        .result-row.is-strong .score-bar-track {
+            box-shadow: 0 0 0 1px #facc15;
+        }
+
+        #results-list .result-blurb {
+            font-size: 0.75rem;
+            line-height: 1.35;
+            color: #a1a1aa;
+            font-style: italic;
+        }
+
+        @media (min-width: 768px) {
+            #results-list .result-blurb {
+                font-size: 0.8125rem;
+            }
+        }
+
+        .contact-text-spring {
+            transition: transform 0.35s cubic-bezier(0.34, 2.5, 0.64, 1), color 0.075s ease;
+            display: inline-block;
+        }
+
+        .group:hover .contact-text-spring {
+            transform: translateY(-6px);
+        }
+
+        @keyframes pixelSquashJump {
+            0%   { transform: translateY(0) scale(1, 1); }
+            20%  { transform: translateY(4px) scale(1.15, 0.85); }
+            50%  { transform: translateY(-12px) scale(0.85, 1.15); }
+            80%  { transform: translateY(2px) scale(1.1, 0.9); }
+            100% { transform: translateY(0) scale(1, 1); }
+        }
+
+        .group:hover .contact-icon-jump {
+            animation: pixelSquashJump 0.45s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            transform-origin: bottom center;
+        }
+
+        .discord-copied-text {
+            color: #5865F2 !important;
+            transform: scale(1.15) translateY(-6px) !important;
+        }
+
+        .modal-fade-out {
+            animation: modalFadeOut 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            pointer-events: none;
+        }
+
+        @keyframes modalFadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        .render-pixel { shape-rendering: crispEdges; }
+
+        /* PDF export: fill one A4 page, keep on-screen dark look */
+        @media print {
+            @page { size: A4 portrait; margin: 0; }
+
+            html, body {
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 210mm !important;
+                height: 297mm !important;
+                max-height: 297mm !important;
+                overflow: hidden !important;
+                background: #1B2933 !important;
+                color: #ffffff !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            body {
+                display: block !important;
+                min-height: 297mm !important;
+                padding: 0 !important;
+            }
+
+            .no-print { display: none !important; }
+
+            #intro-screen,
+            #quiz-screen,
+            #contact-gateway-modal,
+            #contact-email-modal {
+                display: none !important;
+            }
+
+            #app-panel {
+                display: flex !important;
+                flex-direction: column !important;
+                width: 210mm !important;
+                height: 297mm !important;
+                max-width: none !important;
+                max-height: 297mm !important;
+                margin: 0 !important;
+                box-shadow: none !important;
+                background: #1B2933 !important;
+                border: none !important;
+                padding: 14mm 14mm 12mm !important;
+                box-sizing: border-box !important;
+                overflow: hidden !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            #results-screen {
+                display: flex !important;
+                flex-direction: column !important;
+                flex: 1 1 auto !important;
+                width: 100% !important;
+                max-width: none !important;
+                height: 100% !important;
+                min-height: 0 !important;
+                margin: 0 !important;
+                opacity: 1 !important;
+                animation: none !important;
+                transform: none !important;
+            }
+
+            #results-screen > .text-center {
+                margin-bottom: 1.25rem !important;
+                flex-shrink: 0 !important;
+            }
+
+            #results-screen > .text-center h2 {
+                font-size: 22px !important;
+                margin-bottom: 0.6rem !important;
+            }
+
+            #results-screen > .text-center p {
+                font-size: 13px !important;
+            }
+
+            #results-list {
+                display: flex !important;
+                flex-direction: column !important;
+                flex: 1 1 auto !important;
+                justify-content: space-between !important;
+                gap: 0 !important;
+                min-height: 0 !important;
+                margin: 0 !important;
+            }
+
+            .result-row {
+                break-inside: avoid;
+                page-break-inside: avoid;
+                padding: 0.55rem 0.75rem !important;
+                margin: 0 !important;
+                border-width: 2px !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .result-row .score-bar-track {
+                height: 10px !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .score-bar-fill {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            #results-list .result-blurb {
+                font-size: 11px !important;
+                line-height: 1.35 !important;
+                margin-top: 0.35rem !important;
+                font-style: italic !important;
+            }
+
+            #results-screen > p {
+                margin-top: 1.1rem !important;
+                margin-bottom: 0 !important;
+                font-size: 11px !important;
+                line-height: 1.45 !important;
+                flex-shrink: 0 !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4 md:p-8 font-sans">
+
+    <div id="app-panel" class="w-full max-w-4xl mx-auto relative bg-[#1B2933] border-4 border-black p-6 md:p-12 shadow-[8px_8px_0px_#000000]">
+
+        <button type="button" id="close-test-btn" class="hidden no-print absolute top-4 right-4 md:top-6 md:right-6 text-[#AFD5DA] hover:text-white hover:scale-110 active:scale-95 transition-all p-2 z-50" aria-label="Close test">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+        <!-- INTRO -->
+        <div id="intro-screen" class="fade-in text-center max-w-2xl mx-auto">
+            <h1 class="font-['Press_Start_2P'] text-xl md:text-3xl text-yellow-400 mb-6 leading-relaxed tracking-wide uppercase">
+                Inner Critic<br>Types
+            </h1>
+            <p class="text-white font-mono text-sm md:text-base leading-relaxed mb-6">
+                Answer 21 short statements. You’ll see which type of inner-critic you have
+            </p>
+            <p class="text-[#AFD5DA] font-mono text-xs md:text-sm leading-relaxed mb-10">
+                This is purely for self-reflection, not a diagnosis or an assessment of your personality.
+            </p>
+            <button type="button" id="start-btn" class="btn-8bit text-[10px] tracking-widest">
+                Start test
+            </button>
+        </div>
+
+        <!-- QUIZ -->
+        <div id="quiz-screen" class="hidden text-center fade-in w-full max-w-2xl mx-auto">
+            <h2 id="quiz-title" class="text-xl md:text-2xl font-['Press_Start_2P'] uppercase text-yellow-400 mb-8 leading-tight tracking-wide transition-opacity duration-300">
+                Inner Critic Test
+            </h2>
+
+            <div id="xp-bar-container" class="w-full h-6 bg-[#2a2200] border-4 border-black mb-8 relative overflow-visible drop-shadow-[0_4px_0_rgba(0,0,0,0.8)]" style="image-rendering: pixelated; transform-origin: bottom center;">
+                <div id="quiz-progress" class="h-full w-0 transition-[width] duration-500 ease-out relative score-bar-fill">
+                    <div id="flash-overlay" class="absolute inset-0 bg-white opacity-0 pointer-events-none z-10"></div>
+                </div>
+                <div id="master-emitter" class="absolute left-0 top-1/2 h-0 w-0 pointer-events-none z-20"></div>
+            </div>
+
+
+            <h2 id="question-text" class="text-base md:text-lg font-normal text-zinc-100 mb-6 flex items-center justify-center text-center leading-relaxed min-h-[90px]"></h2>
+
+            <div id="answers-container" class="flex flex-col gap-3 md:gap-4 transition-opacity duration-300">
+                <button type="button" class="quest-quiz-btn p-4 md:p-5" data-val="0">Strongly Disagree</button>
+                <button type="button" class="quest-quiz-btn p-4 md:p-5" data-val="1">Disagree</button>
+                <button type="button" class="quest-quiz-btn p-4 md:p-5" data-val="2">Agree</button>
+                <button type="button" class="quest-quiz-btn p-4 md:p-5" data-val="3">Strongly Agree</button>
+            </div>
+        </div>
+
+        <!-- RESULTS -->
+        <div id="results-screen" class="hidden fade-in w-full max-w-3xl mx-auto flex flex-col">
+            <div class="text-center mb-4 md:mb-5 shrink-0">
+                <h2 class="text-xl md:text-2xl text-yellow-400 mb-2 font-['Press_Start_2P'] uppercase tracking-wide">Your results</h2>
+                <p id="loudest-line" class="text-white font-mono text-sm md:text-base leading-relaxed"></p>
+            </div>
+
+            <div id="results-list" class="flex flex-col gap-2 md:gap-2.5 flex-1 min-h-0"></div>
+
+            <p class="text-[#AFD5DA] font-mono text-[11px] md:text-xs leading-relaxed text-center mt-4 mb-5 shrink-0">
+                Good job. This isn't gospel, types can mix and you might want to call them something else. Remember the inner critic isn't all of you, you're bigger than that. If you need support reach out below. 
+            </p>
+
+            <div class="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 shrink-0 no-print">
+                <button type="button" id="export-btn" class="btn-8bit text-[10px] tracking-widest">
+                    Export PDF
+                </button>
+                <button type="button" id="contact-btn" class="btn-8bit text-[10px] tracking-widest">
+                    Contact Magnus
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTACT GATEWAY -->
+    <div id="contact-gateway-modal" class="fixed inset-0 z-[60] hidden bg-black/50 overflow-y-auto no-print">
+        <div class="min-h-screen flex items-center justify-center px-4 py-12 w-full">
+            <div class="w-full max-w-2xl mx-auto relative bg-[#1B2933] border-4 border-black p-6 md:p-12 my-auto">
+                <button type="button" class="modal-close absolute top-4 right-4 md:top-6 md:right-6 text-[#AFD5DA] hover:text-white hover:scale-110 active:scale-95 transition-all p-2 z-50">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+
+                <div class="text-center mb-12">
+                    <h2 class="text-2xl md:text-3xl font-['Press_Start_2P'] text-yellow-400 mb-3 tracking-tight">CONTACT ME</h2>
+                    <p class="text-white font-mono text-sm md:text-base">Email me or send me a message on Discord!</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center justify-items-center">
+                    <button type="button" id="open-email-btn" class="group flex flex-col items-center no-underline relative bg-transparent border-none appearance-none outline-none cursor-pointer">
+                        <div class="flex items-center justify-center w-28 h-28 mb-4 bg-[#1B2933] border-4 border-black shadow-[6px_6px_0px_black] group-hover:bg-[#facc15] group-active:translate-x-[4px] group-active:translate-y-[4px] group-active:shadow-[2px_2px_0px_black] transition-all duration-75">
+                            <svg class="w-14 h-14 text-white group-hover:text-black transition-colors duration-75 render-pixel contact-icon-jump" viewBox="0 0 24 24" fill="currentColor">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M2 5 h20 v14 H2 V5 z M4 7 h2 v2 H4 V7 z M18 7 h2 v2 h-2 V7 z M6 9 h2 v2 H6 V9 z M16 9 h2 v2 h-2 V9 z M8 11 h2 v2 H8 V11 z M14 11 h2 v2 h-2 V11 z M10 13 h4 v2 h-4 V13 z" />
+                            </svg>
+                        </div>
+                        <span class="font-['Press_Start_2P'] text-[10px] text-white uppercase tracking-widest group-hover:text-yellow-400 transition-colors duration-75 leading-relaxed contact-text-spring">Email Me</span>
+                    </button>
+
+                    <button type="button" id="copy-discord-btn" class="group flex flex-col items-center no-underline relative bg-transparent border-none outline-none cursor-pointer appearance-none">
+                        <div class="flex items-center justify-center w-28 h-28 mb-4 bg-[#1B2933] border-4 border-black shadow-[6px_6px_0px_black] group-hover:bg-[#5865F2] group-active:translate-x-[4px] group-active:translate-y-[4px] group-active:shadow-[2px_2px_0px_black] transition-all duration-75">
+                            <svg class="w-14 h-14 text-white transition-colors duration-75 render-pixel contact-icon-jump" viewBox="0 0 24 24" fill="currentColor">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M6 4h4v2h4V4h4v4h2v8h-2v2h-4v-2h-4v2H6v-2H4V8h2V4zm3 6H7v2h2v-2zm6 0h-2v2h2v-2z" />
+                            </svg>
+                        </div>
+                        <span class="font-['Press_Start_2P'] text-[10px] text-white uppercase tracking-widest group-hover:text-yellow-400 transition-colors duration-75 leading-relaxed contact-text-spring">COPY DISCORD ID</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EMAIL FORM -->
+    <div id="contact-email-modal" class="fixed inset-0 z-[70] hidden bg-black/50 overflow-y-auto no-print">
+        <div class="min-h-screen flex items-center justify-center px-4 py-12 md:py-20 w-full">
+            <div class="w-full max-w-2xl mx-auto relative bg-[#1B2933] border-4 border-black p-6 md:p-12 my-auto">
+                <button type="button" class="modal-close absolute top-4 right-4 md:top-6 md:right-6 text-[#AFD5DA] hover:text-white hover:scale-110 active:scale-95 transition-all p-2 z-50">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl md:text-3xl font-['Press_Start_2P'] uppercase text-yellow-400 mb-3 tracking-tight">EMAIL ME</h2>
+                    <p class="text-white font-mono text-sm md:text-base">I read all emails sent to me and I try to get back to you as soon as possible!</p>
+                </div>
+
+                <div class="border-4 border-black bg-[#1B2933] flex flex-col gap-4 w-full p-5 md:p-6">
+                    <div class="flex flex-col sm:flex-row gap-4 w-full">
+                        <input type="text" id="contactName" placeholder="Your Name" class="w-full sm:w-1/2 bg-[#FAF9F6] border-4 border-black text-[#1B2933] font-bold px-5 py-4 focus:outline-none focus:border-yellow-400 transition-colors font-mono text-sm placeholder:text-[#1B2933]/70">
+                        <input type="email" id="contactEmail" placeholder="Your Email" class="w-full sm:w-1/2 bg-[#FAF9F6] border-4 border-black text-[#1B2933] font-bold px-5 py-4 focus:outline-none focus:border-yellow-400 transition-colors font-mono text-sm placeholder:text-[#1B2933]/70">
+                    </div>
+                    <textarea id="contactMessage" placeholder="Your Message" rows="4" class="w-full bg-[#FAF9F6] border-4 border-black text-[#1B2933] font-bold px-5 py-4 focus:outline-none focus:border-yellow-400 transition-colors font-mono text-sm placeholder:text-[#1B2933]/70 resize-none"></textarea>
+                    <button type="button" id="contactSendBtn" class="btn-8bit w-full mt-2 text-[10px] tracking-widest">
+                        SEND MESSAGE
+                    </button>
+                </div>
+                <p id="contactStatusMsg" class="text-sm font-mono tracking-widest h-6 text-zinc-500 text-center mt-4"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- EXIT CONFIRM -->
+    <div id="exit-confirm-modal" class="fixed inset-0 z-[80] hidden bg-black/50 overflow-y-auto no-print">
+        <div class="min-h-screen flex items-center justify-center px-4 py-12 w-full">
+            <div class="w-full max-w-lg mx-auto relative bg-[#1B2933] border-4 border-black p-6 md:p-10 my-auto text-center">
+                <p class="text-white font-mono text-sm md:text-base leading-relaxed mb-8">
+                    Your progress will be lost are you sure you want to exit?
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <button type="button" id="exit-confirm-ok" class="btn-8bit text-[10px] tracking-widest">OK</button>
+                    <button type="button" id="exit-confirm-cancel" class="btn-8bit text-[10px] tracking-widest" style="background-color:#AFD5DA;">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const TYPE_META = {
+            perfectionist: {
+                title: 'Perfectionist',
+                blurb: '“This isn’t good enough. Fix it. It still isn’t right.”, “If it’s not perfect, it doesn’t count.”'
+            },
+            controller: {
+                title: 'Inner Controller',
+                blurb: '“You lost control again. What’s wrong with you?”, “You should be ashamed of that habit.”'
+            },
+            taskmaster: {
+                title: 'Taskmaster',
+                blurb: '“You’re lazy. Stop resting and get back to work.”, “Other people hustle. Why don’t you?”'
+            },
+            underminer: {
+                title: 'Underminer',
+                blurb: '“Don’t even try. You’ll just fail and look stupid.”, “You don’t have what it takes, just give up.”'
+            },
+            destroyer: {
+                title: 'Destroyer',
+                blurb: '“Something’s wrong with you. You shouldn’t even be here.”, “You’re broken. Deep down, you know it.”'
+            },
+            guilt: {
+                title: 'Guilt Tripper',
+                blurb: '“What you did was unforgivable. Don’t forget it.”, “If you were a good person, you wouldn’t have done that.”'
+            },
+            molder: {
+                title: 'Molder',
+                blurb: '“That’s not who you’re supposed to be. Fit in.”, “People like us don’t do that.”'
+            }
+        };
+
+        // 21 items: 3 per type. invert:true = positive framing (agree = less critic).
+        const QUESTIONS = [
+            { text: 'When I make a mistake, I can treat myself with the same patience I’d show a friend.', type: 'perfectionist', invert: true },
+            { text: 'I feel bad about myself if I fail to control my impulses.', type: 'controller', invert: false },
+            { text: 'I push myself to work very hard so I can achieve my goals.', type: 'taskmaster', invert: false },
+            { text: 'When I think about trying something challenging, I talk myself out of even trying', type: 'underminer', invert: false },
+            { text: 'Deep down, I feel like something must be really wrong with me.', type: 'destroyer', invert: false },
+            { text: 'I can easily forgive myself for things I’ve done.', type: 'guilt', invert: true },
+            { text: 'I can easily be myself and say what I want without feeling bad about standing out', type: 'molder', invert: true },
+
+            { text: 'I always feel like I could have done it better.', type: 'perfectionist', invert: false },
+            { text: 'I have to try really hard to control my impulses.', type: 'controller', invert: false },
+            { text: 'I feel bad because I’m lazy and can’t motivate myself to work', type: 'taskmaster', invert: false },
+            { text: 'I feel comfortable failing at things that mean a lot to me.', type: 'underminer', invert: true },
+            { text: 'I feel positive about who I am.', type: 'destroyer', invert: true },
+            { text: 'I keep replaying the ways I’ve let people down', type: 'guilt', invert: false },
+            { text: 'I feel bad when I don’t meet other people’s expectations.', type: 'molder', invert: false },
+
+            { text: 'I spend a lot more time on a task than I need to, just to make it as good as possible.', type: 'perfectionist', invert: false },
+            { text: 'I feel ashamed of some of my habits.', type: 'controller', invert: false },
+            { text: 'I have to force myself to work so I don’t avoid it', type: 'taskmaster', invert: false },
+            { text: 'I believe I have what it takes to succeed at hard things.', type: 'underminer', invert: true },
+            { text: 'I often feel like I don’t have the right to exist or belong.', type: 'destroyer', invert: false },
+            { text: 'If I were a good person, I’d take better care of the people I care about.', type: 'guilt', invert: false },
+            { text: 'I feel completely free to be different than my family or culture expects.', type: 'molder', invert: true }
+        ];
+
+        const QUESTION_TEXT_CLASS = 'text-base md:text-lg font-normal text-zinc-100 mb-6 flex items-center justify-center text-center leading-relaxed min-h-[90px]';
+
+        const TYPE_ORDER = Object.keys(TYPE_META);
+        const MAX_PER_TYPE = 9;
+
+        let qIdx = 0;
+        let scores = emptyScores();
+        let answering = false;
+        let testInProgress = false;
+
+        const introScreen = document.getElementById('intro-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultsScreen = document.getElementById('results-screen');
+        const questionText = document.getElementById('question-text');
+        const quizTitle = document.getElementById('quiz-title');
+        const answersContainer = document.getElementById('answers-container');
+        const progressBar = document.getElementById('quiz-progress');
+        const masterEmitter = document.getElementById('master-emitter');
+        const flashOverlay = document.getElementById('flash-overlay');
+        const xpBarContainer = document.getElementById('xp-bar-container');
+        const loudestLine = document.getElementById('loudest-line');
+        const resultsList = document.getElementById('results-list');
+        const closeTestBtn = document.getElementById('close-test-btn');
+        const particleColors = ['#ffffff', '#fff1a1', '#facc15', '#e8c857'];
+
+        function emptyScores() {
+            return TYPE_ORDER.reduce((acc, key) => {
+                acc[key] = 0;
+                return acc;
+            }, {});
+        }
+
+        function setCloseVisible(visible) {
+            closeTestBtn.classList.toggle('hidden', !visible);
+        }
+
+        function showScreen(screen) {
+            [introScreen, quizScreen, resultsScreen].forEach((el) => {
+                el.classList.add('hidden');
+                el.classList.remove('fade-in');
+            });
+            screen.classList.remove('hidden');
+            void screen.offsetWidth;
+            screen.classList.add('fade-in');
+            setCloseVisible(screen !== introScreen);
+        }
+
+        function startTest() {
+            qIdx = 0;
+            scores = emptyScores();
+            answering = false;
+            testInProgress = true;
+            answersContainer.style.opacity = '1';
+            answersContainer.style.pointerEvents = 'auto';
+            quizTitle.style.opacity = '1';
+            questionText.className = QUESTION_TEXT_CLASS;
+            progressBar.style.width = '0%';
+            if (masterEmitter) masterEmitter.innerHTML = '';
+            showScreen(quizScreen);
+            renderQuestion();
+        }
+
+        function exitToIntro() {
+            testInProgress = false;
+            answering = false;
+            qIdx = 0;
+            scores = emptyScores();
+            showScreen(introScreen);
+        }
+
+        function requestExit() {
+            if (!testInProgress) {
+                exitToIntro();
+                return;
+            }
+            openModal(exitConfirmModal);
+        }
+
+        function renderQuestion() {
+            const q = QUESTIONS[qIdx];
+            questionText.innerText = q.text;
+            const progressPct = (qIdx / QUESTIONS.length) * 100;
+            progressBar.style.width = `${progressPct}%`;
+        }
+
+        function spawnParticle(type, ratio, customAngle = null) {
+            const particle = document.createElement('div');
+            particle.className = 'pixel-particle';
+            const size = type === 'finale' ? (Math.random() > 0.4 ? '3px' : '4px') : (Math.random() > 0.6 ? '2px' : '3px');
+            particle.style.width = size;
+            particle.style.height = size;
+            particle.style.backgroundColor = particleColors[Math.floor(Math.random() * particleColors.length)];
+
+            let targetX = 0;
+            let targetY = 0;
+            const baseVerticalSpread = 12 + (Math.random() * 12) + (ratio * 20);
+
+            if (type === 'top') {
+                targetX = (Math.random() - 0.5) * (ratio * 30);
+                targetY = -baseVerticalSpread;
+            } else if (type === 'bottom') {
+                targetX = (Math.random() - 0.5) * (ratio * 30);
+                targetY = baseVerticalSpread;
+            } else if (type === 'front') {
+                const angle = (Math.random() - 0.5) * Math.PI;
+                const velocity = 15 + (Math.random() * 12) + (ratio * 25);
+                targetX = Math.cos(angle) * velocity;
+                targetY = Math.sin(angle) * velocity;
+            } else if (type === 'finale') {
+                const velocity = 35 + (Math.random() * 45);
+                targetX = Math.cos(customAngle) * velocity;
+                targetY = Math.sin(customAngle) * velocity;
+            }
+
+            particle.style.setProperty('--tw-x', `${targetX}px`);
+            particle.style.setProperty('--tw-y', `${targetY}px`);
+            particle.style.animationDelay = `${Math.random() * 0.05}s`;
+            masterEmitter.appendChild(particle);
+        }
+
+        function triggerEffects(currentIdx, total) {
+            const ratio = currentIdx / total;
+            masterEmitter.style.left = `${ratio * 100}%`;
+            xpBarContainer.style.animation = 'none';
+            void xpBarContainer.offsetWidth;
+            xpBarContainer.style.transformOrigin = 'bottom center';
+
+            const progressiveCurve = Math.pow(ratio, 2);
+            const squishFactor = 1 - (progressiveCurve * 0.12);
+            const stretchFactor = 1 + (progressiveCurve * 0.16);
+
+            xpBarContainer.animate([
+                { transform: 'scale(1, 1)' },
+                { transform: `scale(1.03, ${squishFactor})` },
+                { transform: `scale(0.97, ${stretchFactor})` },
+                { transform: 'scale(1, 1)' }
+            ], { duration: 110 + (ratio * 40), easing: 'steps(4)', fill: 'forwards' });
+
+            if (flashOverlay) {
+                flashOverlay.style.animation = 'none';
+                void flashOverlay.offsetWidth;
+                flashOverlay.animate([
+                    { opacity: 0.9, offset: 0 },
+                    { opacity: 0.9, offset: 0.35 },
+                    { opacity: 0.4, offset: 0.7 },
+                    { opacity: 0, offset: 1 }
+                ], { duration: 120 + (ratio * 180), easing: 'steps(3)', fill: 'forwards' });
+            }
+
+            masterEmitter.innerHTML = '';
+            const verticalSideCount = Math.max(2, Math.floor(ratio * 6));
+            for (let i = 0; i < verticalSideCount; i++) {
+                spawnParticle('top', ratio);
+                spawnParticle('bottom', ratio);
+            }
+
+            const halfwayStep = Math.floor(total / 2);
+            if (currentIdx > halfwayStep) {
+                const stepsPastHalfway = currentIdx - halfwayStep;
+                const totalRemainingSteps = total - halfwayStep;
+                const frontCount = Math.floor((stepsPastHalfway / totalRemainingSteps) * 8);
+                for (let i = 0; i < frontCount; i++) spawnParticle('front', ratio);
+            }
+        }
+
+        function triggerFinaleEffects() {
+            masterEmitter.style.left = '50%';
+            xpBarContainer.style.animation = 'none';
+            void xpBarContainer.offsetWidth;
+            xpBarContainer.style.transformOrigin = 'center center';
+
+            xpBarContainer.animate([
+                { transform: 'scale(1, 1) translateY(0)' },
+                { transform: 'scale(1.08, 0.82) translateY(2px)' },
+                { transform: 'scale(0.88, 1.22) translateY(-14px)' },
+                { transform: 'scale(1.05, 0.93) translateY(2px)' },
+                { transform: 'scale(0.98, 1.02) translateY(-2px)' },
+                { transform: 'scale(1, 1) translateY(0)' }
+            ], { duration: 450, easing: 'steps(6)', fill: 'forwards' });
+
+            if (flashOverlay) {
+                flashOverlay.style.animation = 'none';
+                void flashOverlay.offsetWidth;
+                flashOverlay.animate([
+                    { opacity: 1, offset: 0.0 },
+                    { opacity: 0, offset: 0.166 },
+                    { opacity: 1, offset: 0.333 },
+                    { opacity: 0, offset: 0.5 },
+                    { opacity: 1, offset: 0.666 },
+                    { opacity: 0, offset: 0.833 },
+                    { opacity: 0, offset: 1.0 }
+                ], { duration: 1125, easing: 'steps(6)', fill: 'forwards' });
+            }
+
+            masterEmitter.innerHTML = '';
+            const finaleCount = 40;
+            for (let i = 0; i < finaleCount; i++) {
+                const angle = (i / finaleCount) * (Math.PI * 2);
+                spawnParticle('finale', 1, angle);
+            }
+        }
+
+        function showResults() {
+            const ranked = TYPE_ORDER
+                .map((key) => ({ key, score: scores[key], ...TYPE_META[key] }))
+                .sort((a, b) => b.score - a.score);
+
+            const topScore = ranked[0].score;
+            const tops = ranked.filter((r) => r.score === topScore && topScore > 0);
+
+            if (tops.length === 0) {
+                loudestLine.innerText = 'Nothing scored high — your critical voices look quiet on this pass.';
+            } else if (tops.length === 1) {
+                loudestLine.innerHTML = `Loudest right now: <span class="text-yellow-400">${tops[0].title}</span> (${tops[0].score}/9)`;
+            } else {
+                const names = tops.map((t) => t.title).join(' & ');
+                loudestLine.innerHTML = `Loudest right now: <span class="text-yellow-400">${names}</span> (${topScore}/9)`;
+            }
+
+            resultsList.innerHTML = ranked.map((row) => {
+                const pct = Math.round((row.score / MAX_PER_TYPE) * 100);
+                const isTop = topScore > 0 && row.score === topScore;
+                const isStrong = row.score >= 7;
+                const classes = [
+                    'result-row',
+                    'border-2 border-black bg-[#152028] px-3 py-2.5 md:px-4 md:py-3',
+                    isTop ? 'is-top' : '',
+                    isStrong ? 'is-strong' : ''
+                ].filter(Boolean).join(' ');
+
+                return `
+                    <div class="${classes}">
+                        <div class="flex items-center gap-3 md:gap-4">
+                            <div class="w-[7.5rem] md:w-40 shrink-0">
+                                <span class="font-['Press_Start_2P'] text-[8px] md:text-[10px] uppercase tracking-wider ${isTop ? 'text-yellow-400' : 'text-[#AFD5DA]'}">${row.title}</span>
+                            </div>
+                            <div class="score-bar-track flex-1 h-3 md:h-3.5 bg-[#2a2200] border-2 border-black overflow-hidden">
+                                <div class="score-bar-fill h-full" style="width: ${pct}%"></div>
+                            </div>
+                            <span class="font-['Press_Start_2P'] text-[9px] md:text-[10px] text-white w-10 text-right shrink-0">${row.score}/9</span>
+                        </div>
+                        <p class="result-blurb mt-1.5">${row.blurb}</p>
+                    </div>
+                `;
+            }).join('');
+
+            testInProgress = false;
+            showScreen(resultsScreen);
+        }
+
+        function answer(val) {
+            if (answering || qIdx >= QUESTIONS.length) return;
+            answering = true;
+
+            const q = QUESTIONS[qIdx];
+            let points = val;
+            if (q.invert) points = 3 - val;
+            scores[q.type] += points;
+            qIdx++;
+
+            if (qIdx === QUESTIONS.length) {
+                progressBar.style.width = '100%';
+                answersContainer.style.opacity = '0';
+                answersContainer.style.pointerEvents = 'none';
+                quizTitle.style.opacity = '0';
+                questionText.innerText = 'LOADING RESULTS...';
+                questionText.className = "font-['Press_Start_2P'] text-sm md:text-lg tracking-widest leading-relaxed text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-500 animate-pulse text-center justify-center mb-6 flex items-center min-h-[90px]";
+
+                setTimeout(() => triggerFinaleEffects(), 500);
+                setTimeout(() => {
+                    answering = false;
+                    showResults();
+                }, 2800);
+            } else {
+                renderQuestion();
+                setTimeout(() => {
+                    triggerEffects(qIdx, QUESTIONS.length);
+                    answering = false;
+                }, 500);
+            }
+        }
+
+        document.getElementById('start-btn').addEventListener('click', startTest);
+        closeTestBtn.addEventListener('click', requestExit);
+
+        window.addEventListener('beforeunload', (e) => {
+            if (!testInProgress) return;
+            e.preventDefault();
+            e.returnValue = '';
+        });
+
+        document.getElementById('export-btn').addEventListener('click', () => {
+            window.print();
+        });
+
+        const gatewayModal = document.getElementById('contact-gateway-modal');
+        const emailModal = document.getElementById('contact-email-modal');
+        const exitConfirmModal = document.getElementById('exit-confirm-modal');
+        const contactStatusMsg = document.getElementById('contactStatusMsg');
+        const contactSendBtn = document.getElementById('contactSendBtn');
+        const TARGET_DISCORD_ID = '198813370441269249';
+        const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxLLC8Ph1O-zphixuFRMzogpbFDK-gEWWshqQqpgf2mzT4twYN5pRj92nOPwMVutyOO/exec';
+
+        function openModal(modal) {
+            modal.classList.remove('hidden', 'modal-fade-out');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModals() {
+            const modals = [gatewayModal, emailModal, exitConfirmModal].filter((m) => m && !m.classList.contains('hidden'));
+            if (modals.length === 0) return;
+
+            modals.forEach((m) => m.classList.add('modal-fade-out'));
+            setTimeout(() => {
+                modals.forEach((m) => {
+                    m.classList.remove('modal-fade-out');
+                    m.classList.add('hidden');
+                });
+                document.body.style.overflow = 'auto';
+            }, 300);
+        }
+
+        document.getElementById('exit-confirm-ok').addEventListener('click', () => {
+            closeModals();
+            exitToIntro();
+        });
+
+        document.getElementById('exit-confirm-cancel').addEventListener('click', () => {
+            closeModals();
+        });
+
+        document.getElementById('contact-btn').addEventListener('click', () => {
+            openModal(gatewayModal);
+        });
+
+        document.getElementById('open-email-btn').addEventListener('click', () => {
+            gatewayModal.classList.add('hidden');
+            openModal(emailModal);
+        });
+
+        document.querySelectorAll('.modal-close').forEach((btn) => {
+            btn.addEventListener('click', closeModals);
+        });
+
+        [gatewayModal, emailModal, exitConfirmModal].forEach((modal) => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal || e.target === modal.firstElementChild) {
+                    if (modal === exitConfirmModal) {
+                        closeModals();
+                        return;
+                    }
+                    closeModals();
+                }
+            });
+        });
+
+        document.getElementById('copy-discord-btn').addEventListener('click', function () {
+            navigator.clipboard.writeText(TARGET_DISCORD_ID).then(() => {
+                const textSpan = this.querySelector('.contact-text-spring');
+                const originalText = 'COPY DISCORD ID';
+                textSpan.innerText = 'ID COPIED!';
+                textSpan.classList.add('discord-copied-text');
+                setTimeout(() => {
+                    textSpan.innerText = originalText;
+                    textSpan.classList.remove('discord-copied-text');
+                }, 2500);
+            }).catch((err) => {
+                console.error('Failed to copy Discord ID: ', err);
+            });
+        });
+
+        contactSendBtn.addEventListener('click', async () => {
+            const nameInput = document.getElementById('contactName');
+            const emailInput = document.getElementById('contactEmail');
+            const messageInput = document.getElementById('contactMessage');
+            const nameVal = nameInput.value.trim();
+            const emailVal = emailInput.value.trim();
+            const messageVal = messageInput.value.trim();
+
+            nameInput.classList.remove('border-red-500');
+            emailInput.classList.remove('border-red-500');
+
+            if (!nameVal || !emailVal) {
+                contactStatusMsg.innerText = '[ ERROR: NAME AND EMAIL REQUIRED ]';
+                contactStatusMsg.className = 'text-sm font-mono tracking-widest h-6 text-red-500 text-center mt-4';
+                if (!nameVal) nameInput.classList.add('border-red-500');
+                if (!emailVal) emailInput.classList.add('border-red-500');
+                return;
+            }
+
+            if (!emailVal.includes('@') || !emailVal.includes('.')) {
+                contactStatusMsg.innerText = '[ ERROR: INVALID EMAIL FORMAT ]';
+                contactStatusMsg.className = 'text-sm font-mono tracking-widest h-6 text-red-500 text-center mt-4';
+                emailInput.classList.add('border-red-500');
+                return;
+            }
+
+            contactSendBtn.disabled = true;
+            contactStatusMsg.innerText = '';
+            const originalLabel = contactSendBtn.innerText;
+            contactSendBtn.innerText = 'SENDING...';
+
+            try {
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        type: 'contact',
+                        name: nameVal,
+                        email: emailVal,
+                        message: messageVal || '(from Inner Critic Types test)'
+                    }),
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+                });
+                if (!response.ok) throw new Error(`Webhook failed: ${response.status}`);
+
+                contactSendBtn.innerText = 'SENT!';
+                contactStatusMsg.innerText = '[ MESSAGE SENT ]';
+                contactStatusMsg.className = 'text-sm font-mono tracking-widest h-6 text-yellow-400 text-center mt-4';
+                nameInput.value = '';
+                emailInput.value = '';
+                messageInput.value = '';
+            } catch (err) {
+                console.error(err);
+                contactSendBtn.innerText = originalLabel;
+                contactStatusMsg.innerText = '[ ERROR: COULD NOT SEND ]';
+                contactStatusMsg.className = 'text-sm font-mono tracking-widest h-6 text-red-500 text-center mt-4';
+            } finally {
+                contactSendBtn.disabled = false;
+                setTimeout(() => {
+                    if (contactSendBtn.innerText === 'SENT!') contactSendBtn.innerText = originalLabel;
+                }, 2500);
+            }
+        });
+
+        document.querySelectorAll('.quest-quiz-btn').forEach((btn) => {
+            btn.addEventListener('click', function () {
+                answer(parseInt(this.getAttribute('data-val'), 10));
+            });
+        });
+    </script>
+</body>
+</html>
