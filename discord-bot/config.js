@@ -1,7 +1,14 @@
 require('dotenv').config();
 
-function required(name) {
+function envValue(name) {
     const value = process.env[name];
+    if (value == null || value === '') return '';
+    // Strip CRLF / stray whitespace from Windows-edited .env files on Linux hosts.
+    return value.trim();
+}
+
+function required(name) {
+    const value = envValue(name);
     if (!value) {
         throw new Error(`Missing ${name}. Add it in discord-bot/.env (the file you upload to Discloud).`);
     }
@@ -9,7 +16,7 @@ function required(name) {
 }
 
 function optional(name) {
-    return process.env[name] || '';
+    return envValue(name);
 }
 
 const config = {
@@ -30,9 +37,9 @@ const config = {
             3: required('CHANNEL_DAY3'),
         },
         resources: {
-            1: required('CHANNEL_RESOURCES_DAY1'),
-            2: required('CHANNEL_RESOURCES_DAY2'),
-            3: required('CHANNEL_RESOURCES_DAY3'),
+            1: optional('CHANNEL_RESOURCES_DAY1'),
+            2: optional('CHANNEL_RESOURCES_DAY2'),
+            3: optional('CHANNEL_RESOURCES_DAY3'),
         },
         log: optional('CHANNEL_LOG'),
         courseDiscussion: optional('CHANNEL_COURSE_DISCUSSION') || '1526212880729641202',

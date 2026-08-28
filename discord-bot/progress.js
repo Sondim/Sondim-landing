@@ -7,7 +7,7 @@ function hasRole(member, roleId) {
 async function respond(interaction, payload) {
     const data = typeof payload === 'string' ? { content: payload } : payload;
     if (interaction.deferred || interaction.replied) {
-        return interaction.editReply(data);
+        return interaction.followUp({ ...data, ephemeral: true });
     }
     return interaction.reply({ ...data, ephemeral: true });
 }
@@ -19,6 +19,9 @@ function permissionHint(error) {
     }
     if (text.includes('Missing Access') || text.includes('50001')) {
         return ' The bot cannot see that channel. Give it View Channel + Send Messages there.';
+    }
+    if (text.includes('Thread') || text.includes('50083') || text.includes('50084')) {
+        return ' The bot needs Create Private Threads + Send Messages in Threads on that day channel.';
     }
     return '';
 }
@@ -85,12 +88,16 @@ async function unlockDay(interaction, dayNumber) {
 
 function unlockReply(dayNumber) {
     const introMention = `<#${config.channels.intro[dayNumber]}>`;
-    return [`Day ${dayNumber} is unlocked.`, `Open ${introMention} and read the pinned intro.`].join('\n');
+    return [`Level ${dayNumber} is unlocked.`, `Open ${introMention} and read the intro.`].join('\n');
+}
+
+function hasRequiredDayRole(member, day) {
+    return hasRole(member, config.roles[`day${day}`]);
 }
 
 async function startDay1(interaction) {
     if (hasRole(interaction.member, config.roles.day1)) {
-        await respond(interaction, `Day 1 is already unlocked. Open <#${config.channels.intro[1]}>.`);
+        await respond(interaction, `Level 1 is already unlocked. Open <#${config.channels.intro[1]}>.`);
         return;
     }
 
@@ -103,7 +110,7 @@ async function completeDay(interaction, finishedDay) {
     const currentRole = config.roles[`day${finishedDay}`];
 
     if (!hasRole(member, currentRole)) {
-        await respond(interaction, `You still need Day ${finishedDay} first. Start from <#${config.channels.startHere}>.`);
+        await respond(interaction, `You still need Level ${finishedDay} first. Start from <#${config.channels.startHere}>.`);
         return;
     }
 
@@ -111,7 +118,7 @@ async function completeDay(interaction, finishedDay) {
         if (hasRole(member, config.roles.alumni)) {
             await respond(
                 interaction,
-                `You already finished the 3-day course. Hang out in <#${config.channels.gradChat}>.`
+                `You already finished the course. Hang out in <#${config.channels.gradChat}>.`
             );
             return;
         }
@@ -144,7 +151,7 @@ async function completeDay(interaction, finishedDay) {
     const nextRole = config.roles[`day${nextDay}`];
 
     if (hasRole(member, nextRole)) {
-        await respond(interaction, `You already have Day ${nextDay}. Open <#${config.channels.intro[nextDay]}>.`);
+        await respond(interaction, `You already have Level ${nextDay}. Open <#${config.channels.intro[nextDay]}>.`);
         return;
     }
 
@@ -152,9 +159,58 @@ async function completeDay(interaction, finishedDay) {
     await respond(interaction, unlockReply(nextDay));
 }
 
+async function resetStudentProgress(client, member) {
+    const { clearUserProgress, findStudentCourseThreads } = require('./threads');
+    const roleIds = [
+        config.roles.day1,
+        config.roles.day2,
+        config.roles.day3,
+        config.roles.alumni,
+    ].filter((roleId) => hasRole(member, roleId));
+
+    if (roleIds.length > 0) {
+        await member.roles.remove(roleIds, 'Course progress reset');
+    }
+
+    const trackedThreadIds = clearUserProgress(member.id);
+    const threadsById = new Map(
+        (await findStudentCourseThreads(client, member)).map((thread) => [thread.id, thread])
+    );
+
+    for (const threadId of trackedThreadIds) {
+        if (threadsById.has(threadId)) continue;
+        const thread = await client.channels.fetch(threadId).catch(() => null);
+        if (thread?.isThread()) {
+            threadsById.set(thread.id, thread);
+        }
+    }
+
+    const deletedThreads = [];
+    for (const thread of threadsById.values()) {
+        try {
+            if (thread.archived) {
+                await thread.setArchived(false).catch(() => {});
+            }
+            await thread.delete('Course progress reset');
+            deletedThreads.push(thread.name);
+        } catch {
+            // ignore if already gone or no permission
+        }
+    }
+
+    await logEvent(
+        client,
+        `Reset course progress for ${member.user.tag} (${member.id}). Removed roles: ${roleIds.length}, threads: ${deletedThreads.length}`
+    );
+
+    return { removedRoles: roleIds.length, deletedThreads };
+}
+
 module.exports = {
     permissionHint,
     startDay1,
     completeDay,
     logEvent,
+    hasRequiredDayRole,
+    resetStudentProgress,
 };

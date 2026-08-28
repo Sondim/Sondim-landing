@@ -9,9 +9,32 @@ const {
     ActionRowBuilder,
     ButtonBuilder,
     ButtonStyle,
+    MessageFlags,
 } = require('discord.js');
 const { config } = require('./config');
-const { permissionHint, startDay1, completeDay, logEvent } = require('./progress');
+const {
+    permissionHint,
+    startDay1,
+    completeDay,
+    logEvent,
+    hasRequiredDayRole,
+    resetStudentProgress,
+} = require('./progress');
+const {
+    buildChannelIntroPayload,
+    buildThreadStepPayload,
+    parseStepCustomId,
+    getFinalStepNumber,
+    stepCustomId,
+    getChannelIntroMarker,
+    getLegacyChannelIntroMarkers,
+    START_HERE_MARKER,
+} = require('./content');
+const {
+    getUserDayProgress,
+    setUserDayProgress,
+    getOrCreatePrivateThread,
+} = require('./threads');
 
 const client = new Client({
     intents: [
@@ -24,7 +47,19 @@ const client = new Client({
 
 const setupCommand = new SlashCommandBuilder()
     .setName('setup')
-    .setDescription('Post the Start and Done buttons (staff only).')
+    .setDescription('Post course buttons in #start-here and each day channel (staff only).')
+    .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
+    .toJSON();
+
+const resetProgressCommand = new SlashCommandBuilder()
+    .setName('reset-progress')
+    .setDescription('Wipe a student\'s course roles, bot progress, and private threads (staff only).')
+    .addUserOption((option) =>
+        option
+            .setName('student')
+            .setDescription('Who to reset (defaults to you)')
+            .setRequired(false)
+    )
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
     .toJSON();
 
@@ -32,98 +67,253 @@ function startRow() {
     return new ActionRowBuilder().addComponents(
         new ButtonBuilder()
             .setCustomId('start-day-1')
-            .setLabel('Start Day 1')
+            .setLabel('Start Level 1')
             .setStyle(ButtonStyle.Success)
     );
 }
 
-function doneRow(day) {
-    const label = day === 3 ? 'Complete course' : `I'm done with Day ${day}`;
-    return new ActionRowBuilder().addComponents(
-        new ButtonBuilder()
-            .setCustomId(`done-day-${day}`)
-            .setLabel(label)
-            .setStyle(ButtonStyle.Primary)
+const LEGACY_INTRO_BUTTON_IDS = {
+    1: ['read-intro-day-1', 'done-day-1'],
+    2: ['read-intro-day-2', 'done-day-2'],
+    3: ['read-intro-day-3', 'done-day-3'],
+};
+
+function messageButtonCustomIds(message) {
+    return message.components.flatMap((row) =>
+        row.components.map((component) => component.customId)
     );
 }
 
-function introReadRow(day) {
-    return new ActionRowBuilder().addComponents(
-        new ButtonBuilder()
-            .setCustomId(`read-intro-day-${day}`)
-            .setLabel("I've read the intro")
-            .setStyle(ButtonStyle.Primary)
+function isBotCourseIntroMessage(message, day) {
+    if (message.author.id !== client.user.id) return false;
+
+    const marker = getChannelIntroMarker(day);
+    const legacyMarkers = getLegacyChannelIntroMarkers(day);
+    if ([marker, ...legacyMarkers].some((text) => (message.content || '').includes(text))) {
+        return true;
+    }
+
+    if (!message.components?.length) return false;
+
+    const customIds = messageButtonCustomIds(message);
+    const currentId = stepCustomId(day, 1);
+    const legacyIds = LEGACY_INTRO_BUTTON_IDS[day] || [];
+
+    return customIds.some((id) => id === currentId || legacyIds.includes(id));
+}
+
+function isBotStartMessage(message) {
+    if (message.author.id !== client.user.id) return false;
+
+    if ((message.content || '').includes(START_HERE_MARKER)) return true;
+    if ((message.content || '').includes('Free 3-day course')) return true;
+
+    if (!message.components?.length) return false;
+
+    return messageButtonCustomIds(message).includes('start-day-1');
+}
+
+async function findBotCourseIntroMessage(channel, day) {
+    const matches = await findAllBotCourseIntroMessages(channel, day);
+    if (matches.length === 0) return null;
+
+    return matches.reduce((oldest, message) =>
+        message.createdTimestamp < oldest.createdTimestamp ? message : oldest
     );
 }
 
-async function findBotButtonMessage(channel, customId) {
-    const messages = await channel.messages.fetch({ limit: 50 });
-    return messages.find((message) => {
-        if (message.author.id !== client.user.id) return false;
-        return message.components.some((row) =>
-            row.components.some((component) => component.customId === customId)
-        );
-    });
+async function findAllBotCourseIntroMessages(channel, day) {
+    const messages = await channel.messages.fetch({ limit: 100 });
+    return [...messages.values()].filter((message) => isBotCourseIntroMessage(message, day));
 }
 
-async function upsertButtonMessage(channel, customId, payload) {
-    const existing = await findBotButtonMessage(channel, customId);
+async function findBotStartMessage(channel) {
+    const messages = await channel.messages.fetch({ limit: 100 });
+    const matches = [...messages.values()].filter((message) => isBotStartMessage(message));
+    if (matches.length === 0) return null;
+
+    return matches.reduce((oldest, message) =>
+        message.createdTimestamp < oldest.createdTimestamp ? message : oldest
+    );
+}
+
+function silentPayload(payload, { suppressNotification = false } = {}) {
+    return {
+        ...payload,
+        allowedMentions: { parse: [] },
+        ...(suppressNotification ? { flags: MessageFlags.SuppressNotifications } : {}),
+    };
+}
+
+async function removeDuplicateBotMessages(channel, keepMessageId, isMatch) {
+    const messages = await channel.messages.fetch({ limit: 100 });
+
+    for (const [, message] of messages) {
+        if (message.id === keepMessageId || !isMatch(message)) continue;
+        await message.delete().catch(() => {});
+    }
+}
+
+async function upsertCourseMessage(channel, { findMessage, isMatch, payload }) {
+    const existing = await findMessage(channel);
+    const safePayload = silentPayload({ ...payload, embeds: [] });
+
     if (existing) {
-        await existing.edit(payload);
+        await existing.edit(safePayload);
+        await removeDuplicateBotMessages(channel, existing.id, isMatch);
         return existing;
     }
-    return channel.send(payload);
+
+    const sent = await channel.send(silentPayload({ ...payload, embeds: [] }, { suppressNotification: true }));
+    await removeDuplicateBotMessages(channel, sent.id, isMatch);
+    return sent;
 }
 
 async function registerCommands() {
     const rest = new REST({ version: '10' }).setToken(config.token);
     await rest.put(
         Routes.applicationGuildCommands(config.clientId, config.guildId),
-        { body: [setupCommand] }
+        { body: [setupCommand, resetProgressCommand] }
     );
+}
+
+const STEP_DONE_MARK = '✅';
+
+async function getButtonMessage(interaction) {
+    let message = interaction.message;
+    if (!message) return null;
+    if (message.partial) {
+        message = await message.fetch();
+    }
+    return message;
+}
+
+function markedContent(content) {
+    const text = content || '';
+    if (text.includes(STEP_DONE_MARK)) return text;
+    return `${text}\n\n${STEP_DONE_MARK}`;
+}
+
+function buildMarkPayload(message) {
+    return {
+        components: [],
+        content: markedContent(message.content),
+        embeds: [],
+    };
+}
+
+async function markStepComplete(interaction) {
+    if (!interaction.deferred && !interaction.replied) {
+        await interaction.deferUpdate();
+    }
+
+    const message = await getButtonMessage(interaction);
+    if (!message?.editable || message.author?.id !== client.user.id) return;
+
+    const payload = buildMarkPayload(message);
+    await message.edit(payload);
+}
+
+async function handleCourseStep(interaction, day, step) {
+    if (!hasRequiredDayRole(interaction.member, day)) {
+        await interaction.followUp({
+            content: `You need access to Level ${day} first. Start from <#${config.channels.startHere}>.`,
+            ephemeral: true,
+        });
+        return;
+    }
+
+    const finalStep = getFinalStepNumber(day);
+
+    if (step === finalStep) {
+        await completeDay(interaction, day);
+        return;
+    }
+
+    const parentChannel = interaction.channel.isThread()
+        ? interaction.channel.parent
+        : interaction.channel;
+
+    if (!parentChannel) {
+        throw new Error('Could not find parent channel for course thread.');
+    }
+
+    const thread = await getOrCreatePrivateThread(parentChannel, interaction.member, day);
+    const progress = getUserDayProgress(interaction.user.id, day) || { postedUpTo: 0 };
+
+    if (progress.postedUpTo >= step) {
+        await interaction.followUp({
+            content: `You already have this step in your private thread: ${thread}. Open it to continue.`,
+            ephemeral: true,
+        });
+        return;
+    }
+
+    if (step !== progress.postedUpTo + 1) {
+        await interaction.followUp({
+            content: `Continue from your private thread: ${thread}. Press the latest button there.`,
+            ephemeral: true,
+        });
+        return;
+    }
+
+    const payload = buildThreadStepPayload(day, step - 1);
+    await thread.send(payload);
+    setUserDayProgress(interaction.user.id, day, { threadId: thread.id, postedUpTo: step });
+
+    if (step === 1) {
+        await interaction.followUp({
+            content: [
+                `Your private Level ${day} thread is ready: ${thread}`,
+                'The first step is posted there — only you can see it.',
+            ].join('\n'),
+            ephemeral: true,
+        });
+    }
 }
 
 client.once('ready', async () => {
     console.log(`Logged in as ${client.user.tag}`);
     try {
         await registerCommands();
-        console.log('Registered /setup for this server');
+        console.log('Registered /setup and /reset-progress for this server');
     } catch (error) {
         console.error('Could not register /setup', error);
     }
 });
 
 client.on('interactionCreate', async (interaction) => {
+    if (!interaction.guild) return;
+
     try {
         if (interaction.isChatInputCommand() && interaction.commandName === 'setup') {
             await runSetup(interaction);
             return;
         }
 
+        if (interaction.isChatInputCommand() && interaction.commandName === 'reset-progress') {
+            await runResetProgress(interaction);
+            return;
+        }
+
         if (!interaction.isButton()) return;
 
-        await interaction.deferReply({ ephemeral: true });
-
         if (interaction.customId === 'start-day-1') {
+            if (!interaction.deferred && !interaction.replied) {
+                await interaction.deferUpdate();
+            }
             await startDay1(interaction);
             return;
         }
 
-        const doneMatch = interaction.customId.match(/^done-day-([123])$/);
-        if (doneMatch) {
-            await completeDay(interaction, Number(doneMatch[1]));
-            return;
-        }
-
-        const introReadMatch = interaction.customId.match(/^read-intro-day-([123])$/);
-        if (introReadMatch) {
-            const day = Number(introReadMatch[1]);
-            await interaction.editReply({
-                content: [
-                    `Nice — you're set for Day ${day}.`,
-                    `Go to <#${config.channels.resources[day]}> for the work.`,
-                ].join('\n'),
-            });
+        const parsed = parseStepCustomId(interaction.customId);
+        if (parsed) {
+            if (interaction.channel.isThread()) {
+                await markStepComplete(interaction);
+            } else if (!interaction.deferred && !interaction.replied) {
+                await interaction.deferUpdate();
+            }
+            await handleCourseStep(interaction, parsed.day, parsed.step);
         }
     } catch (error) {
         console.error(error);
@@ -132,7 +322,9 @@ client.on('interactionCreate', async (interaction) => {
         await logEvent(client, `Error for ${interaction.user?.tag}: ${error.stack || error}`);
 
         if (interaction.deferred || interaction.replied) {
-            await interaction.editReply({ content: text }).catch(() => {});
+            await interaction.editReply({ content: text }).catch(() =>
+                interaction.followUp({ content: text, ephemeral: true }).catch(() => {})
+            );
         } else {
             await interaction.reply({ content: text, ephemeral: true }).catch(() => {});
         }
@@ -160,7 +352,7 @@ async function cleanupBriefingChannels(guild) {
     for (const [, channel] of guild.channels.cache) {
         if (channel.name === 'your-briefing' && channel.isTextBased() && !channel.isThread()) {
             try {
-                await channel.delete('Replaced by DM approach');
+                await channel.delete('Replaced by private thread approach');
                 removed.push(channel.id);
             } catch (e) {
                 // ignore if can't delete
@@ -170,37 +362,54 @@ async function cleanupBriefingChannels(guild) {
     return removed;
 }
 
+async function runResetProgress(interaction) {
+    await interaction.deferReply({ ephemeral: true });
+
+    const targetUser = interaction.options.getUser('student') || interaction.user;
+    const member = await interaction.guild.members.fetch(targetUser.id).catch(() => null);
+
+    if (!member) {
+        await interaction.editReply({ content: 'Could not find that member in this server.' });
+        return;
+    }
+
+    const { removedRoles, deletedThreads } = await resetStudentProgress(interaction.client, member);
+
+    await interaction.editReply({
+        content: [
+            `Reset **${member.displayName}** (${member.id}).`,
+            `Removed **${removedRoles}** course role(s).`,
+            `Deleted **${deletedThreads.length}** private thread(s).`,
+            '',
+            'They can press **Start Level 1** again from a clean slate.',
+            'Run `/setup` only if button messages need refreshing — not required for reset.',
+        ].join('\n'),
+    });
+}
+
 async function runSetup(interaction) {
     await interaction.deferReply({ ephemeral: true });
 
     const startChannel = await requireTextChannel('#start-here', config.channels.startHere);
-    await upsertButtonMessage(startChannel, 'start-day-1', {
-        content: [
-            '**Free 3-day course**',
-            'You will only see **Day 1** until you finish it.',
-            'Press the button when you are ready.',
-        ].join('\n'),
-        components: [startRow()],
+    await upsertCourseMessage(startChannel, {
+        findMessage: findBotStartMessage,
+        isMatch: isBotStartMessage,
+        payload: {
+            content: [
+                '**Free 3-level course**',
+                'Press the button when you are ready.',
+            ].join('\n'),
+            components: [startRow()],
+        },
     });
 
     for (const day of [1, 2, 3]) {
         const intro = await requireTextChannel(`#day-${day}`, config.channels.intro[day]);
-        await upsertButtonMessage(intro, `read-intro-day-${day}`, {
-            content: `When you've read the pinned intro for Day ${day}, press the button below.`,
-            components: [introReadRow(day)],
-        });
-
-        const resources = await requireTextChannel(
-            `#resources-day-${day}`,
-            config.channels.resources[day]
-        );
-        const next = day === 3 ? 'complete the course' : `unlock Day ${day + 1}`;
-        await upsertButtonMessage(resources, `done-day-${day}`, {
-            content: [
-                `If you have any questions or reflections about this day, post in <#${config.channels.courseDiscussion}>.`,
-                `When you have done the reading / video / workshop, press the button to ${next}.`,
-            ].join('\n\n'),
-            components: [doneRow(day)],
+        const payload = buildChannelIntroPayload(day);
+        await upsertCourseMessage(intro, {
+            findMessage: (channel) => findBotCourseIntroMessage(channel, day),
+            isMatch: (message) => isBotCourseIntroMessage(message, day),
+            payload,
         });
     }
 
@@ -210,7 +419,11 @@ async function runSetup(interaction) {
         : '';
 
     await interaction.editReply({
-        content: `Buttons are posted (or updated) in #start-here and each resources channel. Unlock confirmations are shown privately on button press.${cleanupNote}`,
+        content: [
+            'Course buttons updated in **#start-here** and the three level channels (existing messages edited in place — no channel pings).',
+            'Duplicate bot intro posts, if any, were removed.',
+            cleanupNote.trim(),
+        ].filter(Boolean).join('\n'),
     });
 }
 

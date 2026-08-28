@@ -1,10 +1,23 @@
-# Course bot — setup for Magnus (no coding)
+# Course bot — setup for Magnus
 
-This bot is **Magnus Chirgwin** in Discord (your name + avatar, with a small APP/BOT badge). It unlocks Day 1 → 2 → 3 when someone presses a button, and pings **only that person** in a private thread under **`#your-briefing`** at the top of that day’s category (so the ping sits above `#day-1` / `#day-2` / `#day-3`).
+This bot is **Magnus Chirgwin** in Discord (your name + avatar, with a small APP/BOT badge). It guides students through the free **3-day course** using buttons and **private threads**.
 
 Students never see a public “Ben started Day 1” message.
 
-Paid checkout is **not** in this version. When people finish the free course and ask for more, we add a lock in front of Start.
+Paid checkout is **not** in this version.
+
+---
+
+## How the course flows
+
+1. **`#start-here`** — student presses **Start Day 1** → gets `@Day1` + a private popup with a link to `#day-1`.
+2. **`#day-1`** — one shared bot message with the **full Day 1 intro** + **I've read the intro**.
+3. Pressing that button opens a **private thread** (e.g. `Day 1 — Anna`) under `#day-1`. Only that student sees it.
+4. Each next button posts the **next step** in the same thread (videos, test link, workshop, etc.). History stays in the thread.
+5. Last button of Day 1 unlocks **Day 2**. Same pattern in `#day-2` and `#day-3`.
+6. Last button of Day 3 grants **Alumni** + welcome in `#grad-chat`.
+
+**Edit all course copy** in [`content.js`](content.js) — intros, video URLs, workshop links, button labels.
 
 ---
 
@@ -12,74 +25,51 @@ Paid checkout is **not** in this version. When people finish the free course and
 
 1. **Stop BotGhost** for this bot. Two systems cannot share the same token.
 2. Keep the bot **in the server**. Same name, same picture.
-3. Create a role named **Alumni** (or **Finished**) if you do not have one yet.
+3. Create a role named **Alumni** if you do not have one yet.
 
 ---
 
-## 1. Discord Developer Portal (10 min)
+## 1. Discord Developer Portal
 
-Open [discord.com/developers/applications](https://discord.com/developers/applications) and click the **Magnus Chirgwin** app.
+Open [discord.com/developers/applications](https://discord.com/developers/applications) → **Magnus Chirgwin** app.
 
 ### Bot tab
 
-1. **Privileged Gateway Intents** → turn on **Server Members Intent**. Save.
-2. **Reset Token** only if BotGhost still has the old one and you want a clean break. Copy the token into a password manager. **Never paste it into Cursor chat, email, or GitHub.**
+1. **Server Members Intent** → on. Save.
+2. Copy token into password manager only. **Never paste into chat or GitHub.**
 
-### OAuth2 → URL Generator (only if the bot is not in the server)
-
-Scopes: `bot`, `applications.commands`
-
-Bot permissions:
+### Bot permissions (invite or bot role)
 
 - View Channels
 - Send Messages
-- Embed Links
-- Add Reactions
+- Embed Links (YouTube previews)
 - Manage Roles
-- Manage Channels (needed so `/setup` can create `#your-briefing` at the top of each Day category)
-- Create Public Threads
 - Create Private Threads
 - Send Messages in Threads
 - Manage Threads
 - Read Message History
 
-If the bot is **already in the server**, add **Manage Channels** on the bot role in Server Settings → Roles (or re-run the invite URL with that permission).
+---
 
-Open the generated URL, pick the course server, authorize.
+## 2. Role order
+
+Drag the **bot role** **above** Day 1, Day 2, Day 3, and Alumni.
 
 ---
 
-## 2. Role order (2 min)
-
-Server Settings → Roles. Drag **the bot’s role** (Magnus Chirgwin) **above**:
-
-- Day 1
-- Day 2
-- Day 3
-- Alumni
-
-If it sits below them, buttons will fail with a permissions error.
-
-Give **yourself** a Staff / admin view of every Day category so you are never locked out while testing.
-
----
-
-## 3. Channel permissions (20–40 min)
+## 3. Channel permissions
 
 For each **Day 1 / Day 2 / Day 3** category:
 
 | Who | View channel |
 |---|---|
 | @everyone | **Off** |
-| Day 1 role | **On** for Day 1 category only |
-| Day 2 role | **On** for Day 2 (keep Day 1 on for people who already have Day 1) |
+| Day 1 role | **On** for Day 1 only |
+| Day 2 role | **On** for Day 2 (keep Day 1 on for graduates) |
 | Day 3 role | **On** for Day 3 |
 | Bot | **On** for all three |
-| You / Staff | **On** for all three |
 
-**Grad category** (`grad-chat` + graduate voice): `@everyone` **Off**. **Alumni** **On**. Bot **On**. That is how finishing Day 3 unlocks the reward room.
-
-**Also grant the APP on `#day-1` itself**, not only the Day 1 category. If that channel is unsynced, category allows do not apply. Open `#day-1` → Edit Channel → Permissions → add **Magnus Chirgwin** (the APP) → turn **ON**:
+On **`#day-1`, `#day-2`, `#day-3`** (if unsynced from category), grant the APP:
 
 - View Channel
 - Send Messages
@@ -88,153 +78,106 @@ For each **Day 1 / Day 2 / Day 3** category:
 - Send Messages in Threads
 - Manage Threads
 
-Do the same on `#day-2` and `#day-3` if they are unsynced. Then confirm **CHANNEL_DAY1** in `.env` is the ID from right-click `#day-1` → Copy Channel ID (not resources, not an old deleted channel). `/setup` will echo the intro channel **name + ID** so you can check this.
+**Grad category:** `@everyone` off, **Alumni** on.
 
-Always visible to everyone (or Joiner):
+Always visible: `#start-here`, `#general`, Q&A.
 
-- `#start-here`
-- `#general`
-- Q&A voice
+Optional: `#resources-day-*` channels can be **archived** — the bot no longer uses them.
 
-Optional: create `#bot-log` that only you and the bot can see.
-
-`/setup` creates **`#your-briefing`** as the first channel in each Day category. Students with that day’s role can see it; they talk in their private thread, not in the parent channel.
+Set **thread auto-archive** to **1 week** (or longer) in Server Settings so inactive student threads stay easy to reopen.
 
 ---
 
-## 4. Copy IDs (10 min)
+## 4. Environment variables
 
-Discord Settings → Advanced → **Developer Mode** on.
-
-Then right-click each thing → **Copy Server ID** / **Copy Role ID** / **Copy Channel ID**.
-
-Paste them into a notes file on your computer (not into chat):
+Copy `.env.example` → `.env`. Required:
 
 ```
-DISCORD_CLIENT_ID=     (Application ID on the General Information tab of the Developer Portal)
-DISCORD_GUILD_ID=      (right-click the server icon)
+DISCORD_TOKEN=
+DISCORD_CLIENT_ID=
+DISCORD_GUILD_ID=
 ROLE_DAY1=
 ROLE_DAY2=
 ROLE_DAY3=
 ROLE_ALUMNI=
 CHANNEL_START_HERE=
-CHANNEL_DAY1=          (right-click the live #day-1 intro channel — not resources)
+CHANNEL_DAY1=
 CHANNEL_DAY2=
 CHANNEL_DAY3=
-CHANNEL_RESOURCES_DAY1=
-CHANNEL_RESOURCES_DAY2=
-CHANNEL_RESOURCES_DAY3=
-CHANNEL_LOG=           (optional)
-CATEGORY_GRAD=         (grad category)
-CHANNEL_GRAD_CHAT=     (#grad-chat)
-CHANNEL_GRAD_VOICE=    (optional)
-CHANNEL_SELF_PROMOTION= (optional)
+CHANNEL_GRAD_CHAT=
 ```
 
-`DISCORD_TOKEN` is the bot token from step 1. Put it only in the `.env` file you upload to Discloud — never GitHub or chat.
+Optional: `VIDEO_DAY1_2`, `VIDEO_DAY2`, `VIDEO_DAY3`, `CHANNEL_LOG`, grad/promo IDs.
+
+`CHANNEL_RESOURCES_DAY*` is optional and unused.
 
 ---
 
-## 5. Host on Discloud (free, made for Discord bots)
+## 5. Host on Discloud
 
-GitHub Pages cannot run a bot. Railway is paid after a trial. **[Discloud](https://discloud.com) free plan** is one small always-on bot (100 MB). That is enough for this.
+1. Zip these files from `discord-bot/`:
+   - `index.js`, `config.js`, `progress.js`, `content.js`, `threads.js`, `package.json`, `discloud.config`, `.env`
+2. Upload at [discloud.com](https://discloud.com).
+3. Logs should say `Logged in as Magnus Chirgwin`.
 
-Koyeb’s free tier sleeps after an hour — buttons would stop working. Do not use it for this.
+After code changes, re-zip and upload over the existing app.
 
-### 5a. Create a `.env` file
+---
 
-In the `discord-bot` folder, copy `.env.example` and name the copy `.env`. Fill it in. Yours looks like this (add the token yourself):
+## 6. Run `/setup` in Discord
+
+Staff only. This posts (or updates):
+
+- Start button in `#start-here`
+- Full intro + first button in each `#day-1`, `#day-2`, `#day-3`
+
+Remove old **pinned intro** messages if they duplicate the bot intro.
+
+---
+
+## 6b. Retest with `/reset-progress`
+
+Staff only. Wipes one student back to zero:
 
 ```
-DISCORD_TOKEN=
-DISCORD_CLIENT_ID=1529464296797634731
-DISCORD_GUILD_ID=1356608874786066502
-ROLE_DAY1=1526283207308214273
-ROLE_DAY2=1526283382781378580
-ROLE_DAY3=1526283527077888041
-ROLE_ALUMNI=1526283565489459365
-CHANNEL_START_HERE=1538872437939249193
-CHANNEL_DAY1=1526284554359406642
-CHANNEL_DAY2=1539183494855397396
-CHANNEL_DAY3=1539183541072437248
-CHANNEL_RESOURCES_DAY1=1526212818335174777
-CHANNEL_RESOURCES_DAY2=1526284197084270682
-CHANNEL_RESOURCES_DAY3=1538868434706628678
-CHANNEL_LOG=1538818523973951558
-CATEGORY_GRAD=1539237731144568862
-CHANNEL_GRAD_CHAT=1539234069789810748
-CHANNEL_GRAD_VOICE=1539238258167390350
-CHANNEL_SELF_PROMOTION=1539169770136412220
+/reset-progress
+/reset-progress student:@TestAccount
 ```
 
-`.env` is gitignored. Do not commit it.
+This removes **Day 1 / Day 2 / Day 3 / Alumni** roles, clears bot progress, and deletes their private course threads. Then they can press **Start Day 1** again.
 
-### 5b. Zip and upload
-
-1. Sign up at [discloud.com](https://discloud.com) (they may ask you to join their Discord once to verify).
-2. In File Explorer open `discord-bot`.
-3. Select: `index.js`, `config.js`, `progress.js`, `package.json`, `discloud.config`, `.env`
-4. Right-click → **Send to → Compressed (zipped) folder**. Do **not** include `node_modules`.
-5. Dashboard → **Applications** → **+ Upload** → **Upload ZIP** → drop the zip.
-6. Wait until it shows online. Logs should say `Logged in as Magnus Chirgwin`.
-
-If it crashes, the log usually means a missing `.env` line or the token is wrong. Paste the log here (never the token).
-
-### 5c. After a code update (this fix)
-
-The bot already on Discloud does **not** pick up GitHub commits. Zip the same six files again and upload over the existing app.
-
-1. Grant the APP **Manage Channels**, plus the `#day-1` channel permissions in section 3.
-2. Upload the new zip. Wait until logs say `Logged in as Magnus Chirgwin`.
-3. In Discord run `/setup`. You should see `#your-briefing` at the top of each Day category, and each intro name listed.
-4. Test **Start Day 1** with an account that does not already have Day 1.
+Bot needs **Manage Threads** to delete private threads.
 
 ---
 
-## 6. In Discord
+## 7. Test with a second account
 
-1. Type `/setup` (only people who can manage the server).
-2. Confirm buttons appear in `#start-here` and each `#resources-day-*`.
-3. Confirm `#your-briefing` is the **first** channel in Day 1, Day 2, and Day 3. `/setup` also lists each intro channel name — it must match `#day-1` / `#day-2` / `#day-3`.
-4. Pin **your** intro and resource text in those channels (the messages from your screenshots). The bot only owns the button messages.
+Not admin. No Day 1 role yet.
 
-Running `/setup` again updates the same button messages and repositions `#your-briefing`. It does not spam extra buttons.
+1. **Start Day 1** → private popup → open `#day-1`.
+2. Read intro → **I've read the intro** → private thread appears with video step.
+3. Work through buttons in the thread through to **Proceed to next level**.
+4. `#day-2` unlocks. Repeat.
+5. Finish Day 3 → Alumni + `#grad-chat`.
 
-If `/setup` errors about Missing Permissions, the bot still needs **Manage Channels**. Add it, then run `/setup` again.
-
----
-
-## 7. Test with a second Discord account
-
-Use an account that is **not** admin (admin can see hidden channels and the test lies) and does **not** already have the Day 1 role (Start is skipped if they already have it).
-
-1. Join → you should **not** see Day 2 / Day 3.
-2. Press **Start Day 1** → Day 1 appears. You get a mention in a private thread under **`#your-briefing`**, above `#day-1`.
-3. Your main account should **not** get a ping.
-4. Press **I'm done with Day 1** → Day 2 appears + a new mention under that day’s `#your-briefing`.
-5. Repeat through Day 3.
-6. Come back later: Days 1–3 still visible (own it forever).
-
-Old private threads that already sit under `#day-3` cannot be moved. Only new unlocks go under `#your-briefing`.
-
-If something fails, the button reply will include a hint. Paste that text here (never the token).
+If a student loses the popup, they reopen their thread from the `#day-N` sidebar.
 
 ---
 
-## What you can change without code
+## What you can change without a coder
 
-- Intro / resource **copy** in Discord (pins)
-- Channel names and topic text
-- Role colors
+- Channel names, role colors, server layout
+- Archive old resource channels
 
-Need a coder for:
+## What to edit in `content.js`
 
+- Day intros and thread step text
+- YouTube and workshop URLs
 - Button labels
-- Adding Day 4
-- Paid lock in front of Start
+- Optional: set `VIDEO_DAY1_2` in `.env` for the Day 1 second video
 
 ---
 
-## Paid later (do not build now)
+## Paid later
 
-Same bot. Add a `@Paid` role and only show Start (or auto-grant Day 1) after checkout. The unlock path you are testing now stays the same.
+Add a `@Paid` role in front of Start. The unlock path stays the same.
